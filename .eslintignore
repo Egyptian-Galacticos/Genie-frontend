@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+
+# Generated files
+coverage/
+.nyc_output/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Angular specific
+.angular/
