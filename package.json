@@ -15,10 +15,7 @@
     "format:check": "prettier --check ."
   },
   "lint-staged": {
-    "*.{ts,js}": [
-      "prettier --write"
-    ],
-    "*.{html,css,scss,json,md}": [
+    "*.{ts,js,html,css,scss,json,md}": [
       "prettier --write"
     ]
   },
