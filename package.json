@@ -16,7 +16,11 @@
     "env:setup": "node -e \"const fs = require('fs'); const content = fs.readFileSync('src/environments/environment.example.ts', 'utf8'); fs.writeFileSync('src/environments/environment.ts', content); fs.writeFileSync('src/environments/environment.development.ts', content); console.log('Environment files created successfully!');\""
   },
   "lint-staged": {
-    "*.{ts,js,html,css,scss,json,md}": [
+    "*.{ts,html}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,css,scss,json,md}": [
       "prettier --write"
     ]
   },
