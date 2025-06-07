@@ -1,0 +1,373 @@
+import { definePreset } from '@primeng/themes';
+import Aura from '@primeng/themes/aura';
+
+// Custom Aura preset with purple/indigo color scheme
+export const CustomAura = definePreset(Aura, {
+  semantic: {
+    primary: {
+      50: '#f0f1fe',
+      100: '#e2e4fd',
+      200: '#cad0fb',
+      300: '#a9abff',
+      400: '#8894f1',
+      500: '#636ae8',
+      600: '#534fdc',
+      700: '#4640c2',
+      800: '#3a369d',
+      900: '#33337c',
+      950: '#1f1f3d',
+    },
+    colorScheme: {
+      light: {
+        surface: {
+          0: '#ffffff',
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+          950: '#020617',
+        },
+        text: {
+          color: '#0f172a',
+          hoverColor: '#1e293b',
+          mutedColor: '#64748b',
+          highlightBackground: '#636ae8',
+          highlightColor: '#ffffff',
+        },
+        content: {
+          background: '#ffffff',
+          hoverBackground: '#f8fafc',
+        },
+        overlay: {
+          select: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+          },
+        },
+        primary: {
+          color: '#636ae8',
+          contrastColor: '#ffffff',
+        },
+      },
+      dark: {
+        surface: {
+          0: '#0f172a',
+          50: '#1e293b',
+          100: '#334155',
+          200: '#475569',
+          300: '#64748b',
+          400: '#94a3b8',
+          500: '#cbd5e1',
+          600: '#e2e8f0',
+          700: '#f1f5f9',
+          800: '#f8fafc',
+          900: '#ffffff',
+          950: '#ffffff',
+        },
+        text: {
+          color: '#f8fafc',
+          hoverColor: '#ffffff',
+          mutedColor: '#94a3b8',
+          highlightBackground: '#8894f1',
+          highlightColor: '#0f172a',
+        },
+        content: {
+          background: '#0f172a',
+          hoverBackground: '#1e293b',
+        },
+        overlay: {
+          select: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            color: '#f8fafc',
+          },
+        },
+        primary: {
+          color: '#8894f1',
+          contrastColor: '#0f172a',
+        },
+      },
+    },
+  },
+  components: {
+    checkbox: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            hoverBorderColor: '#cbd5e1',
+            focusBorderColor: '#636ae8',
+            checkedBackground: '#636ae8',
+            checkedBorderColor: '#636ae8',
+            checkedHoverBackground: '#534fdc',
+            checkedHoverBorderColor: '#534fdc',
+            disabledBackground: '#f8fafc',
+            invalidBorderColor: '#ef4444',
+            borderRadius: '6px',
+            shadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+            width: '20px',
+            height: '20px',
+            focusRing: {
+              width: '2px',
+              style: 'solid',
+              color: 'rgba(99, 106, 232, 0.2)',
+              offset: '2px',
+            },
+          },
+          icon: {
+            color: 'transparent',
+            checkedColor: '#ffffff',
+            size: '14px',
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            hoverBorderColor: '#475569',
+            focusBorderColor: '#8894f1',
+            checkedBackground: '#8894f1',
+            checkedBorderColor: '#8894f1',
+            checkedHoverBackground: '#636ae8',
+            checkedHoverBorderColor: '#636ae8',
+            disabledBackground: '#334155',
+            invalidBorderColor: '#ef4444',
+            borderRadius: '6px',
+            shadow: '0 1px 2px 0 rgba(0, 0, 0, 0.3)',
+            width: '20px',
+            height: '20px',
+            focusRing: {
+              width: '2px',
+              style: 'solid',
+              color: 'rgba(136, 148, 241, 0.3)',
+              offset: '2px',
+            },
+          },
+          icon: {
+            color: 'transparent',
+            checkedColor: '#0f172a',
+            size: '14px',
+          },
+        },
+      },
+    },
+    divider: {
+      colorScheme: {
+        light: {
+          root: {
+            borderColor: '#e2e8f0',
+          },
+          content: {
+            background: '#ffffff',
+            color: '#0f172a',
+          },
+        },
+        dark: {
+          root: {
+            borderColor: '#334155',
+          },
+          content: {
+            background: '#0f172a',
+            color: '#f8fafc',
+          },
+        },
+      },
+    },
+    card: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+            shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          },
+          header: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+          },
+          content: {
+            background: '#ffffff',
+            color: '#0f172a',
+          },
+          footer: {
+            background: '#f8fafc',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            color: '#f8fafc',
+            shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)',
+          },
+          header: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            color: '#f8fafc',
+          },
+          content: {
+            background: '#1e293b',
+            color: '#f8fafc',
+          },
+          footer: {
+            background: '#334155',
+            borderColor: '#475569',
+            color: '#f8fafc',
+          },
+        },
+      },
+    },
+    select: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            hoverBorderColor: '#cbd5e1',
+            focusBorderColor: '#636ae8',
+            borderRadius: '8px',
+            fontSize: '14px',
+            height: '44px',
+          },
+          label: {
+            padding: '12px 16px',
+            fontSize: '14px',
+          },
+          overlay: {
+            background: '#ffffff',
+            borderColor: '#cbd5e1',
+            borderRadius: '8px',
+            shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          },
+          option: {
+            focusBackground: '#f8fafc',
+            selectedBackground: '#636ae8',
+            selectedFocusBackground: '#534fdc',
+            color: '#0f172a',
+            focusColor: '#0f172a',
+            selectedColor: '#ffffff',
+            selectedFocusColor: '#ffffff',
+            padding: '10px 12px',
+            borderRadius: '6px',
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            hoverBorderColor: '#475569',
+            focusBorderColor: '#8894f1',
+            borderRadius: '8px',
+            fontSize: '14px',
+            height: '44px',
+          },
+          label: {
+            padding: '12px 16px',
+            fontSize: '14px',
+          },
+          overlay: {
+            background: '#1e293b',
+            borderColor: '#475569',
+            borderRadius: '8px',
+            shadow: '0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
+          },
+          option: {
+            focusBackground: '#334155',
+            selectedBackground: '#636ae8',
+            selectedFocusBackground: '#534fdc',
+            color: '#f8fafc',
+            focusColor: '#ffffff',
+            selectedColor: '#ffffff',
+            selectedFocusColor: '#ffffff',
+            padding: '10px 12px',
+            borderRadius: '6px',
+          },
+        },
+      },
+    },
+    inputtext: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            hoverBorderColor: '#cbd5e1',
+            focusBorderColor: '#636ae8',
+            color: '#0f172a',
+            placeholderColor: '#64748b',
+            borderRadius: '8px',
+            fontSize: '14px',
+            padding: '12px 16px',
+            height: '44px',
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            hoverBorderColor: '#475569',
+            focusBorderColor: '#8894f1',
+            color: '#f8fafc',
+            placeholderColor: '#94a3b8',
+            borderRadius: '8px',
+            fontSize: '14px',
+            padding: '12px 16px',
+            height: '44px',
+          },
+        },
+      },
+    },
+    button: {
+      colorScheme: {
+        light: {
+          primary: {
+            background: '#636ae8',
+            hoverBackground: '#534fdc',
+            activeBackground: '#4640c2',
+            borderColor: '#636ae8',
+            hoverBorderColor: '#534fdc',
+            activeBorderColor: '#4640c2',
+            color: '#ffffff',
+            hoverColor: '#ffffff',
+            activeColor: '#ffffff',
+            borderRadius: '8px',
+            fontSize: '14px',
+            fontWeight: '500',
+            padding: '12px 24px',
+            height: '44px',
+          },
+        },
+        dark: {
+          primary: {
+            background: '#8894f1',
+            hoverBackground: '#636ae8',
+            activeBackground: '#534fdc',
+            borderColor: '#8894f1',
+            hoverBorderColor: '#636ae8',
+            activeBorderColor: '#534fdc',
+            color: '#0f172a',
+            hoverColor: '#ffffff',
+            activeColor: '#ffffff',
+            borderRadius: '8px',
+            fontSize: '14px',
+            fontWeight: '500',
+            padding: '12px 24px',
+            height: '44px',
+          },
+        },
+      },
+    },
+  },
+});
