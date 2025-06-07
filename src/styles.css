@@ -4,64 +4,19 @@
 @import 'primeicons/primeicons.css';
 
 @theme {
-  /* Primary color scale based on #636AE8 */
+  /* Light Theme Colors */
   --color-primary-50: #f0f1fe;
   --color-primary-100: #e2e4fd;
   --color-primary-200: #cad0fb;
-  --color-primary-300: #a9abff; /* Primary Light */
+  --color-primary-300: #a9abff;
   --color-primary-400: #8894f1;
-  --color-primary-500: #636ae8; /* Primary */
+  --color-primary-500: #636ae8;
   --color-primary-600: #534fdc;
   --color-primary-700: #4640c2;
   --color-primary-800: #3a369d;
   --color-primary-900: #33337c;
-  --color-primary-950: #1f1f3d; /* Text Main */
+  --color-primary-950: #1f1f3d;
 
-  /* Accent color scale based on #E8C063 */
-  --color-accent-50: #fdfcf0;
-  --color-accent-100: #fbf7e1;
-  --color-accent-200: #f5edbd;
-  --color-accent-300: #ede194;
-  --color-accent-400: #e8c063; /* Accent */
-  --color-accent-500: #e0a93e;
-  --color-accent-600: #d29325;
-  --color-accent-700: #b07b20;
-  --color-accent-800: #8e6420;
-  --color-accent-900: #73541d;
-  --color-accent-950: #422e0c;
-
-  /* Accent 1 color scale based on #E89C63 */
-  --color-accent1-50: #fdf6f0;
-  --color-accent1-100: #fbe9df;
-  --color-accent1-200: #f5d0be;
-  --color-accent1-300: #ecb092;
-  --color-accent1-400: #e89c63; /* Accent 1 */
-  --color-accent1-500: #de7a3a;
-  --color-accent1-600: #cf6425;
-  --color-accent1-700: #ac5020;
-  --color-accent1-800: #894020;
-  --color-accent1-900: #70361d;
-  --color-accent1-950: #3e1a0c;
-
-  /* Accent 2 color scale based on #63E8A5 */
-  --color-accent2-50: #f0fdf7;
-  --color-accent2-100: #dcfce7;
-  --color-accent2-200: #bbf7d0;
-  --color-accent2-300: #86efac;
-  --color-accent2-400: #63e8a5; /* Accent 2 */
-  --color-accent2-500: #22c55e;
-  --color-accent2-600: #16a34a;
-  --color-accent2-700: #15803d;
-  --color-accent2-800: #166534;
-  --color-accent2-900: #14532d;
-  --color-accent2-950: #052e16;
-
-  /* Custom text and background colors */
-  --color-text-main: #1f1f3d; /* Text Main */
-  --color-text-secondary: #5a5a75; /* Text Secondary */
-  --color-bg-light: #efefef; /* Background Light */
-
-  /* Surface colors for UI elements */
   --color-surface-0: #ffffff;
   --color-surface-50: #f8fafc;
   --color-surface-100: #f1f5f9;
@@ -74,192 +29,125 @@
   --color-surface-800: #1e293b;
   --color-surface-900: #0f172a;
   --color-surface-950: #020617;
+
+  /* Dark Theme Surface Colors */
+  --color-surface-dark-0: #0f172a;
+  --color-surface-dark-50: #1e293b;
+  --color-surface-dark-100: #334155;
+  --color-surface-dark-200: #475569;
+  --color-surface-dark-300: #64748b;
+  --color-surface-dark-400: #94a3b8;
+  --color-surface-dark-500: #cbd5e1;
+  --color-surface-dark-600: #e2e8f0;
+  --color-surface-dark-700: #f1f5f9;
+  --color-surface-dark-800: #f8fafc;
+  --color-surface-dark-900: #ffffff;
+
+  /* Semantic Colors for both themes */
+  --color-success-50: #f0fdf4;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+
+  --color-danger-50: #fef2f2;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+
+  --color-info-50: #eff6ff;
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
+  --color-info-700: #1d4ed8;
 }
 
-/* PrimeNG Integration - Maps @theme colors to PrimeNG variables */
+/* Dynamic color switching for dark mode */
 :root {
-  /* PrimeNG Primary Color Variables */
-  --p-primary-50: var(--color-primary-50);
-  --p-primary-100: var(--color-primary-100);
-  --p-primary-200: var(--color-primary-200);
-  --p-primary-300: var(--color-primary-300);
-  --p-primary-400: var(--color-primary-400);
-  --p-primary-500: var(--color-primary-500);
-  --p-primary-600: var(--color-primary-600);
-  --p-primary-700: var(--color-primary-700);
-  --p-primary-800: var(--color-primary-800);
-  --p-primary-900: var(--color-primary-900);
-  --p-primary-950: var(--color-primary-950);
-
-  /* PrimeNG Surface Variables */
-  --p-surface-0: var(--color-surface-0);
-  --p-surface-50: var(--color-surface-50);
-  --p-surface-100: var(--color-surface-100);
-  --p-surface-200: var(--color-surface-200);
-  --p-surface-300: var(--color-surface-300);
-  --p-surface-400: var(--color-surface-400);
-  --p-surface-500: var(--color-surface-500);
-  --p-surface-600: var(--color-surface-600);
-  --p-surface-700: var(--color-surface-700);
-  --p-surface-800: var(--color-surface-800);
-  --p-surface-900: var(--color-surface-900);
-  --p-surface-950: var(--color-surface-950);
-
-  /* PrimeNG Component Colors using custom palette */
-  --p-primary-color: var(--color-primary-500);
-  --p-primary-color-text: white;
-  --p-primary-contrast-color: white;
-
-  /* Custom text colors integrated with PrimeNG */
-  --p-text-color: var(--color-text-main);
-  --p-text-color-secondary: var(--color-text-secondary);
-  --p-text-color-muted: var(--color-surface-500);
-
-  /* Background colors */
-  --p-content-background: var(--color-surface-0);
-  --p-surface-ground: var(--color-bg-light);
-  --p-surface-section: var(--color-surface-50);
-  --p-surface-card: var(--color-surface-0);
-  --p-surface-border: var(--color-surface-200);
+  --bg-ground: var(--color-surface-50);
+  --bg-card: var(--color-surface-0);
+  --text-primary: var(--color-surface-900);
+  --text-secondary: var(--color-surface-600);
+  --text-muted: var(--color-surface-500);
+  --border-color: var(--color-surface-200);
 }
 
 [data-theme='dark'] {
-  --color-primary-50: #333a70;
-  --color-primary-100: #3e4489;
-  --color-primary-200: #464ca0;
-  --color-primary-300: #5156b8;
-  --color-primary-400: #585ed0;
-  --color-primary-500: #646ae8;
-  --color-primary-600: #6267f3;
-  --color-primary-700: #888cf6;
-  --color-primary-800: #aeb2f9;
-  --color-primary-900: #d4d8fc;
-  --color-primary-950: #d4d8fc;
-
-  --color-surface-0: #0c1220;
-  --color-surface-50: #1a202c;
-  --color-surface-100: #2d3748;
-  --color-surface-200: #334155;
-  --color-surface-300: #475569;
-  --color-surface-400: #64748b;
-  --color-surface-500: #94a3b8;
-  --color-surface-600: #cbd5e1;
-  --color-surface-700: #e2e8f0;
-  --color-surface-800: #f1f5f9;
-  --color-surface-900: #f8fafc;
-  --color-surface-950: #ffffff;
-
-  --p-primary-color-text: var(--color-surface-50);
-  --p-primary-contrast-color: var(--color-surface-50);
-
-  --p-text-color: var(--color-surface-900);
-  --p-text-color-secondary: var(--color-surface-600);
-  --p-text-color-muted: var(--color-surface-500);
-  --p-surface-card: var(--color-surface-100);
-  --p-surface-section: var(--color-surface-50);
-  --p-surface-border: var(--color-surface-300);
+  --bg-ground: var(--color-surface-dark-0);
+  --bg-card: var(--color-surface-dark-50);
+  --text-primary: var(--color-surface-dark-900);
+  --text-secondary: var(--color-surface-dark-600);
+  --text-muted: var(--color-surface-dark-500);
+  --border-color: var(--color-surface-dark-200);
 }
 
-a {
-  @apply cursor-pointer;
+/* Utility classes for easy usage */
+.bg-ground {
+  background-color: var(--bg-ground);
+}
+.bg-card {
+  background-color: var(--bg-card);
+}
+.text-primary {
+  color: var(--text-primary);
+}
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-muted {
+  color: var(--text-muted);
+}
+.border-default {
+  border-color: var(--border-color);
 }
 
-.container {
-  @apply mx-auto p-4 sm:px-6 lg:px-8;
+* {
+  box-sizing: border-box;
 }
 
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-@layer utilities {
-  /* Primary color utilities */
-  .text-primary {
-    color: var(--p-primary-color);
-  }
-
-  .bg-primary {
-    background-color: var(--p-primary-color);
-  }
-
-  .border-primary {
-    border-color: var(--p-primary-color);
-  }
-
-  /* Custom accent color utilities */
-  .text-accent {
-    color: var(--color-accent-400);
-  }
-
-  .bg-accent {
-    background-color: var(--color-accent-400);
-  }
-
-  .border-accent {
-    border-color: var(--color-accent-400);
-  }
-
-  .text-accent-1 {
-    color: var(--color-accent1-400);
-  }
-
-  .bg-accent-1 {
-    background-color: var(--color-accent1-400);
-  }
-
-  .border-accent-1 {
-    border-color: var(--color-accent1-400);
-  }
-
-  .text-accent-2 {
-    color: var(--color-accent2-400);
-  }
-
-  .bg-accent-2 {
-    background-color: var(--color-accent2-400);
-  }
-
-  .border-accent-2 {
-    border-color: var(--color-accent2-400);
-  }
-
-  /* Custom text color utilities */
-  .text-main {
-    color: var(--color-text-main);
-  }
-
-  .text-secondary {
-    color: var(--color-text-secondary);
-  }
-
-  /* Background utilities */
-  .bg-light {
-    background-color: var(--color-bg-light);
-  }
-}
 html {
-  background-color: var(--p-surface-ground);
-  color: var(--p-text-color);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  scroll-behavior: smooth;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  font-size: 14px;
 }
 
 body {
-  background-color: var(--p-content-background);
-  color: var(--p-text-color);
   margin: 0;
-  /* Modern system font stack for optimal cross-platform readability
-     Uses native fonts: San Francisco (Apple), Segoe UI (Windows), Roboto (Android)
-     Used by GitHub, X, Bootstrap, and many top sites */
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-ground);
+  color: var(--text-primary);
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Validation states */
+.ng-invalid.ng-dirty,
+.ng-invalid.ng-touched {
+  border-color: var(--color-danger-500) !important;
+}
+
+.ng-invalid.ng-dirty:focus,
+.ng-invalid.ng-touched:focus {
+  border-color: var(--color-danger-500) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-500) 10%, transparent) !important;
+}
+
+/* Focus styles for accessibility */
+.p-inputtext:focus-visible,
+.p-select:focus-visible,
+.p-button:focus-visible {
+  outline: 2px solid var(--color-primary-500) !important;
+  outline-offset: 2px !important;
 }
