@@ -14,6 +14,7 @@ export const roleGuard = (requiredRoles: string[]): CanActivateFn => {
     if (!authService.isAuthenticated()) {
       router.navigate(['/auth/login'], {
         queryParams: { returnUrl: state.url },
+        replaceUrl: true,
       });
       return false;
     }
@@ -22,7 +23,7 @@ export const roleGuard = (requiredRoles: string[]): CanActivateFn => {
       return true;
     }
 
-    router.navigate(['/unauthorized']);
+    router.navigate(['/unauthorized'], { replaceUrl: true });
     return false;
   };
 };
