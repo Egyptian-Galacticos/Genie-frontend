@@ -60,8 +60,6 @@ function shouldSkipAuth(url: string): boolean {
     '/auth/forgot-password',
     '/auth/reset-password',
     '/auth/email/verify',
-    '/auth/email/status',
-    '/auth/email/send-verification',
     '/public/',
   ];
 
