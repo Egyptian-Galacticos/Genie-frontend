@@ -1,0 +1,563 @@
+<div class="p-8 sm:p-10">
+  <div class="mb-8 text-center">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-3" style="color: var(--p-text-color)">
+      Company Information
+    </h2>
+    <p class="text-base" style="color: var(--p-text-muted-color)">
+      Tell us about your business to get started on the platform
+    </p>
+  </div>
+
+  <form [formGroup]="companyForm" class="space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="space-y-3">
+        <label for="name" class="block text-sm font-semibold" style="color: var(--p-text-color)">
+          Company Name *
+        </label>
+        <div class="relative">
+          <i
+            class="pi pi-building absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+            style="color: var(--p-text-muted-color)"
+          ></i>
+          <input
+            id="name"
+            type="text"
+            pInputText
+            formControlName="name"
+            class="w-full transition-all duration-300 focus:scale-105"
+            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            placeholder="Enter your company name"
+          />
+        </div>
+        @if (
+          companyForm.controls['name'].errors?.['required'] &&
+          (companyForm.controls['name'].dirty || companyForm.controls['name'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Company name is required
+              </span>
+            </div>
+          </div>
+        }
+        @if (
+          companyForm.controls['name'].errors?.['minlength'] &&
+          (companyForm.controls['name'].dirty || companyForm.controls['name'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Company name must be at least 2 characters
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="space-y-3">
+        <label for="email" class="block text-sm font-semibold" style="color: var(--p-text-color)">
+          Company Email *
+        </label>
+        <div class="relative">
+          <i
+            class="pi pi-envelope absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+            style="color: var(--p-text-muted-color)"
+          ></i>
+          <input
+            id="email"
+            type="email"
+            pInputText
+            formControlName="email"
+            class="w-full transition-all duration-300 focus:scale-105"
+            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            placeholder="Enter your company email"
+          />
+        </div>
+        @if (
+          companyForm.controls['email'].errors?.['required'] &&
+          (companyForm.controls['email'].dirty || companyForm.controls['email'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Company email is required
+              </span>
+            </div>
+          </div>
+        }
+        @if (
+          companyForm.controls['email'].errors?.['email'] &&
+          (companyForm.controls['email'].dirty || companyForm.controls['email'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Please enter a valid email address
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="space-y-3">
+        <label
+          for="company_phone"
+          class="block text-sm font-semibold"
+          style="color: var(--p-text-color)"
+        >
+          Company Phone *
+        </label>
+        <app-phone-input
+          formControlName="company_phone"
+          placeholder="+1 (555) 123-4567"
+        ></app-phone-input>
+        @if (
+          companyForm.controls['company_phone'].errors?.['required'] &&
+          (companyForm.controls['company_phone'].dirty ||
+            companyForm.controls['company_phone'].touched)
+        ) {
+          <div
+            class="p-3 mt-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Company phone is required
+              </span>
+            </div>
+          </div>
+        }
+        @if (
+          companyForm.controls['company_phone'].errors?.['invalidPhoneNumber'] &&
+          (companyForm.controls['company_phone'].dirty ||
+            companyForm.controls['company_phone'].touched)
+        ) {
+          <div
+            class="p-3 mt-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Please enter a valid phone number
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="space-y-3">
+        <label for="role" class="block text-sm font-semibold" style="color: var(--p-text-color)">
+          Business Role *
+        </label>
+        <p-select
+          id="role"
+          formControlName="role"
+          [options]="roles()"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select your business role"
+          class="w-full"
+          [showClear]="true"
+        ></p-select>
+        @if (
+          companyForm.controls['role'].errors?.['required'] &&
+          companyForm.controls['role'].touched &&
+          !companyForm.controls['role'].value
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Please select your business role
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="pt-4">
+        <h3 class="text-lg font-semibold mb-6" style="color: var(--p-text-color)">
+          <i class="pi pi-map-marker mr-2" style="color: var(--p-primary-500)"></i>
+          Company Address
+        </h3>
+
+        <div class="space-y-6">
+          <div class="space-y-3">
+            <label
+              for="streetAddress"
+              class="block text-sm font-semibold"
+              style="color: var(--p-text-color)"
+            >
+              Street Address *
+            </label>
+            <div class="relative">
+              <i
+                class="pi pi-home absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+                style="color: var(--p-text-muted-color)"
+              ></i>
+              <input
+                id="streetAddress"
+                type="text"
+                pInputText
+                formControlName="streetAddress"
+                class="w-full transition-all duration-300 focus:scale-105"
+                style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                placeholder="Enter street address"
+              />
+            </div>
+            @if (
+              companyForm.controls['streetAddress'].errors?.['required'] &&
+              (companyForm.controls['streetAddress'].dirty ||
+                companyForm.controls['streetAddress'].touched)
+            ) {
+              <div
+                class="p-3 rounded-xl border-l-4"
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                    color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                  );
+                  border-left-color: var(--p-red-500);
+                  border: 1px solid var(--p-red-200);
+                "
+              >
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+                  <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                    Street address is required
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="space-y-3">
+              <label
+                for="city"
+                class="block text-sm font-semibold"
+                style="color: var(--p-text-color)"
+              >
+                City *
+              </label>
+              <div class="relative">
+                <i
+                  class="pi pi-building absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+                  style="color: var(--p-text-muted-color)"
+                ></i>
+                <input
+                  id="city"
+                  type="text"
+                  pInputText
+                  formControlName="city"
+                  class="w-full transition-all duration-300 focus:scale-105"
+                  style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                  placeholder="Enter city"
+                />
+              </div>
+              @if (
+                companyForm.controls['city'].errors?.['required'] &&
+                (companyForm.controls['city'].dirty || companyForm.controls['city'].touched)
+              ) {
+                <div
+                  class="p-3 rounded-xl border-l-4"
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                      color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                    );
+                    border-left-color: var(--p-red-500);
+                    border: 1px solid var(--p-red-200);
+                  "
+                >
+                  <div class="flex items-center gap-2">
+                    <i
+                      class="pi pi-exclamation-triangle text-sm"
+                      style="color: var(--p-red-500)"
+                    ></i>
+                    <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                      City is required
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="space-y-3">
+              <label
+                for="stateProvince"
+                class="block text-sm font-semibold"
+                style="color: var(--p-text-color)"
+              >
+                State / Province *
+              </label>
+              <div class="relative">
+                <i
+                  class="pi pi-flag absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+                  style="color: var(--p-text-muted-color)"
+                ></i>
+                <input
+                  id="stateProvince"
+                  type="text"
+                  pInputText
+                  formControlName="stateProvince"
+                  class="w-full transition-all duration-300 focus:scale-105"
+                  style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                  placeholder="Enter state/province"
+                />
+              </div>
+              @if (
+                companyForm.controls['stateProvince'].errors?.['required'] &&
+                (companyForm.controls['stateProvince'].dirty ||
+                  companyForm.controls['stateProvince'].touched)
+              ) {
+                <div
+                  class="p-3 rounded-xl border-l-4"
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                      color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                    );
+                    border-left-color: var(--p-red-500);
+                    border: 1px solid var(--p-red-200);
+                  "
+                >
+                  <div class="flex items-center gap-2">
+                    <i
+                      class="pi pi-exclamation-triangle text-sm"
+                      style="color: var(--p-red-500)"
+                    ></i>
+                    <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                      State/Province is required
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="space-y-3">
+              <label
+                for="zipPostalCode"
+                class="block text-sm font-semibold"
+                style="color: var(--p-text-color)"
+              >
+                Zip / Postal Code *
+              </label>
+              <div class="relative">
+                <i
+                  class="pi pi-hashtag absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+                  style="color: var(--p-text-muted-color)"
+                ></i>
+                <input
+                  id="zipPostalCode"
+                  type="text"
+                  pInputText
+                  formControlName="zipPostalCode"
+                  class="w-full transition-all duration-300 focus:scale-105"
+                  style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                  placeholder="Enter zip/postal code"
+                />
+              </div>
+              @if (
+                companyForm.controls['zipPostalCode'].errors?.['required'] &&
+                (companyForm.controls['zipPostalCode'].dirty ||
+                  companyForm.controls['zipPostalCode'].touched)
+              ) {
+                <div
+                  class="p-3 rounded-xl border-l-4"
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                      color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                    );
+                    border-left-color: var(--p-red-500);
+                    border: 1px solid var(--p-red-200);
+                  "
+                >
+                  <div class="flex items-center gap-2">
+                    <i
+                      class="pi pi-exclamation-triangle text-sm"
+                      style="color: var(--p-red-500)"
+                    ></i>
+                    <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                      Zip/Postal code is required
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="space-y-3">
+              <label
+                for="country"
+                class="block text-sm font-semibold"
+                style="color: var(--p-text-color)"
+              >
+                Country *
+              </label>
+              <p-select
+                id="country"
+                formControlName="country"
+                [options]="countries()"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Select country"
+                class="w-full"
+                filter="true"
+                filterBy="label"
+                filterPlaceholder="Search countries..."
+                [showClear]="true"
+                [virtualScroll]="true"
+                [virtualScrollItemSize]="38"
+                appendTo="body"
+                styleClass="modern-select"
+              ></p-select>
+              @if (
+                companyForm.controls['country'].errors?.['required'] &&
+                companyForm.controls['country'].touched &&
+                !companyForm.controls['country'].value
+              ) {
+                <div
+                  class="p-3 rounded-xl border-l-4"
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                      color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                    );
+                    border-left-color: var(--p-red-500);
+                    border: 1px solid var(--p-red-200);
+                  "
+                >
+                  <div class="flex items-center gap-2">
+                    <i
+                      class="pi pi-exclamation-triangle text-sm"
+                      style="color: var(--p-red-500)"
+                    ></i>
+                    <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                      Please select a country
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div
+    class="flex flex-col sm:flex-row justify-between items-center mt-8 pt-6 gap-4"
+    style="border-top: 1px solid var(--p-surface-border)"
+  >
+    <div class="text-sm text-center sm:text-left" style="color: var(--p-text-muted-color)">
+      Already have an account?
+      <a
+        routerLink="/auth/login"
+        class="font-medium hover:underline ml-1 transition-all duration-300"
+        style="color: var(--p-primary-color)"
+      >
+        Sign in
+      </a>
+    </div>
+    <p-button
+      label="Next Step"
+      icon="pi pi-arrow-right"
+      iconPos="right"
+      [disabled]="companyForm.invalid"
+      (onClick)="onNext()"
+      size="large"
+      styleClass="w-full sm:w-auto transition-all duration-300 hover:scale-105"
+      [style]="{ 'border-radius': '12px' }"
+    ></p-button>
+  </div>
+</div>
