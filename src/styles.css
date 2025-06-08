@@ -133,12 +133,10 @@ body {
 }
 
 /* Validation states */
-.ng-invalid.ng-dirty,
 .ng-invalid.ng-touched {
   border-color: var(--color-danger-500) !important;
 }
 
-.ng-invalid.ng-dirty:focus,
 .ng-invalid.ng-touched:focus {
   border-color: var(--color-danger-500) !important;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-500) 10%, transparent) !important;
