@@ -1,0 +1,178 @@
+<section
+  class="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden"
+  style="background: linear-gradient(135deg, var(--p-surface-50) 0%, var(--p-surface-100) 100%)"
+>
+  <div
+    class="absolute top-10 left-10 w-40 h-40 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-green-500), var(--p-green-400))"
+  ></div>
+  <div
+    class="absolute bottom-10 right-10 w-32 h-32 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-blue-500), var(--p-blue-400))"
+  ></div>
+  <div
+    class="absolute top-1/3 right-10 w-24 h-24 rounded-full opacity-5"
+    style="background: linear-gradient(45deg, var(--p-indigo-500), var(--p-purple-500))"
+  ></div>
+  <div
+    class="absolute bottom-1/3 left-10 w-20 h-20 rounded-full opacity-8"
+    style="background: linear-gradient(45deg, var(--p-purple-500), var(--p-purple-400))"
+  ></div>
+
+  <div class="w-full max-w-2xl relative z-10">
+    <div
+      class="rounded-3xl overflow-hidden relative"
+      style="
+        background: var(--p-surface-0);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--p-surface-border);
+        backdrop-filter: blur(10px);
+      "
+    >
+      <div class="p-8 sm:p-12 text-center">
+        <div class="mb-8">
+          <div
+            class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 relative"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-green-500) 15%, transparent),
+                color-mix(in srgb, var(--p-green-400) 10%, transparent)
+              );
+            "
+          >
+            <div
+              class="w-16 h-16 rounded-full flex items-center justify-center relative"
+              style="background: linear-gradient(135deg, var(--p-green-500), var(--p-green-400))"
+            >
+              <i class="pi pi-check text-2xl text-white"></i>
+              <div
+                class="absolute inset-0 rounded-full animate-ping"
+                style="background: var(--p-green-500); opacity: 0.3"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <h1
+          class="text-3xl sm:text-4xl font-bold mb-4 leading-tight"
+          style="color: var(--p-text-color)"
+        >
+          Registration Successful!
+        </h1>
+
+        <p class="text-lg mb-8 leading-relaxed" style="color: var(--p-text-muted-color)">
+          Welcome to the Genie Platform! Your business account has been created and you're now
+          logged in.
+        </p>
+
+        <p-divider></p-divider>
+
+        <div class="mb-8">
+          <div
+            class="p-6 rounded-2xl mb-6"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-blue-500) 8%, transparent),
+                color-mix(in srgb, var(--p-blue-400) 5%, transparent)
+              );
+              border: 1px solid color-mix(in srgb, var(--p-blue-400) 50%, transparent);
+            "
+          >
+            <div class="flex items-center justify-center mb-4">
+              <div
+                class="w-12 h-12 rounded-full flex items-center justify-center"
+                style="background: linear-gradient(135deg, var(--p-blue-500), var(--p-blue-400))"
+              >
+                <i class="pi pi-envelope text-white"></i>
+              </div>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-3" style="color: var(--p-text-color)">
+              Verify Your Email Address
+            </h3>
+
+            <p class="text-sm leading-relaxed mb-4" style="color: var(--p-text-muted-color)">
+              We've sent a verification email to your registered email address. Please check your
+              inbox and click the verification link to activate your account.
+            </p>
+
+            <div
+              class="p-4 rounded-xl"
+              style="
+                background: var(--p-surface-100);
+                border: 1px solid color-mix(in srgb, var(--p-blue-400) 30%, transparent);
+              "
+            >
+              <div class="flex items-center gap-3">
+                <i class="pi pi-info-circle" style="color: var(--p-blue-500)"></i>
+                <div class="text-left">
+                  <p class="text-sm font-medium" style="color: var(--p-text-color)">
+                    Didn't receive the email?
+                  </p>
+                  <p class="text-xs" style="color: var(--p-text-muted-color)">
+                    Check your spam folder or contact support if the email doesn't arrive within 5
+                    minutes.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <p-button
+            label="Go to Dashboard"
+            icon="pi pi-th-large"
+            iconPos="right"
+            routerLink="/dashboard"
+            size="large"
+            styleClass="w-full sm:w-auto transition-all duration-300 hover:scale-105"
+            [style]="{ 'border-radius': '12px' }"
+          ></p-button>
+          <p-button
+            label="Go to Home"
+            icon="pi pi-home"
+            iconPos="right"
+            routerLink="/"
+            size="large"
+            severity="secondary"
+            styleClass="w-full sm:w-auto transition-all duration-300 hover:scale-105"
+            [style]="{ 'border-radius': '12px' }"
+          ></p-button>
+        </div>
+
+        <p-divider></p-divider>
+
+        <div class="text-center">
+          <p class="text-sm font-medium mb-3" style="color: var(--p-text-muted-color)">
+            Need help getting started?
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a
+              [href]="'mailto:' + environment.email"
+              class="flex items-center gap-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+              style="color: var(--p-primary-color)"
+            >
+              <i class="pi pi-envelope"></i>
+              Contact Support
+            </a>
+
+            <span class="hidden sm:block" style="color: var(--p-surface-400)">•</span>
+
+            <a
+              href="/help"
+              class="flex items-center gap-2 text-sm font-medium transition-all duration-300 hover:scale-105"
+              style="color: var(--p-primary-color)"
+            >
+              <i class="pi pi-question-circle"></i>
+              Help Center
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
