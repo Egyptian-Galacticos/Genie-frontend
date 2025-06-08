@@ -12,12 +12,12 @@ export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ) => {
-  const authService = inject(AuthService);
-
-  // Skip auth public endpoints
   if (shouldSkipAuth(req.url)) {
     return next(req);
   }
+
+  const authService = inject(AuthService);
+
   const token = authService.getAccessToken();
   const authReq = token
     ? req.clone({
@@ -27,20 +27,15 @@ export const authInterceptor: HttpInterceptorFn = (
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Handle 401 errors by attempting to refresh the token
       if (error.status === 401 && !shouldSkipAuth(req.url)) {
         return authService.refreshToken().pipe(
           switchMap((newToken: string) => {
-            // Retry the original request with the new token
             const retryReq = req.clone({
               headers: req.headers.set('Authorization', `Bearer ${newToken}`),
             });
             return next(retryReq);
           }),
-          catchError(refreshError => {
-            // If refresh fails, let the auth service handle logout
-            return throwError(() => refreshError);
-          })
+          catchError(refreshError => throwError(() => refreshError))
         );
       }
 
@@ -56,7 +51,7 @@ function shouldSkipAuth(url: string): boolean {
   const skipAuthEndpoints = [
     '/auth/login',
     '/auth/register',
-    '/auth/refresh',
+    '/auth/refresh-token',
     '/auth/forgot-password',
     '/auth/reset-password',
     '/auth/email/verify',
