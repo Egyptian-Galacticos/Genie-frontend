@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { DashboardLayoutComponent } from '../layouts/dashboard-layout/dashboard-layout.component';
+// import { DashboardLayoutComponent } from '../layouts/dashboard-layout/dashboard-layout.component';
 
 @Component({
   selector: 'app-seller-dashboard',
-  imports: [DashboardLayoutComponent],
+  imports: [],
   templateUrl: './seller-dashboard.component.html',
   styleUrl: './seller-dashboard.component.css',
 })
