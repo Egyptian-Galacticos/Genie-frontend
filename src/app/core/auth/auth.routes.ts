@@ -18,6 +18,14 @@ export const authRoutes: Routes = [
     title: 'Create Account - Genie',
   },
   {
+    path: 'register-success',
+    loadComponent: () =>
+      import('../auth/pages/register-success/register-success.component').then(
+        m => m.RegisterSuccessComponent
+      ),
+    title: 'Registration Successful - Genie',
+  },
+  {
     path: 'forgot-password',
     loadComponent: () =>
       import('../auth/pages/forgot-password/forgot-password.component').then(
