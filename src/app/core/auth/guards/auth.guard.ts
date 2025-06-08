@@ -1,6 +1,9 @@
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { CanActivateFn, CanMatchFn } from '@angular/router';
+import { map, filter, take } from 'rxjs/operators';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { AuthService } from '../services/auth.service';
 
 /**
@@ -9,15 +12,27 @@ import { AuthService } from '../services/auth.service';
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
+  const platformId = inject(PLATFORM_ID);
 
-  if (authService.isAuthenticated()) {
-    return true;
+  if (!isPlatformBrowser(platformId)) {
+    return false;
   }
-  router.navigate(['/auth/login'], {
-    queryParams: { returnUrl: state.url },
-    replaceUrl: true,
-  });
-  return false;
+
+  return toObservable(authService.isInitializing).pipe(
+    filter(isInitializing => !isInitializing),
+    take(1),
+    map(() => {
+      if (authService.isAuthenticated()) {
+        return true;
+      }
+
+      router.navigate(['/auth/login'], {
+        queryParams: { returnUrl: state.url },
+        replaceUrl: true,
+      });
+      return false;
+    })
+  );
 };
 
 /**
@@ -25,6 +40,15 @@ export const authGuard: CanActivateFn = (route, state) => {
  */
 export const authMatchGuard: CanMatchFn = () => {
   const authService = inject(AuthService);
+  const platformId = inject(PLATFORM_ID);
 
-  return authService.isAuthenticated();
+  if (!isPlatformBrowser(platformId)) {
+    return false;
+  }
+
+  return toObservable(authService.isInitializing).pipe(
+    filter(isInitializing => !isInitializing),
+    take(1),
+    map(() => authService.isAuthenticated())
+  );
 };
