@@ -20,10 +20,10 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'quotes',
+        path: 'quotes-requests',
         loadComponent: () =>
-          import('./features/seller-dashboard/quotes/quotes.component').then(
-            c => c.QuotesComponent
+          import('./features/seller-dashboard/quotes-requests/quotes-requests.component').then(
+            c => c.QuotesRequestsComponent
           ),
       },
     ],
