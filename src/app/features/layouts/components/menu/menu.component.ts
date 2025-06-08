@@ -27,14 +27,25 @@ export class MenuComponent implements OnInit {
                 routerLink: ['/dashboard/seller'],
               },
               {
-                label: 'Quotes',
-                icon: 'pi pi-fw pi-receipt',
-                routerLink: ['quotes'],
-              },
-              {
                 label: 'Customers',
                 icon: 'pi pi-fw pi-users',
                 routerLink: ['/dashboard/seller/customers'],
+              },
+              {
+                label: 'Quotes',
+                icon: 'pi pi-fw pi-receipt',
+                items: [
+                  {
+                    label: 'Requests',
+                    icon: 'pi pi-fw pi-receipt',
+                    routerLink: ['/dashboard/seller/quotes-requests'],
+                  },
+                  {
+                    label: 'Quotes',
+                    icon: 'pi pi-fw pi-receipt',
+                    routerLink: ['/dashboard/seller/quotes'],
+                  },
+                ],
               },
               {
                 label: 'Contracts',

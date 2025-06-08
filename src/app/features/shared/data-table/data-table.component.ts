@@ -1,6 +1,6 @@
 import { Component, input, model, output, TemplateRef } from '@angular/core';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
-import { dataTableColumn, ISellerQuote } from '../utils/interfaces';
+import { dataTableColumn, IRequestForQuote } from '../utils/interfaces';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SortMeta } from 'primeng/api';
 import { RequestOptions } from '../../../core/interfaces/api.interface';
@@ -25,7 +25,7 @@ import { NgTemplateOutlet } from '@angular/common';
   styleUrl: './data-table.component.css',
 })
 export class DataTableComponent {
-  data = model.required<ISellerQuote[]>();
+  data = model.required<IRequestForQuote[]>();
   rows = model.required<number>();
   multiSortMeta = model.required<SortMeta[]>();
   totalRecords = model.required<number>();

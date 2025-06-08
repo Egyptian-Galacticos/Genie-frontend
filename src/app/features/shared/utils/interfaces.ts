@@ -1,6 +1,6 @@
 import { TableLazyLoadEvent } from 'primeng/table';
 
-export interface ISellerQuote {
+export interface IRequestForQuote {
   id: string;
   quote: string;
   status: string;
