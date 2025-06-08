@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -29,19 +29,21 @@ export class ForgotPasswordComponent {
   private readonly authService = inject(AuthService);
 
   readonly submitted = signal<boolean>(false);
+  readonly loading = signal<boolean>(false);
 
   readonly forgotPasswordForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
   });
 
-  readonly loading = computed(() => this.authService.isLoading());
-
   onSubmit(): void {
     if (this.forgotPasswordForm.valid && !this.loading()) {
       const email = this.forgotPasswordForm.value.email as string;
 
+      this.loading.set(true);
+
       this.authService.forgotPassword(email).subscribe({
         next: response => {
+          this.loading.set(false);
           this.submitted.set(true);
           this.messageService.add({
             severity: 'success',
@@ -51,6 +53,7 @@ export class ForgotPasswordComponent {
           });
         },
         error: error => {
+          this.loading.set(false);
           const errorMsg = error.error?.message || 'Failed to send reset email. Please try again.';
           this.messageService.add({
             severity: 'error',
