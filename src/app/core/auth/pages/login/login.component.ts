@@ -15,6 +15,7 @@ import { MessageService } from 'primeng/api';
 
 import { AuthService } from '../../services/auth.service';
 import { LoginRequest } from '../../interfaces/login.interface';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -48,6 +49,8 @@ export class LoginComponent {
 
   readonly loading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
+
+  readonly environment = environment;
 
   readonly emailErrors = computed(() => {
     const control = this.loginForm.get('email');
