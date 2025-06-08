@@ -1,0 +1,87 @@
+<div class="flex flex-col gap-6 min-h-full w-full">
+  <div class="flex flex-row gap-y-4 gap-xl-2 justify-between flex-wrap">
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+      <app-dashboard-info-card
+        [cardTitle]="'New Quotes'"
+        [cardDescription]="'5'"
+        [cardIconClass]="'pi pi-envelope'"
+      />
+    </div>
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+      <app-dashboard-info-card
+        [cardTitle]="'In Progress Quotes'"
+        [cardDescription]="'3'"
+        [cardIconClass]="'pi pi-spinner-dotted'"
+      />
+    </div>
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+      <app-dashboard-info-card
+        [cardTitle]="'Completed'"
+        [cardDescription]="'1'"
+        [cardIconClass]="'pi pi-check-circle'"
+      />
+    </div>
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+      <app-dashboard-info-card
+        [cardTitle]="'Unopened Quotes'"
+        [cardDescription]="'0'"
+        [cardIconClass]="'pi pi-info-circle'"
+      />
+      <div class="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4"></div>
+    </div>
+  </div>
+  <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
+    <div class="px-6 flex flex-col gap-1">
+      <span class="font-bold text-2xl"> Recent Quotes </span>
+      <span class="text-sm text-secondary">
+        Overview of recent quotes, highlighting those needing attention
+      </span>
+    </div>
+    <div>
+      <app-data-table
+        [cols]="cols"
+        [rows]="rows"
+        [totalRecords]="totalRecords"
+        [dataLoading]="quotesLoading"
+        [data]="quotes"
+        (loadDataEvent)="loadQuotes($event)"
+        [multiSortMeta]="multiSortMeta"
+        [bodyTemplate]="customBodyTemplate"
+      >
+      </app-data-table>
+    </div>
+  </div>
+</div>
+
+<ng-template #customBodyTemplate let-rowData let-rowIndex="rowIndex">
+  <tr [class]="rowData.status === 'new' ? 'surface-50' : ''">
+    <td class="text-center">{{ rowData.id }}</td>
+    <td class="text-center">{{ rowData.buyer.name }}</td>
+    <td class="text-center">{{ rowData.product.name }}</td>
+    <td class="text-center text-nowrap">{{ rowData.date }}</td>
+    <td class="text-center">
+      <p-badge
+        [value]="rowData.status"
+        [severity]="rowData.status === 'New' ? 'success' : 'warn'"
+        [badgeSize]="'large'"
+        [styleClass]="'text-surface-500 font-normal  bg-transparent-75 px-5 rounded-4xl'"
+      />
+    </td>
+    <td class="flex justify-around">
+      <p-button
+        [icon]="'pi pi-comment'"
+        styleClass="p-button-text"
+        label="chat"
+        [rounded]="true"
+        [outlined]="true"
+        [raised]="true"
+      />
+      <p-button
+        [icon]="'pi pi-eye'"
+        styleClass="p-button-text"
+        [rounded]="true"
+        [outlined]="true"
+      />
+    </td>
+  </tr>
+</ng-template>
