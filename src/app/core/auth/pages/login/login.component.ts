@@ -83,10 +83,6 @@ export class LoginComponent {
       }
     });
   }
-
-  /**
-   * Handle form submission
-   */
   onSubmit(): void {
     if (this.loginForm.valid && !this.loading()) {
       const formValue = this.loginForm.value;
@@ -110,7 +106,7 @@ export class LoginComponent {
           });
 
           const returnUrl = this.route.snapshot.queryParams['returnUrl'];
-          const redirectUrl = returnUrl && returnUrl.startsWith('/') ? returnUrl : '/dashboard';
+          const redirectUrl = returnUrl && returnUrl.startsWith('/') ? returnUrl : '/';
           this.router.navigate([redirectUrl]);
         },
         error: error => {
@@ -133,30 +129,18 @@ export class LoginComponent {
     }
   }
 
-  /**
-   * Navigate to forgot password page
-   */
   goToForgotPassword(): void {
     this.router.navigate(['/auth/forgot-password']);
   }
 
-  /**
-   * Navigate to register page
-   */
   goToRegister(): void {
     this.router.navigate(['/auth/register']);
   }
 
-  /**
-   * Clear form errors when user starts typing
-   */
   onFieldFocus(): void {
     this.error.set(null);
   }
 
-  /**
-   * Check if the error indicates account suspension
-   */
   private isAccountSuspended(error: { error?: { message?: string }; status?: number }): boolean {
     const is403Error = error.status === 403;
     const hasAccountSuspendedMessage = error.error?.message === 'Account suspended';
