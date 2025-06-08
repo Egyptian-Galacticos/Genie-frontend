@@ -1,0 +1,146 @@
+<section class="flex flex-col items-center justify-center min-h-screen p-6">
+  <div class="w-full max-w-md">
+    <div
+      class="rounded-xl p-8 shadow-xl border"
+      style="background: var(--p-content-background); border-color: var(--p-content-border-color)"
+    >
+      <div class="text-center mb-8">
+        <div class="mb-4">
+          <i class="pi pi-envelope text-6xl" style="color: var(--p-primary-color)"></i>
+        </div>
+        <h1 class="text-3xl font-bold mb-2" style="color: var(--p-text-color)">
+          Email Verification
+        </h1>
+        <p class="text-base" style="color: var(--p-text-muted-color)">
+          We're verifying your email address
+        </p>
+      </div>
+
+      @if (verifying()) {
+        <div class="text-center space-y-6">
+          <div class="flex justify-center">
+            <p-progressSpinner
+              styleClass="w-12 h-12"
+              strokeWidth="4"
+              [style]="{ color: 'var(--p-primary-color)' }"
+            ></p-progressSpinner>
+          </div>
+          <div class="space-y-3">
+            <h2 class="text-xl font-semibold" style="color: var(--p-text-color)">
+              Verifying Your Email
+            </h2>
+            <p class="text-base" style="color: var(--p-text-muted-color)">
+              Please wait while we verify your email address...
+            </p>
+          </div>
+        </div>
+      } @else if (verified()) {
+        <div class="text-center space-y-6">
+          <div class="flex justify-center">
+            <div
+              class="w-16 h-16 rounded-full flex items-center justify-center"
+              style="background: var(--p-green-50); color: var(--p-green-500)"
+            >
+              <i class="pi pi-check text-2xl"></i>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <h2 class="text-2xl font-bold" style="color: var(--p-text-color)">Email Verified!</h2>
+            <p class="text-base leading-relaxed" style="color: var(--p-text-muted-color)">
+              Your email address has been successfully verified. You can now access all features of
+              your account.
+            </p>
+            <p-message
+              severity="success"
+              text="Welcome! Your account is now fully activated."
+            ></p-message>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            @if (isAuthenticated()) {
+              <p-button routerLink="/dashboard" styleClass="w-full" size="large">
+                <i class="pi pi-home mr-2"></i>
+                Go to Dashboard
+              </p-button>
+            } @else {
+              <p-button routerLink="/auth/login" styleClass="w-full" size="large">
+                <i class="pi pi-sign-in mr-2"></i>
+                Sign In to Your Account
+              </p-button>
+            }
+            <p-button routerLink="/" styleClass="w-full" [outlined]="true" size="large">
+              <i class="pi pi-home mr-2"></i>
+              Go to Homepage
+            </p-button>
+          </div>
+        </div>
+      } @else {
+        <div class="text-center space-y-6">
+          <div class="flex justify-center">
+            <div
+              class="w-16 h-16 rounded-full flex items-center justify-center"
+              style="background: var(--p-red-50); color: var(--p-red-500)"
+            >
+              <i class="pi pi-times text-2xl"></i>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <h2 class="text-2xl font-bold" style="color: var(--p-text-color)">
+              Verification Failed
+            </h2>
+            <p class="text-base leading-relaxed" style="color: var(--p-text-muted-color)">
+              {{
+                errorMessage() ||
+                  "We couldn't verify your email address. The verification link may be invalid or expired."
+              }}
+            </p>
+            <div
+              class="text-sm p-4 rounded-lg border-l-4"
+              style="
+                background: var(--p-highlight-background);
+                border-color: var(--p-red-500);
+                color: var(--p-highlight-color);
+              "
+            >
+              <div class="flex items-start gap-2">
+                <i class="pi pi-info-circle mt-0.5" style="color: var(--p-red-500)"></i>
+                <div class="space-y-1">
+                  <div class="font-medium">What to do next:</div>
+                  <ul class="text-xs space-y-0.5 list-disc ml-4">
+                    <li>Check your email for a new verification link</li>
+                    <li>Make sure you're using the latest link sent to you</li>
+                    <li>Contact support if you continue having issues</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <p-button routerLink="/auth/login" styleClass="w-full" size="large">
+              <i class="pi pi-arrow-left mr-2"></i>
+              Back to Login
+            </p-button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="text-center mt-6">
+      <p class="text-sm" style="color: var(--p-text-muted-color)">
+        Need help?
+        <a
+          href="mailto:support@example.com"
+          class="font-medium hover:underline"
+          style="color: var(--p-primary-color)"
+        >
+          Contact Support
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <p-toast></p-toast>
+</section>
