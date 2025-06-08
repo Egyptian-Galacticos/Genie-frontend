@@ -10,7 +10,6 @@ import { environment } from '../../../../../environments/environment';
   selector: 'app-register-success',
   imports: [CommonModule, RouterModule, ButtonModule, CardModule, DividerModule],
   templateUrl: './register-success.component.html',
-  styleUrl: './register-success.component.css',
 })
 export class RegisterSuccessComponent {
   readonly environment = environment;
