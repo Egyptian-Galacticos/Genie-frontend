@@ -51,3 +51,14 @@ export interface IProduct {
 export interface CustomTableLazyLoadEvent extends TableLazyLoadEvent {
   customProperty?: string;
 }
+
+export interface dataTableColumn {
+  field: string;
+  header: string;
+  sortableColumn?: boolean;
+  filterableColumn?: boolean;
+  filterType?: string;
+  matchMode?: string;
+  filterPlaceholder?: string;
+  options?: string[];
+}
