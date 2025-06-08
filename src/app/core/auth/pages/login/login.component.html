@@ -1,0 +1,265 @@
+<section
+  class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+  style="background: linear-gradient(135deg, var(--p-surface-50) 0%, var(--p-surface-100) 100%)"
+>
+  <div
+    class="absolute top-10 left-10 w-32 h-32 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-primary-500), var(--p-primary-300))"
+  ></div>
+  <div
+    class="absolute bottom-10 right-10 w-20 h-20 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-blue-500), var(--p-blue-300))"
+  ></div>
+  <div
+    class="absolute top-1/2 right-1/4 w-16 h-16 rounded-full opacity-5"
+    style="background: linear-gradient(45deg, var(--p-green-500), var(--p-green-300))"
+  ></div>
+
+  <div class="w-full max-w-lg relative z-10">
+    <div
+      class="rounded-3xl p-10 relative"
+      style="
+        background: var(--p-surface-0);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--p-surface-border);
+        backdrop-filter: blur(10px);
+      "
+    >
+      <div class="text-center mb-10">
+        <div class="mb-6">
+          <div
+            class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 relative"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-primary-500) 15%, transparent),
+                color-mix(in srgb, var(--p-primary-400) 10%, transparent)
+              );
+            "
+          >
+            <div
+              class="w-16 h-16 rounded-full flex items-center justify-center relative"
+              style="
+                background: linear-gradient(135deg, var(--p-primary-500), var(--p-primary-400));
+              "
+            >
+              <i class="pi pi-user text-2xl text-white"></i>
+              <div
+                class="absolute inset-0 rounded-full animate-ping"
+                style="background: var(--p-primary-500); opacity: 0.3"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <h1
+          class="text-4xl font-bold mb-4"
+          style="color: var(--p-text-color); background: transparent"
+        >
+          Welcome Back
+        </h1>
+        <p class="text-lg leading-relaxed" style="color: var(--p-text-muted-color)">
+          Sign in to your account
+        </p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="space-y-3">
+          <label for="email" class="block text-sm font-semibold" style="color: var(--p-text-color)"
+            >Email Address</label
+          >
+          <div class="relative">
+            <i
+              class="pi pi-envelope absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+              style="color: var(--p-text-muted-color)"
+            ></i>
+            <input
+              id="email"
+              type="email"
+              pInputText
+              formControlName="email"
+              class="w-full transition-all duration-300 focus:scale-105"
+              style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+              placeholder="Enter your email"
+            />
+          </div>
+          @if (
+            loginForm.controls['email'].errors?.['required'] &&
+            (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)
+          ) {
+            <div
+              class="p-3 rounded-xl border-l-4"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                  color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                );
+                border-left-color: var(--p-red-500);
+                border: 1px solid var(--p-red-200);
+              "
+            >
+              <div class="flex items-center gap-2">
+                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+                <span class="text-sm font-medium" style="color: var(--p-red-700)"
+                  >Email is required</span
+                >
+              </div>
+            </div>
+          }
+          @if (
+            loginForm.controls['email'].errors?.['email'] &&
+            (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)
+          ) {
+            <div
+              class="p-3 rounded-xl border-l-4"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                  color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                );
+                border-left-color: var(--p-red-500);
+                border: 1px solid var(--p-red-200);
+              "
+            >
+              <div class="flex items-center gap-2">
+                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+                <span class="text-sm font-medium" style="color: var(--p-red-700)"
+                  >Please enter a valid email address</span
+                >
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="space-y-3">
+          <label
+            for="password"
+            class="block text-sm font-semibold"
+            style="color: var(--p-text-color)"
+            >Password</label
+          >
+          <div class="relative">
+            <i
+              class="pi pi-lock absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+              style="color: var(--p-text-muted-color)"
+            ></i>
+            <input
+              id="password"
+              type="password"
+              pPassword
+              [feedback]="false"
+              formControlName="password"
+              class="w-full transition-all duration-300 focus:scale-105"
+              style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+              placeholder="Enter your password"
+            />
+          </div>
+          @if (
+            loginForm.controls['password'].errors?.['required'] &&
+            (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)
+          ) {
+            <div
+              class="p-3 rounded-xl border-l-4"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                  color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                );
+                border-left-color: var(--p-red-500);
+                border: 1px solid var(--p-red-200);
+              "
+            >
+              <div class="flex items-center gap-2">
+                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+                <span class="text-sm font-medium" style="color: var(--p-red-700)"
+                  >Password is required</span
+                >
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="flex justify-between items-center">
+          <div class="flex items-center">
+            <p-checkbox
+              [binary]="true"
+              formControlName="rememberMe"
+              inputId="rememberMe"
+            ></p-checkbox>
+            <label
+              for="rememberMe"
+              class="ml-3 text-sm cursor-pointer select-none font-medium"
+              style="color: var(--p-text-color)"
+            >
+              Remember me
+            </label>
+          </div>
+          <a
+            routerLink="/auth/forgot-password"
+            class="text-sm hover:underline font-medium transition-all duration-300 hover:scale-105"
+            style="color: var(--p-primary-color)"
+          >
+            Forgot Password?
+          </a>
+        </div>
+
+        <p-button
+          type="submit"
+          label="Sign In"
+          icon="pi pi-sign-in"
+          [loading]="loading()"
+          [disabled]="loginForm.invalid || loading()"
+          styleClass="w-full transition-all duration-300 hover:scale-105"
+          size="large"
+          [style]="{ 'border-radius': '12px' }"
+        />
+      </form>
+
+      <p-divider align="center" styleClass="my-8">
+        <span class="text-sm font-medium" style="color: var(--p-text-muted-color)">OR</span>
+      </p-divider>
+
+      <div class="text-center">
+        <p class="text-sm" style="color: var(--p-text-muted-color)">
+          Don't have an account?
+          <a
+            routerLink="/auth/register"
+            class="font-medium hover:underline ml-1 transition-all duration-300 hover:scale-105"
+            style="color: var(--p-primary-color)"
+          >
+            Create an account
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="absolute -bottom-4 -right-4">
+      <p-button
+        icon="pi pi-question-circle"
+        [rounded]="true"
+        size="large"
+        severity="help"
+        [outlined]="true"
+        styleClass="shadow-lg hover:scale-110 transition-all duration-300"
+        pTooltip="Need help signing in?"
+        tooltipPosition="left"
+      ></p-button>
+    </div>
+
+    <div class="text-center mt-8">
+      <p class="text-sm" style="color: var(--p-text-muted-color)">
+        Need assistance?
+        <a
+          href="mailto:genienotify3@gmail.com"
+          class="font-medium hover:underline ml-1 transition-all duration-300"
+          style="color: var(--p-primary-color)"
+        >
+          Contact Support
+        </a>
+      </p>
+    </div>
+  </div>
+  <p-toast></p-toast>
+</section>
