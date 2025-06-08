@@ -1,114 +1,231 @@
-<section class="flex flex-col items-center justify-center min-h-screen p-6">
-  <div class="w-full max-w-md">
+<section
+  class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden"
+  style="background: linear-gradient(135deg, var(--p-surface-50) 0%, var(--p-surface-100) 100%)"
+>
+  <!-- Background decorative elements -->
+  <div
+    class="absolute top-10 left-10 w-32 h-32 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-blue-500), var(--p-blue-300))"
+  ></div>
+  <div
+    class="absolute bottom-10 right-10 w-20 h-20 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-green-500), var(--p-green-300))"
+  ></div>
+  <div
+    class="absolute top-1/2 right-1/4 w-16 h-16 rounded-full opacity-5"
+    style="background: linear-gradient(45deg, var(--p-purple-500), var(--p-purple-300))"
+  ></div>
+
+  <div class="w-full max-w-lg relative z-10">
     <div
-      class="rounded-xl p-8 shadow-xl border"
-      style="background: var(--p-content-background); border-color: var(--p-content-border-color)"
+      class="rounded-3xl p-10 relative"
+      style="
+        background: var(--p-surface-0);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--p-surface-border);
+        backdrop-filter: blur(10px);
+      "
     >
-      <div class="text-center mb-8">
-        <div class="mb-4">
-          <i class="pi pi-envelope text-6xl" style="color: var(--p-primary-color)"></i>
+      <div class="text-center mb-10">
+        <div class="mb-6">
+          <div
+            class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 relative"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-blue-500) 15%, transparent),
+                color-mix(in srgb, var(--p-blue-400) 10%, transparent)
+              );
+            "
+          >
+            <div
+              class="w-16 h-16 rounded-full flex items-center justify-center relative"
+              style="background: linear-gradient(135deg, var(--p-blue-500), var(--p-blue-400))"
+            >
+              <i class="pi pi-envelope text-2xl text-white"></i>
+              <div
+                class="absolute inset-0 rounded-full animate-ping"
+                style="background: var(--p-blue-500); opacity: 0.3"
+              ></div>
+            </div>
+          </div>
         </div>
-        <h1 class="text-3xl font-bold mb-2" style="color: var(--p-text-color)">
+        <h1 class="text-4xl font-bold mb-4" style="color: var(--p-text-color)">
           Email Verification
         </h1>
-        <p class="text-base" style="color: var(--p-text-muted-color)">
+        <p class="text-lg leading-relaxed" style="color: var(--p-text-muted-color)">
           We're verifying your email address
         </p>
       </div>
 
       @if (verifying()) {
-        <div class="text-center space-y-6">
+        <div class="text-center space-y-8">
           <div class="flex justify-center">
-            <p-progressSpinner
-              styleClass="w-12 h-12"
-              strokeWidth="4"
-              [style]="{ color: 'var(--p-primary-color)' }"
-            ></p-progressSpinner>
+            <div class="relative">
+              <p-progressSpinner
+                styleClass="w-16 h-16"
+                strokeWidth="3"
+                [style]="{ color: 'var(--p-primary-color)' }"
+              ></p-progressSpinner>
+              <div
+                class="absolute inset-0 rounded-full animate-ping"
+                style="background: var(--p-primary-500); opacity: 0.2"
+              ></div>
+            </div>
           </div>
-          <div class="space-y-3">
-            <h2 class="text-xl font-semibold" style="color: var(--p-text-color)">
+          <div class="space-y-4">
+            <h2 class="text-2xl font-semibold" style="color: var(--p-text-color)">
               Verifying Your Email
             </h2>
-            <p class="text-base" style="color: var(--p-text-muted-color)">
+            <p class="text-lg leading-relaxed" style="color: var(--p-text-muted-color)">
               Please wait while we verify your email address...
             </p>
+            <div
+              class="p-4 rounded-xl border-l-4"
+              style="
+                background: var(--p-surface-100);
+                border-left-color: var(--p-primary-500);
+                border: 1px solid var(--p-surface-300);
+              "
+            >
+              <div class="flex items-center gap-3">
+                <i class="pi pi-info-circle" style="color: var(--p-primary-500)"></i>
+                <span class="text-sm font-medium" style="color: var(--p-text-color)">
+                  This process usually takes just a few seconds
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       } @else if (verified()) {
-        <div class="text-center space-y-6">
+        <div class="text-center space-y-8">
           <div class="flex justify-center">
             <div
-              class="w-16 h-16 rounded-full flex items-center justify-center"
-              style="background: var(--p-green-50); color: var(--p-green-500)"
+              class="w-24 h-24 rounded-full flex items-center justify-center relative"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  color-mix(in srgb, var(--p-green-500) 15%, transparent),
+                  color-mix(in srgb, var(--p-green-400) 10%, transparent)
+                );
+              "
             >
-              <i class="pi pi-check text-2xl"></i>
+              <div
+                class="w-16 h-16 rounded-full flex items-center justify-center"
+                style="background: linear-gradient(135deg, var(--p-green-500), var(--p-green-400))"
+              >
+                <i class="pi pi-check text-2xl text-white"></i>
+              </div>
             </div>
           </div>
 
-          <div class="space-y-3">
-            <h2 class="text-2xl font-bold" style="color: var(--p-text-color)">Email Verified!</h2>
-            <p class="text-base leading-relaxed" style="color: var(--p-text-muted-color)">
+          <div class="space-y-4">
+            <h2 class="text-3xl font-bold" style="color: var(--p-text-color)">Email Verified!</h2>
+            <p class="text-lg leading-relaxed" style="color: var(--p-text-muted-color)">
               Your email address has been successfully verified. You can now access all features of
               your account.
             </p>
-            <p-message
-              severity="success"
-              text="Welcome! Your account is now fully activated."
-            ></p-message>
+            <div
+              class="p-4 rounded-xl border-l-4"
+              style="
+                background: var(--p-surface-100);
+                border-left-color: var(--p-green-500);
+                border: 1px solid var(--p-surface-300);
+              "
+            >
+              <div class="flex items-center gap-3">
+                <i class="pi pi-star text-lg" style="color: var(--p-green-500)"></i>
+                <span class="text-sm font-medium" style="color: var(--p-text-color)">
+                  Welcome! Your account is now fully activated.
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div class="flex flex-col gap-3">
+          <div class="flex flex-col gap-4">
             @if (isAuthenticated()) {
-              <p-button routerLink="/dashboard" styleClass="w-full" size="large">
+              <p-button
+                routerLink="/dashboard"
+                styleClass="w-full transition-all duration-300 hover:scale-105"
+                size="large"
+                [style]="{ 'border-radius': '12px' }"
+              >
                 <i class="pi pi-home mr-2"></i>
                 Go to Dashboard
               </p-button>
             } @else {
-              <p-button routerLink="/auth/login" styleClass="w-full" size="large">
+              <p-button
+                routerLink="/auth/login"
+                styleClass="w-full transition-all duration-300 hover:scale-105"
+                size="large"
+                [style]="{ 'border-radius': '12px' }"
+              >
                 <i class="pi pi-sign-in mr-2"></i>
                 Sign In to Your Account
               </p-button>
             }
-            <p-button routerLink="/" styleClass="w-full" [outlined]="true" size="large">
+            <p-button
+              routerLink="/"
+              styleClass="w-full transition-all duration-300 hover:scale-105"
+              [outlined]="true"
+              size="large"
+              [style]="{ 'border-radius': '12px' }"
+            >
               <i class="pi pi-home mr-2"></i>
               Go to Homepage
             </p-button>
           </div>
         </div>
       } @else {
-        <div class="text-center space-y-6">
+        <div class="text-center space-y-8">
           <div class="flex justify-center">
             <div
-              class="w-16 h-16 rounded-full flex items-center justify-center"
-              style="background: var(--p-red-50); color: var(--p-red-500)"
+              class="w-24 h-24 rounded-full flex items-center justify-center relative"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  color-mix(in srgb, var(--p-red-500) 15%, transparent),
+                  color-mix(in srgb, var(--p-red-400) 10%, transparent)
+                );
+              "
             >
-              <i class="pi pi-times text-2xl"></i>
+              <div
+                class="w-16 h-16 rounded-full flex items-center justify-center"
+                style="background: linear-gradient(135deg, var(--p-red-500), var(--p-red-400))"
+              >
+                <i class="pi pi-times text-2xl text-white"></i>
+              </div>
             </div>
           </div>
 
-          <div class="space-y-3">
-            <h2 class="text-2xl font-bold" style="color: var(--p-text-color)">
+          <div class="space-y-4">
+            <h2 class="text-3xl font-bold" style="color: var(--p-text-color)">
               Verification Failed
             </h2>
-            <p class="text-base leading-relaxed" style="color: var(--p-text-muted-color)">
+            <p class="text-lg leading-relaxed" style="color: var(--p-text-muted-color)">
               {{
                 errorMessage() ||
                   "We couldn't verify your email address. The verification link may be invalid or expired."
               }}
             </p>
             <div
-              class="text-sm p-4 rounded-lg border-l-4"
+              class="text-sm p-4 rounded-xl border-l-4"
               style="
-                background: var(--p-highlight-background);
-                border-color: var(--p-red-500);
-                color: var(--p-highlight-color);
+                background: var(--p-surface-100);
+                border-left-color: var(--p-red-500);
+                border: 1px solid var(--p-surface-300);
               "
             >
-              <div class="flex items-start gap-2">
+              <div class="flex items-start gap-3">
                 <i class="pi pi-info-circle mt-0.5" style="color: var(--p-red-500)"></i>
-                <div class="space-y-1">
-                  <div class="font-medium">What to do next:</div>
-                  <ul class="text-xs space-y-0.5 list-disc ml-4">
+                <div class="space-y-2">
+                  <div class="font-semibold" style="color: var(--p-text-color)">
+                    What to do next:
+                  </div>
+                  <ul
+                    class="text-xs space-y-1 list-disc ml-4"
+                    style="color: var(--p-text-muted-color)"
+                  >
                     <li>Check your email for a new verification link</li>
                     <li>Make sure you're using the latest link sent to you</li>
                     <li>Contact support if you continue having issues</li>
@@ -118,8 +235,13 @@
             </div>
           </div>
 
-          <div class="flex flex-col gap-3">
-            <p-button routerLink="/auth/login" styleClass="w-full" size="large">
+          <div class="flex flex-col gap-4">
+            <p-button
+              routerLink="/auth/login"
+              styleClass="w-full transition-all duration-300 hover:scale-105"
+              size="large"
+              [style]="{ 'border-radius': '12px' }"
+            >
               <i class="pi pi-arrow-left mr-2"></i>
               Back to Login
             </p-button>
@@ -128,12 +250,27 @@
       }
     </div>
 
-    <div class="text-center mt-6">
+    <!-- Floating help button -->
+    <div class="absolute -bottom-4 -right-4">
+      <p-button
+        icon="pi pi-question-circle"
+        [rounded]="true"
+        size="large"
+        severity="info"
+        [outlined]="true"
+        styleClass="shadow-lg hover:scale-110 transition-all duration-300"
+        pTooltip="Email Verification Help"
+        tooltipPosition="left"
+      ></p-button>
+    </div>
+
+    <!-- Support section -->
+    <div class="text-center mt-8">
       <p class="text-sm" style="color: var(--p-text-muted-color)">
         Need help?
         <a
-          href="mailto:support@example.com"
-          class="font-medium hover:underline"
+          href="mailto:genienotify3@gmail.com"
+          class="font-medium hover:underline ml-1 transition-all duration-300"
           style="color: var(--p-primary-color)"
         >
           Contact Support
