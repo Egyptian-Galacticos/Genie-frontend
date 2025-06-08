@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/services/auth.service';
 
@@ -29,6 +29,7 @@ import { AuthService } from '../../core/auth/services/auth.service';
 export class DashboardRedirectComponent {
   private router = inject(Router);
   private authService = inject(AuthService);
+  private ngZone = inject(NgZone);
   currentRole = signal<string>('');
 
   constructor() {
@@ -56,8 +57,12 @@ export class DashboardRedirectComponent {
   }
 
   private navigateWithDelay(route: string) {
-    setTimeout(() => {
-      this.router.navigate([route]);
-    }, 1500);
+    this.ngZone.runOutsideAngular(() => {
+      setTimeout(() => {
+        this.ngZone.run(() => {
+          this.router.navigate([route]);
+        });
+      }, 1500);
+    });
   }
 }
