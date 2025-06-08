@@ -1,0 +1,157 @@
+<p-table
+  #dt
+  [value]="data()"
+  styleClass="mt-8 bg-card"
+  [paginator]="true"
+  [rows]="rows()"
+  [rowsPerPageOptions]="[5, 10, 20, 30]"
+  [sortMode]="'multiple'"
+  [multiSortMeta]="multiSortMeta()"
+  [lazyLoadOnInit]="true"
+  [lazy]="true"
+  [totalRecords]="totalRecords()"
+  (onLazyLoad)="loadData($event)"
+  dataKey="id"
+>
+  <!-- Header template (keeping your existing logic) -->
+  <ng-template #header>
+    <tr>
+      @for (col of cols(); track $index) {
+        @if (col.sortableColumn) {
+          <th
+            class="text-center text-surface-500/75 font-semibold"
+            [pSortableColumn]="col.field"
+            pSortableColumnDisabled="false"
+          >
+            {{ col.header }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+        } @else {
+          <th class="text-center text-surface-500/75 font-semibold">{{ col.header }}</th>
+        }
+      }
+    </tr>
+    <tr>
+      @for (col of cols(); track $index) {
+        @if (col.filterableColumn && col.filterType === 'input') {
+          <th class="text-center">
+            <p-columnFilter
+              display="menu"
+              [showAddButton]="false"
+              [showOperator]="false"
+              type="text"
+              [field]="col.field"
+              [matchMode]="col.matchMode"
+              [placeholder]="'Filter by ' + col.header"
+            />
+          </th>
+        } @else if (col.filterableColumn && col.filterType === 'select') {
+          <th class="text-center">
+            <p-columnFilter
+              [field]="col.field"
+              matchMode="in"
+              display="menu"
+              [showAddButton]="false"
+              [showOperator]="false"
+              [showMatchModes]="false"
+            >
+              <ng-template #filter let-value let-filter="filterCallback">
+                <p-multiselect
+                  [ngModel]="value"
+                  (ngModelChange)="filter($event)"
+                  [options]="col.options"
+                  placeholder="Filter by Status"
+                  [panelStyle]="{ minWidth: '16rem' }"
+                >
+                  <ng-template let-option #item>
+                    <div class="flex items-center gap-2">
+                      <span>{{ option }}</span>
+                    </div>
+                  </ng-template>
+                </p-multiselect>
+              </ng-template>
+            </p-columnFilter>
+          </th>
+        } @else if (col.filterableColumn && col.filterType === 'date') {
+          <th class="text-center">
+            <p-columnFilter
+              type="date"
+              [field]="col.field"
+              [placeholder]="'Filter by ' + col.header"
+              display="menu"
+              [showAddButton]="false"
+              [showOperator]="false"
+            />
+          </th>
+        } @else if (col.filterableColumn && col.filterType === 'number') {
+          <th class="text-center">
+            <p-columnFilter
+              type="numeric"
+              [field]="col.field"
+              [matchMode]="'Math'"
+              [placeholder]="'Filter by ' + col.header"
+            />
+          </th>
+        } @else if (!col.filterableColumn && col.filterType === 'clear') {
+          <th class="text-center">
+            <p-button
+              label="Clear"
+              [outlined]="true"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt)"
+            />
+          </th>
+        } @else {
+          <th></th>
+        }
+      }
+    </tr>
+  </ng-template>
+
+  <!-- Body template - Project content from parent -->
+  <ng-template #body let-rowData let-rowIndex="rowIndex">
+    <ng-container
+      *ngTemplateOutlet="
+        bodyTemplate();
+        context: {
+          $implicit: rowData,
+          rowIndex: rowIndex,
+          columns: cols(),
+          data: rowData,
+        }
+      "
+    >
+    </ng-container>
+  </ng-template>
+
+  <!-- Keep your existing empty message and loading templates -->
+  <ng-template #emptymessage>
+    <ng-content select="[slot=empty]">
+      @if (dataLoading()) {
+        @for (item of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
+          <tr>
+            @for (col of cols(); track $index) {
+              <td><p-skeleton class="mx-auto" height="2rem" width="100%" /></td>
+            }
+          </tr>
+        }
+      } @else {
+        <tr>
+          <td colspan="6" class="text-center">No quotes found</td>
+        </tr>
+      }
+    </ng-content>
+  </ng-template>
+
+  <ng-template #loadingbody>
+    <ng-content select="[slot=loading]">
+      @for (item of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
+        <tr>
+          @for (col of cols(); track $index) {
+            <td><p-skeleton class="mx-auto" height="2rem" width="100%" /></td>
+          }
+        </tr>
+      }
+    </ng-content>
+  </ng-template>
+</p-table>
