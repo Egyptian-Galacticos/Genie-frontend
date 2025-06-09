@@ -362,6 +362,31 @@
             </div>
           </div>
         }
+        @if (
+          adminForm.controls['password'].errors?.['pattern'] &&
+          (adminForm.controls['password'].dirty || adminForm.controls['password'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Password must contain at least one uppercase letter, one lowercase letter, one
+                number, and one special character
+              </span>
+            </div>
+          </div>
+        }
       </div>
 
       <div class="space-y-3">

@@ -58,7 +58,16 @@ export class AdminDetailsStepComponent implements OnInit {
         first_name: ['', [Validators.required, Validators.minLength(2)]],
         last_name: ['', [Validators.required, Validators.minLength(2)]],
         email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(8)]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(
+              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\-_#.])[A-Za-z\d@$!%*?&\-_#.]{8,}$/
+            ),
+          ],
+        ],
         password_confirmation: ['', [Validators.required, Validators.minLength(8)]],
         phone_number: ['', [Validators.required, phoneNumberValidator()]],
         commercialRegistration: [''],
