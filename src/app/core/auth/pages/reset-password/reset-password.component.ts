@@ -4,9 +4,11 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButtonModule } from 'primeng/button';
-import { PasswordModule } from 'primeng/password';
+import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 import { passwordMatchValidator } from '../../validators/password.validator';
@@ -18,9 +20,11 @@ import { passwordMatchValidator } from '../../validators/password.validator';
     ReactiveFormsModule,
     RouterLink,
     ButtonModule,
-    PasswordModule,
+    InputTextModule,
     MessageModule,
     ToastModule,
+    IconFieldModule,
+    InputIconModule,
   ],
   providers: [MessageService],
   templateUrl: './reset-password.component.html',

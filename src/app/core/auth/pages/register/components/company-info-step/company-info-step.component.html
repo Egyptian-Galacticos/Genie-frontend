@@ -14,21 +14,18 @@
         <label for="name" class="block text-sm font-semibold" style="color: var(--p-text-color)">
           Company Name *
         </label>
-        <div class="relative">
-          <i
-            class="pi pi-building absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-            style="color: var(--p-text-muted-color)"
-          ></i>
+        <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+          <p-inputicon class="pi pi-building" />
           <input
             id="name"
             type="text"
             pInputText
             formControlName="name"
-            class="w-full transition-all duration-300 focus:scale-105"
-            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            class="w-full"
+            style="border-radius: 12px"
             placeholder="Enter your company name"
           />
-        </div>
+        </p-iconfield>
         @if (
           companyForm.controls['name'].errors?.['required'] &&
           (companyForm.controls['name'].dirty || companyForm.controls['name'].touched)
@@ -83,21 +80,18 @@
         <label for="email" class="block text-sm font-semibold" style="color: var(--p-text-color)">
           Company Email *
         </label>
-        <div class="relative">
-          <i
-            class="pi pi-envelope absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-            style="color: var(--p-text-muted-color)"
-          ></i>
+        <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+          <p-inputicon class="pi pi-envelope" />
           <input
             id="email"
             type="email"
             pInputText
             formControlName="email"
-            class="w-full transition-all duration-300 focus:scale-105"
-            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            class="w-full"
+            style="border-radius: 12px"
             placeholder="Enter your company email"
           />
-        </div>
+        </p-iconfield>
         @if (
           companyForm.controls['email'].errors?.['required'] &&
           (companyForm.controls['email'].dirty || companyForm.controls['email'].touched)
@@ -272,21 +266,18 @@
             >
               Street Address *
             </label>
-            <div class="relative">
-              <i
-                class="pi pi-home absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-                style="color: var(--p-text-muted-color)"
-              ></i>
+            <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+              <p-inputicon class="pi pi-home" />
               <input
                 id="streetAddress"
                 type="text"
                 pInputText
                 formControlName="streetAddress"
-                class="w-full transition-all duration-300 focus:scale-105"
-                style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                class="w-full"
+                style="border-radius: 12px"
                 placeholder="Enter street address"
               />
-            </div>
+            </p-iconfield>
             @if (
               companyForm.controls['streetAddress'].errors?.['required'] &&
               (companyForm.controls['streetAddress'].dirty ||
@@ -323,21 +314,18 @@
               >
                 City *
               </label>
-              <div class="relative">
-                <i
-                  class="pi pi-building absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-                  style="color: var(--p-text-muted-color)"
-                ></i>
+              <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+                <p-inputicon class="pi pi-building" />
                 <input
                   id="city"
                   type="text"
                   pInputText
                   formControlName="city"
-                  class="w-full transition-all duration-300 focus:scale-105"
-                  style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                  class="w-full"
+                  style="border-radius: 12px"
                   placeholder="Enter city"
                 />
-              </div>
+              </p-iconfield>
               @if (
                 companyForm.controls['city'].errors?.['required'] &&
                 (companyForm.controls['city'].dirty || companyForm.controls['city'].touched)
@@ -375,21 +363,18 @@
               >
                 State / Province *
               </label>
-              <div class="relative">
-                <i
-                  class="pi pi-flag absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-                  style="color: var(--p-text-muted-color)"
-                ></i>
+              <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+                <p-inputicon class="pi pi-flag" />
                 <input
                   id="stateProvince"
                   type="text"
                   pInputText
                   formControlName="stateProvince"
-                  class="w-full transition-all duration-300 focus:scale-105"
-                  style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                  class="w-full"
+                  style="border-radius: 12px"
                   placeholder="Enter state/province"
                 />
-              </div>
+              </p-iconfield>
               @if (
                 companyForm.controls['stateProvince'].errors?.['required'] &&
                 (companyForm.controls['stateProvince'].dirty ||
@@ -430,21 +415,18 @@
               >
                 Zip / Postal Code *
               </label>
-              <div class="relative">
-                <i
-                  class="pi pi-hashtag absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-                  style="color: var(--p-text-muted-color)"
-                ></i>
+              <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+                <p-inputicon class="pi pi-hashtag" />
                 <input
                   id="zipPostalCode"
                   type="text"
                   pInputText
                   formControlName="zipPostalCode"
-                  class="w-full transition-all duration-300 focus:scale-105"
-                  style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                  class="w-full"
+                  style="border-radius: 12px"
                   placeholder="Enter zip/postal code"
                 />
-              </div>
+              </p-iconfield>
               @if (
                 companyForm.controls['zipPostalCode'].errors?.['required'] &&
                 (companyForm.controls['zipPostalCode'].dirty ||

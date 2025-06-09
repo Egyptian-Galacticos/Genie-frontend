@@ -6,6 +6,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 
@@ -19,6 +21,8 @@ import { AuthService } from '../../services/auth.service';
     InputTextModule,
     MessageModule,
     ToastModule,
+    IconFieldModule,
+    InputIconModule,
   ],
   providers: [MessageService],
   templateUrl: './forgot-password.component.html',

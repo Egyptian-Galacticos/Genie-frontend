@@ -67,21 +67,18 @@
           <label for="email" class="block text-sm font-semibold" style="color: var(--p-text-color)"
             >Email Address</label
           >
-          <div class="relative">
-            <i
-              class="pi pi-envelope absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-              style="color: var(--p-text-muted-color)"
-            ></i>
+          <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+            <p-inputicon class="pi pi-envelope" />
             <input
               id="email"
               type="email"
               pInputText
               formControlName="email"
-              class="w-full transition-all duration-300 focus:scale-105"
-              style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+              class="w-full"
+              style="border-radius: 12px"
               placeholder="Enter your email"
             />
-          </div>
+          </p-iconfield>
           @if (
             loginForm.controls['email'].errors?.['required'] &&
             (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)
@@ -139,22 +136,18 @@
             style="color: var(--p-text-color)"
             >Password</label
           >
-          <div class="relative">
-            <i
-              class="pi pi-lock absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-              style="color: var(--p-text-muted-color)"
-            ></i>
+          <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+            <p-inputicon class="pi pi-lock" />
             <input
               id="password"
               type="password"
-              pPassword
-              [feedback]="false"
+              pInputText
               formControlName="password"
-              class="w-full transition-all duration-300 focus:scale-105"
-              style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+              class="w-full"
+              style="border-radius: 12px"
               placeholder="Enter your password"
             />
-          </div>
+          </p-iconfield>
           @if (
             loginForm.controls['password'].errors?.['required'] &&
             (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)

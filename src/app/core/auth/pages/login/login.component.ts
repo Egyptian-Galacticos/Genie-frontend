@@ -11,6 +11,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { DividerModule } from 'primeng/divider';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { MessageService } from 'primeng/api';
 
 import { AuthService } from '../../services/auth.service';
@@ -30,6 +32,8 @@ import { environment } from '../../../../../environments/environment';
     MessageModule,
     ToastModule,
     DividerModule,
+    IconFieldModule,
+    InputIconModule,
   ],
   providers: [MessageService],
   templateUrl: './login.component.html',

@@ -18,21 +18,18 @@
         >
           First Name *
         </label>
-        <div class="relative">
-          <i
-            class="pi pi-user absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-            style="color: var(--p-text-muted-color)"
-          ></i>
+        <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+          <p-inputicon class="pi pi-user" />
           <input
             id="first_name"
             type="text"
             pInputText
             formControlName="first_name"
-            class="w-full transition-all duration-300 focus:scale-105"
-            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            class="w-full"
+            style="border-radius: 12px"
             placeholder="Enter first name"
           />
-        </div>
+        </p-iconfield>
         @if (
           adminForm.controls['first_name'].errors?.['required'] &&
           (adminForm.controls['first_name'].dirty || adminForm.controls['first_name'].touched)
@@ -91,21 +88,18 @@
         >
           Last Name *
         </label>
-        <div class="relative">
-          <i
-            class="pi pi-user absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-            style="color: var(--p-text-muted-color)"
-          ></i>
+        <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+          <p-inputicon class="pi pi-user" />
           <input
             id="last_name"
             type="text"
             pInputText
             formControlName="last_name"
-            class="w-full transition-all duration-300 focus:scale-105"
-            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            class="w-full"
+            style="border-radius: 12px"
             placeholder="Enter last name"
           />
-        </div>
+        </p-iconfield>
         @if (
           adminForm.controls['last_name'].errors?.['required'] &&
           (adminForm.controls['last_name'].dirty || adminForm.controls['last_name'].touched)
@@ -162,21 +156,18 @@
         <label for="email" class="block text-sm font-semibold" style="color: var(--p-text-color)">
           Email Address *
         </label>
-        <div class="relative">
-          <i
-            class="pi pi-envelope absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-            style="color: var(--p-text-muted-color)"
-          ></i>
+        <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+          <p-inputicon class="pi pi-envelope" />
           <input
             id="email"
             type="email"
             pInputText
             formControlName="email"
-            class="w-full transition-all duration-300 focus:scale-105"
-            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            class="w-full"
+            style="border-radius: 12px"
             placeholder="Enter your email address"
           />
-        </div>
+        </p-iconfield>
         @if (
           adminForm.controls['email'].errors?.['required'] &&
           (adminForm.controls['email'].dirty || adminForm.controls['email'].touched)
@@ -299,21 +290,18 @@
         >
           Password *
         </label>
-        <div class="relative">
-          <i
-            class="pi pi-lock absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-            style="color: var(--p-text-muted-color)"
-          ></i>
+        <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+          <p-inputicon class="pi pi-lock" />
           <input
             id="password"
             type="password"
             pInputText
             formControlName="password"
-            class="w-full transition-all duration-300 focus:scale-105"
-            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            class="w-full"
+            style="border-radius: 12px"
             placeholder="Minimum 8 characters"
           />
-        </div>
+        </p-iconfield>
         @if (
           adminForm.controls['password'].errors?.['required'] &&
           (adminForm.controls['password'].dirty || adminForm.controls['password'].touched)
@@ -397,21 +385,18 @@
         >
           Confirm Password *
         </label>
-        <div class="relative">
-          <i
-            class="pi pi-lock absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-            style="color: var(--p-text-muted-color)"
-          ></i>
+        <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+          <p-inputicon class="pi pi-lock" />
           <input
             id="password_confirmation"
             type="password"
             pInputText
             formControlName="password_confirmation"
-            class="w-full transition-all duration-300 focus:scale-105"
-            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            class="w-full"
+            style="border-radius: 12px"
             placeholder="Confirm your password"
           />
-        </div>
+        </p-iconfield>
         @if (
           adminForm.controls['password_confirmation'].errors?.['required'] &&
           (adminForm.controls['password_confirmation'].dirty ||
@@ -506,21 +491,18 @@
             >
               Commercial Registration (CR) *
             </label>
-            <div class="relative">
-              <i
-                class="pi pi-file-o absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-                style="color: var(--p-text-muted-color)"
-              ></i>
+            <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+              <p-inputicon class="pi pi-file-o" />
               <input
                 id="commercialRegistration"
                 type="text"
                 pInputText
                 formControlName="commercialRegistration"
-                class="w-full transition-all duration-300 focus:scale-105"
-                style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                class="w-full"
+                style="border-radius: 12px"
                 placeholder="Enter commercial registration number"
               />
-            </div>
+            </p-iconfield>
             @if (
               adminForm.controls['commercialRegistration'].errors?.['required'] &&
               (adminForm.controls['commercialRegistration'].dirty ||
@@ -556,21 +538,18 @@
             >
               Tax ID *
             </label>
-            <div class="relative">
-              <i
-                class="pi pi-file-excel absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
-                style="color: var(--p-text-muted-color)"
-              ></i>
+            <p-iconfield class="transition-all duration-300 focus-within:scale-105 transform-gpu">
+              <p-inputicon class="pi pi-file-excel" />
               <input
                 id="taxId"
                 type="text"
                 pInputText
                 formControlName="taxId"
-                class="w-full transition-all duration-300 focus:scale-105"
-                style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                class="w-full"
+                style="border-radius: 12px"
                 placeholder="Enter tax identification number"
               />
-            </div>
+            </p-iconfield>
             @if (
               adminForm.controls['taxId'].errors?.['required'] &&
               (adminForm.controls['taxId'].dirty || adminForm.controls['taxId'].touched)

@@ -6,6 +6,8 @@ import { MessageModule } from 'primeng/message';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { AdminFormData } from '../../../../interfaces/register.interface';
 import { phoneNumberValidator } from '../../../../validators/phone-number.validator';
 import { passwordMatchValidator } from '../../../../validators/password.validator';
@@ -21,6 +23,8 @@ import { PhoneInputComponent } from '../phone-input.component';
     CardModule,
     ButtonModule,
     DividerModule,
+    IconFieldModule,
+    InputIconModule,
     PhoneInputComponent,
   ],
   templateUrl: './admin-details-step.component.html',
