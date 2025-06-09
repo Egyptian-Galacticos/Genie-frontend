@@ -1,0 +1,219 @@
+<section
+  class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+  style="background: linear-gradient(135deg, var(--p-surface-50) 0%, var(--p-surface-100) 100%)"
+>
+  <div
+    class="absolute top-10 left-10 w-32 h-32 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-orange-500), var(--p-orange-300))"
+  ></div>
+  <div
+    class="absolute bottom-10 right-10 w-20 h-20 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-red-500), var(--p-red-300))"
+  ></div>
+  <div
+    class="absolute top-1/2 left-1/4 w-16 h-16 rounded-full opacity-5"
+    style="background: linear-gradient(45deg, var(--p-yellow-500), var(--p-yellow-300))"
+  ></div>
+
+  <div class="w-full max-w-lg relative z-10">
+    <div
+      class="rounded-3xl p-10 relative"
+      style="
+        background: var(--p-surface-0);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--p-surface-border);
+        backdrop-filter: blur(10px);
+      "
+    >
+      <div class="text-center mb-10">
+        <div class="mb-6">
+          <div
+            class="w-32 h-32 mx-auto rounded-full flex items-center justify-center mb-6 relative"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-orange-500) 15%, transparent),
+                color-mix(in srgb, var(--p-orange-400) 10%, transparent)
+              );
+            "
+          >
+            <div
+              class="w-24 h-24 rounded-full flex items-center justify-center relative"
+              style="background: linear-gradient(135deg, var(--p-orange-500), var(--p-orange-400))"
+            >
+              <i class="pi pi-ban text-4xl text-white"></i>
+              <div
+                class="absolute inset-0 rounded-full animate-ping"
+                style="background: var(--p-orange-500); opacity: 0.3"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <h1 class="text-4xl font-bold mb-4" style="color: var(--p-text-color)">
+          Account Suspended
+        </h1>
+
+        <p class="text-lg mb-6 leading-relaxed" style="color: var(--p-text-muted-color)">
+          Your account has been temporarily suspended. Please contact our support team for
+          assistance or review the information below.
+        </p>
+      </div>
+
+      <div
+        class="p-6 rounded-2xl mb-8 border-l-4"
+        style="
+          background: var(--p-surface-100);
+          border-left-color: var(--p-orange-500);
+          border: 1px solid var(--p-orange-200);
+        "
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+            style="background: linear-gradient(135deg, var(--p-orange-500), var(--p-orange-400))"
+          >
+            <i class="pi pi-exclamation-triangle text-white text-sm"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-2" style="color: var(--p-text-color)">Account Status</h3>
+            <p class="text-sm mb-3" style="color: var(--p-text-muted-color)">
+              Your account has been suspended due to a violation of our terms of service. This is a
+              temporary measure while we review your account.
+            </p>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2">
+                <i class="pi pi-calendar text-xs" style="color: var(--p-orange-500)"></i>
+                <span class="text-sm" style="color: var(--p-text-color)">
+                  Suspended on: <strong>{{ suspensionDate() | date: 'medium' }}</strong>
+                </span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-clock text-xs" style="color: var(--p-orange-500)"></i>
+                <span class="text-sm" style="color: var(--p-text-color)">
+                  Review Period: <strong>5-7 business days</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="font-semibold mb-4 text-center" style="color: var(--p-text-color)">
+          What You Can Do
+        </h3>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div
+              class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+              style="background: var(--p-green-100); color: var(--p-green-600)"
+            >
+              <span class="text-xs font-bold">1</span>
+            </div>
+            <div>
+              <p class="text-sm font-medium mb-1" style="color: var(--p-text-color)">
+                Contact Support
+              </p>
+              <p class="text-xs" style="color: var(--p-text-muted-color)">
+                Reach out to our support team for clarification and assistance
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div
+              class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+              style="background: var(--p-blue-100); color: var(--p-blue-600)"
+            >
+              <span class="text-xs font-bold">2</span>
+            </div>
+            <div>
+              <p class="text-sm font-medium mb-1" style="color: var(--p-text-color)">
+                Review Terms
+              </p>
+              <p class="text-xs" style="color: var(--p-text-muted-color)">
+                Review our terms of service to understand the suspension reason
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div
+              class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+              style="background: var(--p-purple-100); color: var(--p-purple-600)"
+            >
+              <span class="text-xs font-bold">3</span>
+            </div>
+            <div>
+              <p class="text-sm font-medium mb-1" style="color: var(--p-text-color)">
+                Wait for Review
+              </p>
+              <p class="text-xs" style="color: var(--p-text-muted-color)">
+                Our team will review your case within 5-7 business days
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <p-button
+          label="Contact Support"
+          icon="pi pi-envelope"
+          size="large"
+          styleClass="flex-1 sm:flex-none transition-all duration-300 hover:scale-105"
+          [style]="{ 'border-radius': '12px' }"
+          (click)="contactSupport()"
+        ></p-button>
+
+        <p-button
+          label="Back to Login"
+          icon="pi pi-arrow-left"
+          [outlined]="true"
+          routerLink="/auth/login"
+          size="large"
+          styleClass="flex-1 sm:flex-none transition-all duration-300 hover:scale-105"
+          [style]="{ 'border-radius': '12px' }"
+        ></p-button>
+      </div>
+
+      <div class="pt-6 mt-6 text-center" style="border-top: 1px solid var(--p-surface-border)">
+        <p class="text-sm font-semibold mb-2" style="color: var(--p-text-color)">
+          Need Immediate Assistance?
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 text-sm">
+          <a
+            href="mailto:genienotify3@gmail.com"
+            class="group flex items-center gap-2 hover:scale-105 transition-all duration-300"
+            style="color: var(--p-primary-color)"
+          >
+            <i class="pi pi-envelope group-hover:rotate-12 transition-transform duration-300"></i>
+            Email Support
+          </a>
+          <span style="color: var(--p-surface-border)">|</span>
+          <a
+            href="#"
+            class="group flex items-center gap-2 hover:scale-105 transition-all duration-300"
+            style="color: var(--p-primary-color)"
+          >
+            <i class="pi pi-file-pdf group-hover:rotate-12 transition-transform duration-300"></i>
+            Terms of Service
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute -bottom-4 -right-4">
+      <p-button
+        icon="pi pi-question-circle"
+        [rounded]="true"
+        size="large"
+        severity="secondary"
+        [outlined]="true"
+        styleClass="shadow-lg hover:scale-110 transition-all duration-300"
+        pTooltip="Need help with suspension?"
+        tooltipPosition="left"
+        (click)="contactSupport()"
+      ></p-button>
+    </div>
+  </div>
+</section>
