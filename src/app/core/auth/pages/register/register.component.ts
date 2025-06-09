@@ -117,7 +117,7 @@ export class RegisterComponent {
           street: companyData.streetAddress,
           city: companyData.city,
           state: companyData.stateProvince,
-          zipCode: companyData.zipPostalCode,
+          zip_code: companyData.zipPostalCode,
           country: companyData.country,
         },
         ...(this.showSellerFields() && {
