@@ -1,7 +1,6 @@
 import { Component, OnInit, AfterViewInit, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CarouselModule } from 'primeng/carousel';
-import { AnimationService } from '../../../../core/services/animation.service';
+import { CarouselModule, CarouselResponsiveOptions } from 'primeng/carousel';
 
 interface Category {
   id: string;
@@ -10,25 +9,17 @@ interface Category {
   link?: string;
 }
 
-interface ResponsiveOption {
-  breakpoint: string;
-  numVisible: number;
-  numScroll?: number;
-}
-
 @Component({
   selector: 'app-categories',
   imports: [CommonModule, CarouselModule],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.css',
-  animations: [AnimationService.fadeInUp, AnimationService.staggerFadeIn],
 })
 export class CategoriesComponent implements OnInit, AfterViewInit {
   private elementRef = inject(ElementRef<HTMLElement>);
-  private animationService = inject(AnimationService);
 
   categories: Category[] = [];
-  responsiveOptions: ResponsiveOption[] = [];
+  responsiveOptions: CarouselResponsiveOptions[] = [];
 
   ngOnInit(): void {
     this.categories = [
@@ -80,6 +71,26 @@ export class CategoriesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.animationService.animateElements(this.elementRef.nativeElement, ['.animate-item']);
+    setTimeout(() => {
+      const animateElements = this.elementRef.nativeElement.querySelectorAll(
+        '.animate-item'
+      ) as NodeListOf<HTMLElement>;
+
+      const observer = new IntersectionObserver(
+        entries => {
+          entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+              const el = entry.target as HTMLElement;
+              el.style.setProperty('--animate-delay', `${index * 0.1}s`);
+              el.classList.add('animate-in');
+              observer.unobserve(el);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      animateElements.forEach(el => observer.observe(el));
+    }, 100);
   }
 }
