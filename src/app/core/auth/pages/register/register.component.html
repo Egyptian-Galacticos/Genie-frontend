@@ -1,0 +1,193 @@
+<section
+  class="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden"
+  style="background: linear-gradient(135deg, var(--p-surface-50) 0%, var(--p-surface-100) 100%)"
+>
+  <div
+    class="absolute top-10 left-10 w-40 h-40 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-primary-500), var(--p-primary-300))"
+  ></div>
+  <div
+    class="absolute bottom-10 right-10 w-32 h-32 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-blue-500), var(--p-blue-300))"
+  ></div>
+  <div
+    class="absolute top-1/3 right-10 w-24 h-24 rounded-full opacity-5"
+    style="background: linear-gradient(45deg, var(--p-green-500), var(--p-green-300))"
+  ></div>
+  <div
+    class="absolute bottom-1/3 left-10 w-20 h-20 rounded-full opacity-8"
+    style="background: linear-gradient(45deg, var(--p-purple-500), var(--p-purple-300))"
+  ></div>
+
+  <div class="w-full max-w-5xl xl:max-w-6xl relative z-10">
+    <div class="mb-8 sm:mb-12 text-center">
+      <div class="mb-8">
+        <div
+          class="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6 relative"
+          style="
+            background: linear-gradient(
+              135deg,
+              color-mix(in srgb, var(--p-primary-500) 15%, transparent),
+              color-mix(in srgb, var(--p-primary-400) 10%, transparent)
+            );
+          "
+        >
+          <div
+            class="w-14 h-14 rounded-full flex items-center justify-center relative"
+            style="background: linear-gradient(135deg, var(--p-primary-500), var(--p-primary-400))"
+          >
+            <i class="pi pi-users text-xl text-white"></i>
+            <div
+              class="absolute inset-0 rounded-full animate-ping"
+              style="background: var(--p-primary-500); opacity: 0.3"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <h1
+        class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight"
+        style="color: var(--p-text-color)"
+      >
+        Join the Genie Platform
+      </h1>
+      <p
+        class="text-base sm:text-lg mb-8 max-w-2xl mx-auto px-4 leading-relaxed"
+        style="color: var(--p-text-muted-color)"
+      >
+        Create your business account and unlock powerful B2B trading capabilities. Connect with
+        suppliers and buyers worldwide.
+      </p>
+
+      <div class="relative mb-8">
+        <div
+          class="p-6 rounded-2xl"
+          style="
+            background: var(--p-surface-0);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--p-surface-border);
+            backdrop-filter: blur(10px);
+          "
+        >
+          <p-steps
+            [model]="steps"
+            [activeIndex]="currentStep()"
+            styleClass="mb-4"
+            [readonly]="true"
+          >
+          </p-steps>
+
+          <div
+            class="relative h-2 rounded-full overflow-hidden"
+            style="background: var(--p-surface-200)"
+          >
+            <div
+              class="h-full rounded-full transition-all duration-700 ease-out"
+              style="background: linear-gradient(90deg, var(--p-primary-500), var(--p-primary-400))"
+              [style.width.%]="(currentStep() + 1) * 50"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative">
+      <div
+        class="relative rounded-3xl overflow-hidden"
+        style="
+          background: var(--p-surface-0);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          border: 1px solid var(--p-surface-border);
+          backdrop-filter: blur(10px);
+        "
+      >
+        @if (isStep1()) {
+          <app-company-info-step
+            [roles]="roles"
+            [countries]="countries"
+            [initialData]="companyData()"
+            (nextStep)="onCompanyStepNext($event)"
+          ></app-company-info-step>
+        } @else if (isStep2()) {
+          <app-admin-details-step
+            [showSellerFields]="showSellerFields()"
+            [loading]="loading()"
+            [initialData]="adminData()"
+            (previousStep)="onAdminStepPrevious()"
+            (submitForm)="onSubmitRegistration($event)"
+          ></app-admin-details-step>
+        }
+      </div>
+    </div>
+
+    <div class="text-center mt-8 sm:mt-12 space-y-6">
+      <div
+        class="p-6 rounded-2xl"
+        style="
+          background: var(--p-surface-0);
+          box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+          border: 1px solid var(--p-surface-border);
+        "
+      >
+        <div class="flex justify-center items-center flex-wrap gap-6 text-sm font-medium">
+          <div class="flex items-center gap-2 transition-all duration-300 hover:scale-105">
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center"
+              style="background: linear-gradient(135deg, var(--p-green-500), var(--p-green-400))"
+            >
+              <i class="pi pi-shield text-white text-xs"></i>
+            </div>
+            <span style="color: var(--p-text-color)">SSL Secured</span>
+          </div>
+          <div class="flex items-center gap-2 transition-all duration-300 hover:scale-105">
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center"
+              style="background: linear-gradient(135deg, var(--p-blue-500), var(--p-blue-400))"
+            >
+              <i class="pi pi-verified text-white text-xs"></i>
+            </div>
+            <span style="color: var(--p-text-color)">Business Verified</span>
+          </div>
+          <div class="flex items-center gap-2 transition-all duration-300 hover:scale-105">
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center"
+              style="
+                background: linear-gradient(135deg, var(--p-primary-500), var(--p-primary-400));
+              "
+            >
+              <i class="pi pi-globe text-white text-xs"></i>
+            </div>
+            <span style="color: var(--p-text-color)">Global Platform</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="pt-2">
+          <a
+            [href]="'mailto:' + environment.email"
+            class="text-sm font-medium transition-all duration-300 hover:scale-105"
+            style="color: var(--p-primary-color)"
+          >
+            Need help? Contact our support team
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute bottom-4 right-4 z-20">
+      <p-button
+        icon="pi pi-question-circle"
+        [rounded]="true"
+        size="large"
+        severity="help"
+        [outlined]="true"
+        styleClass="shadow-lg hover:scale-110 transition-all duration-300"
+        pTooltip="Registration Help"
+        tooltipPosition="left"
+      ></p-button>
+    </div>
+  </div>
+
+  <p-toast position="top-right"></p-toast>
+</section>

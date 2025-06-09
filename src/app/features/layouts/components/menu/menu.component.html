@@ -1,0 +1,11 @@
+<ul class="layout-menu">
+  @for (item of items; track $index) {
+    @if (!item.separator) {
+      <li>
+        <app-menu-item [item]="item" [index]="$index" [root]="true"></app-menu-item>
+      </li>
+    } @else {
+      <li class="menu-separator"></li>
+    }
+  }
+</ul>

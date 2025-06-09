@@ -1,0 +1,636 @@
+<div class="p-8 sm:p-10">
+  <div class="mb-8 text-center">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-3" style="color: var(--p-text-color)">
+      Administrator Details
+    </h2>
+    <p class="text-base" style="color: var(--p-text-muted-color)">
+      Primary contact person for your business account
+    </p>
+  </div>
+
+  <form [formGroup]="adminForm" class="space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="space-y-3">
+        <label
+          for="first_name"
+          class="block text-sm font-semibold"
+          style="color: var(--p-text-color)"
+        >
+          First Name *
+        </label>
+        <div class="relative">
+          <i
+            class="pi pi-user absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+            style="color: var(--p-text-muted-color)"
+          ></i>
+          <input
+            id="first_name"
+            type="text"
+            pInputText
+            formControlName="first_name"
+            class="w-full transition-all duration-300 focus:scale-105"
+            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            placeholder="Enter first name"
+          />
+        </div>
+        @if (
+          adminForm.controls['first_name'].errors?.['required'] &&
+          (adminForm.controls['first_name'].dirty || adminForm.controls['first_name'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                First name is required
+              </span>
+            </div>
+          </div>
+        }
+        @if (
+          adminForm.controls['first_name'].errors?.['minlength'] &&
+          (adminForm.controls['first_name'].dirty || adminForm.controls['first_name'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                First name must be at least 2 characters
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="space-y-3">
+        <label
+          for="last_name"
+          class="block text-sm font-semibold"
+          style="color: var(--p-text-color)"
+        >
+          Last Name *
+        </label>
+        <div class="relative">
+          <i
+            class="pi pi-user absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+            style="color: var(--p-text-muted-color)"
+          ></i>
+          <input
+            id="last_name"
+            type="text"
+            pInputText
+            formControlName="last_name"
+            class="w-full transition-all duration-300 focus:scale-105"
+            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            placeholder="Enter last name"
+          />
+        </div>
+        @if (
+          adminForm.controls['last_name'].errors?.['required'] &&
+          (adminForm.controls['last_name'].dirty || adminForm.controls['last_name'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Last name is required
+              </span>
+            </div>
+          </div>
+        }
+        @if (
+          adminForm.controls['last_name'].errors?.['minlength'] &&
+          (adminForm.controls['last_name'].dirty || adminForm.controls['last_name'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Last name must be at least 2 characters
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="space-y-3">
+        <label for="email" class="block text-sm font-semibold" style="color: var(--p-text-color)">
+          Email Address *
+        </label>
+        <div class="relative">
+          <i
+            class="pi pi-envelope absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+            style="color: var(--p-text-muted-color)"
+          ></i>
+          <input
+            id="email"
+            type="email"
+            pInputText
+            formControlName="email"
+            class="w-full transition-all duration-300 focus:scale-105"
+            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            placeholder="Enter your email address"
+          />
+        </div>
+        @if (
+          adminForm.controls['email'].errors?.['required'] &&
+          (adminForm.controls['email'].dirty || adminForm.controls['email'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Email address is required
+              </span>
+            </div>
+          </div>
+        }
+        @if (
+          adminForm.controls['email'].errors?.['email'] &&
+          (adminForm.controls['email'].dirty || adminForm.controls['email'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Please enter a valid email address
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="space-y-3">
+        <label
+          for="phone_number"
+          class="block text-sm font-semibold"
+          style="color: var(--p-text-color)"
+        >
+          Phone Number *
+        </label>
+        <app-phone-input
+          formControlName="phone_number"
+          placeholder="+1 (555) 123-4567"
+        ></app-phone-input>
+        @if (
+          adminForm.controls['phone_number'].errors?.['required'] &&
+          (adminForm.controls['phone_number'].dirty || adminForm.controls['phone_number'].touched)
+        ) {
+          <div
+            class="p-3 mt-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Phone number is required
+              </span>
+            </div>
+          </div>
+        }
+        @if (
+          adminForm.controls['phone_number'].errors?.['invalidPhoneNumber'] &&
+          (adminForm.controls['phone_number'].dirty || adminForm.controls['phone_number'].touched)
+        ) {
+          <div
+            class="p-3 mt-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Please enter a valid phone number
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="space-y-3">
+        <label
+          for="password"
+          class="block text-sm font-semibold"
+          style="color: var(--p-text-color)"
+        >
+          Password *
+        </label>
+        <div class="relative">
+          <i
+            class="pi pi-lock absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+            style="color: var(--p-text-muted-color)"
+          ></i>
+          <input
+            id="password"
+            type="password"
+            pInputText
+            formControlName="password"
+            class="w-full transition-all duration-300 focus:scale-105"
+            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            placeholder="Minimum 8 characters"
+          />
+        </div>
+        @if (
+          adminForm.controls['password'].errors?.['required'] &&
+          (adminForm.controls['password'].dirty || adminForm.controls['password'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Password is required
+              </span>
+            </div>
+          </div>
+        }
+        @if (
+          adminForm.controls['password'].errors?.['minlength'] &&
+          (adminForm.controls['password'].dirty || adminForm.controls['password'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Password must be at least 8 characters
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="space-y-3">
+        <label
+          for="password_confirmation"
+          class="block text-sm font-semibold"
+          style="color: var(--p-text-color)"
+        >
+          Confirm Password *
+        </label>
+        <div class="relative">
+          <i
+            class="pi pi-lock absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+            style="color: var(--p-text-muted-color)"
+          ></i>
+          <input
+            id="password_confirmation"
+            type="password"
+            pInputText
+            formControlName="password_confirmation"
+            class="w-full transition-all duration-300 focus:scale-105"
+            style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+            placeholder="Confirm your password"
+          />
+        </div>
+        @if (
+          adminForm.controls['password_confirmation'].errors?.['required'] &&
+          (adminForm.controls['password_confirmation'].dirty ||
+            adminForm.controls['password_confirmation'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Password confirmation is required
+              </span>
+            </div>
+          </div>
+        }
+        @if (
+          adminForm.controls['password_confirmation'].errors?.['minlength'] &&
+          (adminForm.controls['password_confirmation'].dirty ||
+            adminForm.controls['password_confirmation'].touched)
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Password confirmation must be at least 8 characters
+              </span>
+            </div>
+          </div>
+        }
+        @if (
+          adminForm.errors?.['passwordMismatch'] &&
+          adminForm.controls['password_confirmation'].touched
+        ) {
+          <div
+            class="p-3 rounded-xl border-l-4"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                color-mix(in srgb, var(--p-red-100) 50%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid var(--p-red-200);
+            "
+          >
+            <div class="flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+              <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                Passwords do not match
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (showSellerFields()) {
+      <div class="pt-6">
+        <p-divider align="center" styleClass="my-6">
+          <span class="font-semibold" style="color: var(--p-primary-color)">
+            Additional Business Information
+          </span>
+        </p-divider>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="space-y-3">
+            <label
+              for="commercialRegistration"
+              class="block text-sm font-semibold"
+              style="color: var(--p-text-color)"
+            >
+              Commercial Registration (CR) *
+            </label>
+            <div class="relative">
+              <i
+                class="pi pi-file-o absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+                style="color: var(--p-text-muted-color)"
+              ></i>
+              <input
+                id="commercialRegistration"
+                type="text"
+                pInputText
+                formControlName="commercialRegistration"
+                class="w-full transition-all duration-300 focus:scale-105"
+                style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                placeholder="Enter commercial registration number"
+              />
+            </div>
+            @if (
+              adminForm.controls['commercialRegistration'].errors?.['required'] &&
+              (adminForm.controls['commercialRegistration'].dirty ||
+                adminForm.controls['commercialRegistration'].touched)
+            ) {
+              <div
+                class="p-3 rounded-xl border-l-4"
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                    color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                  );
+                  border-left-color: var(--p-red-500);
+                  border: 1px solid var(--p-red-200);
+                "
+              >
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+                  <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                    Commercial registration is required for sellers
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="space-y-3">
+            <label
+              for="taxId"
+              class="block text-sm font-semibold"
+              style="color: var(--p-text-color)"
+            >
+              Tax ID *
+            </label>
+            <div class="relative">
+              <i
+                class="pi pi-file-excel absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+                style="color: var(--p-text-muted-color)"
+              ></i>
+              <input
+                id="taxId"
+                type="text"
+                pInputText
+                formControlName="taxId"
+                class="w-full transition-all duration-300 focus:scale-105"
+                style="padding-left: 3rem; padding-right: 1rem; border-radius: 12px"
+                placeholder="Enter tax identification number"
+              />
+            </div>
+            @if (
+              adminForm.controls['taxId'].errors?.['required'] &&
+              (adminForm.controls['taxId'].dirty || adminForm.controls['taxId'].touched)
+            ) {
+              <div
+                class="p-3 rounded-xl border-l-4"
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                    color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                  );
+                  border-left-color: var(--p-red-500);
+                  border: 1px solid var(--p-red-200);
+                "
+              >
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+                  <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                    Tax ID is required for sellers
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <div
+      class="p-4 rounded-xl text-center"
+      style="
+        background: linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--p-primary-50) 60%, transparent),
+          color-mix(in srgb, var(--p-primary-100) 40%, transparent)
+        );
+        border: 1px solid var(--p-primary-200);
+      "
+    >
+      <p class="text-sm font-medium" style="color: var(--p-text-color)">
+        By clicking Register, you agree to Genie's
+        <a
+          href="#"
+          class="font-semibold hover:underline transition-all duration-300"
+          style="color: var(--p-primary-600)"
+        >
+          Terms of Service
+        </a>
+        and
+        <a
+          href="#"
+          class="font-semibold hover:underline transition-all duration-300"
+          style="color: var(--p-primary-600)"
+        >
+          Privacy Policy
+        </a>
+      </p>
+    </div>
+  </form>
+
+  <div
+    class="flex flex-col sm:flex-row justify-between items-center mt-8 pt-6 gap-4"
+    style="border-top: 1px solid var(--p-surface-border)"
+  >
+    <p-button
+      label="Previous"
+      icon="pi pi-arrow-left"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="onPrevious()"
+      size="large"
+      styleClass="w-full sm:w-auto transition-all duration-300 hover:scale-105"
+      [style]="{ 'border-radius': '12px' }"
+    ></p-button>
+    <p-button
+      label="Register Business Account"
+      icon="pi pi-check"
+      iconPos="right"
+      [loading]="loading()"
+      [disabled]="adminForm.invalid || loading()"
+      (onClick)="onSubmit()"
+      size="large"
+      styleClass="w-full sm:w-auto transition-all duration-300 hover:scale-105"
+      [style]="{ 'border-radius': '12px' }"
+    ></p-button>
+  </div>
+</div>
