@@ -1,0 +1,16 @@
+<section class="py-12 overflow-hidden bg-white">
+  <div class="container mx-auto px-4 mb-8">
+    <h2 class="text-2xl font-semibold text-center text-text-main">Trusted by Leading Companies</h2>
+  </div>
+
+  <div class="companies-slider">
+    <div class="companies-track">
+      @for (company of duplicatedCompanies; track company.uniqueId) {
+        <div class="company-item flex flex-col items-center justify-center">
+          <i [class]="company.logo + ' text-4xl text-primary-500 mb-2'"></i>
+          <span class="text-text-secondary font-medium whitespace-nowrap">{{ company.name }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
