@@ -52,7 +52,7 @@ export class DashboardRedirectComponent {
       this.currentRole.set('Buyer');
       this.navigateWithDelay('/dashboard/buyer');
     } else {
-      this.router.navigate(['/unauthorized']);
+      this.router.navigate(['/unauthorized'], { skipLocationChange: true });
     }
   }
 
