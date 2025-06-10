@@ -35,7 +35,7 @@ export const emailVerificationGuard: CanActivateFn = (route, state) => {
         return true;
       }
 
-      router.navigate(['/email-verification-pending'], {
+      router.navigate(['/auth/email-pending'], {
         queryParams: { returnUrl: state.url },
         replaceUrl: true,
       });
