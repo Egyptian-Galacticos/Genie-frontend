@@ -42,12 +42,6 @@ export const authRoutes: Routes = [
     title: 'Reset Password - Genie',
   },
   {
-    path: 'verify-email',
-    loadComponent: () =>
-      import('../auth/pages/verify-email/verify-email.component').then(m => m.VerifyEmailComponent),
-    title: 'Verify Email - Genie',
-  },
-  {
     path: 'account-suspended',
     loadComponent: () =>
       import('../auth/pages/account-suspended/account-suspended.component').then(
