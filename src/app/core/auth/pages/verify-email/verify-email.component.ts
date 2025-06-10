@@ -30,11 +30,13 @@ export class VerifyEmailComponent {
 
   readonly verifying = signal<boolean>(false);
   readonly verified = signal<boolean>(false);
+  readonly alreadyVerified = signal<boolean>(false);
   readonly errorMessage = signal<string | null>(null);
   readonly token = signal<string>('');
 
   readonly showVerificationStatus = computed(() => !this.verifying() && this.token());
   readonly isAuthenticated = computed(() => this.authService.isAuthenticated());
+  readonly currentUser = computed(() => this.authService.user());
 
   constructor() {
     this.route.queryParams.pipe(takeUntilDestroyed()).subscribe(params => {
@@ -49,6 +51,13 @@ export class VerifyEmailComponent {
   private handleToken(token: string) {
     this.token.set(token);
     if (isPlatformBrowser(this.platformId)) {
+      const user = this.currentUser();
+      if (user && user.is_email_verified) {
+        this.alreadyVerified.set(true);
+        this.showSuccess('Your email is already verified! You have full access to your account.');
+        return;
+      }
+
       this.verifyEmailAddress(token);
     }
   }
@@ -72,7 +81,16 @@ export class VerifyEmailComponent {
       next: response => {
         this.verifying.set(false);
         this.verified.set(true);
-        this.showSuccess(response.message || 'Email verified successfully');
+
+        if (this.isAuthenticated()) {
+          this.authService.updateEmailVerificationStatus(true);
+          this.showSuccess(
+            response.message ||
+              'Email verified successfully! Your account now has full access to all features.'
+          );
+        } else {
+          this.showSuccess(response.message || 'Email verified successfully');
+        }
       },
       error: error => {
         this.verifying.set(false);

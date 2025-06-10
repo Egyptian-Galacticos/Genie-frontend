@@ -504,4 +504,33 @@ export class AuthService {
   resendVerificationEmail(email: string): Observable<{ message: string; success: boolean }> {
     return this.authApiCall('email/resend-verification', { email });
   }
+
+  /**
+   * Send company email verification
+   */
+  sendCompanyEmailVerification(): Observable<{ message: string; success: boolean }> {
+    return this.authApiCall('company-email/send-verification', {});
+  }
+
+  /**
+   * Resend company email verification
+   */
+  resendCompanyEmailVerification(): Observable<{ message: string; success: boolean }> {
+    return this.authApiCall('company-email/resend-verification', {});
+  }
+
+  /**
+   * Update current user's email verification status
+   */
+  updateEmailVerificationStatus(isVerified: boolean): void {
+    const currentUser = this._user();
+    if (currentUser) {
+      const updatedUser: User = {
+        ...currentUser,
+        is_email_verified: isVerified,
+      };
+      this._user.set(updatedUser);
+      this.storeUserData(updatedUser);
+    }
+  }
 }
