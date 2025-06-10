@@ -30,6 +30,7 @@ export class CompanyEmailVerificationComponent implements OnInit {
   isLoading = signal<boolean>(false);
   isResending = signal<boolean>(false);
   emailSent = signal<boolean>(false);
+  alreadyVerified = signal<boolean>(false);
   message = signal<string>('');
   messageType = signal<'success' | 'error'>('success');
 
@@ -53,11 +54,19 @@ export class CompanyEmailVerificationComponent implements OnInit {
       },
       error: error => {
         this.isLoading.set(false);
-        this.emailSent.set(false);
-        this.message.set(
-          error.error?.message || 'Failed to send verification email. Please try again.'
-        );
-        this.messageType.set('error');
+        const message =
+          error.error?.message || 'Failed to send verification email. Please try again.';
+
+        // Check if the error is because company email is already verified
+        if (message.includes('already verified') || message.includes('Already verified')) {
+          this.alreadyVerified.set(true);
+          this.emailSent.set(false);
+          this.message.set('Your company email address is already verified.');
+        } else {
+          this.emailSent.set(false);
+          this.message.set(message);
+          this.messageType.set('error');
+        }
       },
     });
   }
@@ -78,19 +87,27 @@ export class CompanyEmailVerificationComponent implements OnInit {
       },
       error: error => {
         this.isResending.set(false);
-        this.message.set(
-          error.error?.message || 'Failed to resend verification email. Please try again.'
-        );
-        this.messageType.set('error');
+        const message =
+          error.error?.message || 'Failed to resend verification email. Please try again.';
+
+        // Check if the error is because company email is already verified
+        if (message.includes('already verified') || message.includes('Already verified')) {
+          this.alreadyVerified.set(true);
+          this.emailSent.set(false);
+          this.message.set('Your company email address is already verified.');
+        } else {
+          this.message.set(message);
+          this.messageType.set('error');
+        }
       },
     });
   }
 
   /**
-   * Navigate back to profile
+   * Navigate back to dashboard
    */
   goToProfile(): void {
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/dashboard']);
   }
 
   /**
