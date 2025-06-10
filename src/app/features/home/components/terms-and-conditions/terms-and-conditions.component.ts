@@ -4,7 +4,6 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-terms-and-conditions',
-  standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './terms-and-conditions.component.html',
   styleUrl: './terms-and-conditions.component.css',
