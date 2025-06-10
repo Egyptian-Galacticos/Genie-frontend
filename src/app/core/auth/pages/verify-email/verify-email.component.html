@@ -2,7 +2,6 @@
   class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden"
   style="background: linear-gradient(135deg, var(--p-surface-50) 0%, var(--p-surface-100) 100%)"
 >
-  <!-- Background decorative elements -->
   <div
     class="absolute top-10 left-10 w-32 h-32 rounded-full opacity-10"
     style="background: linear-gradient(45deg, var(--p-blue-500), var(--p-blue-300))"
@@ -95,6 +94,85 @@
                 </span>
               </div>
             </div>
+          </div>
+        </div>
+      } @else if (alreadyVerified()) {
+        <div class="text-center space-y-8">
+          <div class="flex justify-center">
+            <div
+              class="w-24 h-24 rounded-full flex items-center justify-center relative"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  color-mix(in srgb, var(--p-blue-500) 15%, transparent),
+                  color-mix(in srgb, var(--p-blue-400) 10%, transparent)
+                );
+              "
+            >
+              <div
+                class="w-16 h-16 rounded-full flex items-center justify-center"
+                style="background: linear-gradient(135deg, var(--p-blue-500), var(--p-blue-400))"
+              >
+                <i class="pi pi-shield text-2xl text-white"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <h2 class="text-3xl font-bold" style="color: var(--p-text-color)">Already Verified!</h2>
+            <p class="text-lg leading-relaxed" style="color: var(--p-text-muted-color)">
+              Your email address is already verified. You have full access to all features of your
+              account.
+            </p>
+            <div
+              class="p-4 rounded-xl border-l-4"
+              style="
+                background: var(--p-surface-100);
+                border-left-color: var(--p-blue-500);
+                border: 1px solid var(--p-surface-300);
+              "
+            >
+              <div class="flex items-center gap-3">
+                <i class="pi pi-check-circle text-lg" style="color: var(--p-blue-500)"></i>
+                <span class="text-sm font-medium" style="color: var(--p-text-color)">
+                  No further action needed - you're all set!
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-4">
+            @if (isAuthenticated()) {
+              <p-button
+                routerLink="/dashboard"
+                styleClass="w-full transition-all duration-300 hover:scale-105"
+                size="large"
+                [style]="{ 'border-radius': '12px' }"
+              >
+                <i class="pi pi-home mr-2"></i>
+                Go to Dashboard
+              </p-button>
+            } @else {
+              <p-button
+                routerLink="/auth/login"
+                styleClass="w-full transition-all duration-300 hover:scale-105"
+                size="large"
+                [style]="{ 'border-radius': '12px' }"
+              >
+                <i class="pi pi-sign-in mr-2"></i>
+                Sign In to Your Account
+              </p-button>
+            }
+            <p-button
+              routerLink="/"
+              styleClass="w-full transition-all duration-300 hover:scale-105"
+              [outlined]="true"
+              size="large"
+              [style]="{ 'border-radius': '12px' }"
+            >
+              <i class="pi pi-home mr-2"></i>
+              Go to Homepage
+            </p-button>
           </div>
         </div>
       } @else if (verified()) {
@@ -250,7 +328,6 @@
       }
     </div>
 
-    <!-- Floating help button -->
     <div class="absolute -bottom-4 -right-4">
       <p-button
         icon="pi pi-question-circle"
@@ -264,7 +341,6 @@
       ></p-button>
     </div>
 
-    <!-- Support section -->
     <div class="text-center mt-8">
       <p class="text-sm" style="color: var(--p-text-muted-color)">
         Need help?
