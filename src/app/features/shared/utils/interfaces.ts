@@ -1,14 +1,5 @@
 import { TableLazyLoadEvent } from 'primeng/table';
 
-export interface IRequestForQuote {
-  id: string;
-  quote: string;
-  status: string;
-  date: string;
-  buyer: ICompany;
-  product: Partial<IProduct>;
-}
-
 export interface IBuyer {
   id: string;
   full_name: string;
@@ -61,4 +52,31 @@ export interface dataTableColumn {
   matchMode?: string;
   filterPlaceholder?: string;
   options?: string[];
+}
+
+/**quotation interfaces */
+
+export interface CreateQuoteDto {
+  quote_request_id: string;
+  buyer_id: string;
+  seller_message: string;
+  quote_items?: CreateQuoteItemDto[];
+}
+
+export interface CreateQuoteItemDto {
+  product_id: string;
+  quantity: number;
+  unit_price: number;
+  notes: string;
+}
+
+export interface IRequestForQuote {
+  id: string;
+  quote: string;
+  status: string;
+  date: string;
+  buyer: ICompany;
+  product: Partial<IProduct>;
+  quantity?: number;
+  unit_price?: number;
 }
