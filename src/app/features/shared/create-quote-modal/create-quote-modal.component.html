@@ -1,0 +1,187 @@
+<p-dialog
+  maskStyleClass="backdrop-blur-sm"
+  [(visible)]="visible"
+  styleClass="!border-0 !bg-transparent"
+  [draggable]="true"
+  [resizable]="true"
+  [styleClass]="'w-3/4 bg-card '"
+  [closable]="false"
+>
+  <ng-content #headless>
+    <div class="flex flex-col gap-4 w-full">
+      <div class="flex justify-between">
+        <div class="flex gap-4 items-center">
+          <i class="pi pi-receipt"></i>
+          <span class="text-2xl font-semibold">Send A Quote</span>
+        </div>
+        <p-button icon="pi pi-times" outlined="true" [rounded]="true" (click)="close()"></p-button>
+      </div>
+      <p-divider></p-divider>
+      <form [formGroup]="quoteFormGroup" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+        <div formArrayName="quoteItemFormArray" class="px-4 flex flex-col gap-3">
+          @for (item of quoteItems.controls; track item.value?.id || $index) {
+            <div [formGroupName]="$index" class="flex gap-4 justify-between items-end flex-wrap">
+              <div class="space-y-3 shrink-0">
+                @if ($index === 0) {
+                  <label
+                    [for]="'product_' + $index"
+                    class="block text-sm font-semibold"
+                    style="color: var(--p-text-color)"
+                    >Product</label
+                  >
+                }
+                @if (singleItem()) {
+                  <div>
+                    <p-auto-complete
+                      [id]="'product_' + $index"
+                      formControlName="product"
+                      field="name"
+                      class="w-full transition-all duration-300 focus:scale-105 shrink-0"
+                    />
+                  </div>
+                } @else {
+                  <div>
+                    <p-autocomplete
+                      [id]="'product_' + $index"
+                      [suggestions]="filteredProducts"
+                      formControlName="product"
+                      (completeMethod)="search($event)"
+                      field="name"
+                      class="w-full transition-all duration-300 focus:scale-105 shrink-0"
+                    />
+                  </div>
+                }
+              </div>
+              <div class="space-y-3 w-40">
+                @if ($index === 0) {
+                  <label
+                    [for]="'unit_price_' + $index"
+                    class="block text-sm font-semibold"
+                    style="color: var(--p-text-color)"
+                    >Unit Price</label
+                  >
+                }
+                <div>
+                  <input
+                    pInputText
+                    [id]="'unit_price_' + $index"
+                    type="number"
+                    formControlName="unit_price"
+                    class="w-full transition-all duration-300 focus:scale-105 min-w-4"
+                  />
+                </div>
+                @if (quoteItems.at($index).get('unit_price')?.errors?.['required']) {
+                  <small class="text-red-500">Unit price is required</small>
+                }
+                @if (quoteItems.at($index).get('unit_price')?.errors?.['min']) {
+                  <small class="text-red-500">Unit price must be at least 1</small>
+                }
+              </div>
+              <div class="space-y-3 w-40">
+                @if ($index === 0) {
+                  <label
+                    [for]="'quantity_' + $index"
+                    class="block text-sm font-semibold"
+                    style="color: var(--p-text-color)"
+                    >Quantity</label
+                  >
+                }
+                <div>
+                  <input
+                    pInputText
+                    [id]="'quantity_' + $index"
+                    type="number"
+                    formControlName="quantity"
+                    class="w-full transition-all duration-300 focus:scale-105"
+                  />
+                </div>
+                @if (quoteItems.at($index).get('quantity')?.errors?.['required']) {
+                  <small class="text-red-500">Quantity is required</small>
+                }
+                @if (quoteItems.at($index).get('quantity')?.errors?.['min']) {
+                  <small class="text-red-500">Quantity must be at least 1</small>
+                }
+              </div>
+              <div class="space-y-3 shrink-0 flex-grow">
+                @if ($index === 0) {
+                  <label
+                    [for]="'notes_' + $index"
+                    class="block text-sm font-semibold"
+                    style="color: var(--p-text-color)"
+                    >Notes</label
+                  >
+                }
+                <div class="relative">
+                  <input
+                    pInputText
+                    [id]="'notes_' + $index"
+                    type="text"
+                    formControlName="notes"
+                    class="w-full transition-all duration-300 focus:scale-101"
+                    placeholder="notes"
+                  />
+                </div>
+              </div>
+              @if (quoteItems.controls.length > 1) {
+                <p-button
+                  [rounded]="true"
+                  [outlined]="true"
+                  [severity]="'danger'"
+                  icon="pi pi-trash"
+                  (click)="removeQuoteItem($index)"
+                  styleClass=" transition-all duration-300 hover:scale-105"
+                  size="small"
+                  [title]="'Remove Quote Item'"
+                />
+              }
+            </div>
+          }
+        </div>
+        @if (!singleItem()) {
+          <div class="flex px-4">
+            <p-button
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-plus"
+              label="Add Quote Item"
+              (click)="addQuoteItem()"
+              styleClass=" transition-all duration-300 hover:scale-105"
+              size="large"
+              [title]="'Add Quote Item'"
+            />
+          </div>
+        }
+        <div class="flex justify-content-around min-g-2">
+          <div class="space-y-3 px-4 w-full">
+            <label
+              for="seller_message"
+              class="block text-sm font-semibold"
+              style="color: var(--p-text-color)"
+              >Add a message for the buyer</label
+            >
+            <div class="relative">
+              <input
+                pInputText
+                id="seller_message"
+                type="text"
+                formControlName="seller_message"
+                class="w-full transition-all duration-300 focus:scale-102"
+              />
+            </div>
+          </div>
+        </div>
+
+        <p-button
+          type="submit"
+          [label]="loading() ? 'Sending Quote...' : 'Send Quote'"
+          icon="pi pi-send"
+          [loading]="loading()"
+          [disabled]="quoteFormGroup.invalid || loading()"
+          styleClass="w-60 ms-4 transition-all duration-300 hover:scale-105"
+          size="large"
+          [style]="{ 'border-radius': '12px' }"
+        />
+      </form>
+    </div>
+  </ng-content>
+</p-dialog>
