@@ -1,24 +1,18 @@
-import { RequestOptions } from '../../../core/interfaces/api.interface';
-import { ApiService } from '../../../core/services/api.service';
-import { Component, inject, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { CreateQuoteDto, IRequestForQuote } from './../../shared/utils/interfaces';
+import { PaginatedResponse, RequestOptions } from '../../../core/interfaces/api.interface';
+import { Component, inject, signal } from '@angular/core';
 import { DashboardInfoCardComponent } from '../../shared/dashboard-info-card/dashboard-info-card.component';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-import { SortMeta } from 'primeng/api';
-import { IRequestForQuote } from '../../shared/utils/interfaces';
+import { MessageService, SortMeta } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
 import { DataTableComponent } from '../../shared/data-table/data-table.component';
-
-interface QuotesResponse {
-  data: IRequestForQuote[];
-  totalRecords: number;
-  page: number;
-  size: number;
-}
+import { CreateQuoteModalComponent } from '../../shared/create-quote-modal/create-quote-modal.component';
+import { QuotesService } from '../../shared/services/quotes.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-quotes',
@@ -31,51 +25,60 @@ interface QuotesResponse {
     MultiSelectModule,
     FormsModule,
     DataTableComponent,
+    CreateQuoteModalComponent,
+    CreateQuoteModalComponent,
+    ToastModule,
   ],
   templateUrl: './quotes-requests.component.html',
   styleUrl: './quotes-requests.component.css',
+  providers: [MessageService],
 })
-export class QuotesRequestsComponent implements OnInit {
-  quotes: IRequestForQuote[] = [];
+export class QuotesRequestsComponent {
+  private quoteService = inject(QuotesService);
+  private messageService = inject(MessageService);
+
+  quotesResponse: PaginatedResponse<IRequestForQuote> | null = null;
   quotesLoading = true;
-  totalRecords = 0;
-  rows = 10;
   first = 0;
   multiSortMeta: SortMeta[] = [{ field: 'date', order: -1 }];
+  currentRequestOptions!: RequestOptions;
 
-  private apiService = inject(ApiService);
-  ngOnInit() {
+  //create quote modal variables
+  createQuoteModalVisible = signal<boolean>(false);
+  beingQuotedQuoteRequest!: IRequestForQuote;
+  creatingQuote = false;
+
+  loadQuoteRequests(requestOptions: RequestOptions) {
+    this.currentRequestOptions = requestOptions;
     this.quotesLoading = true;
-  }
-
-  loadQuotes(requestOptions: RequestOptions) {
-    console.log('event', requestOptions);
-    this.quotesLoading = true;
-
-    this.getQuotesFromBackend(requestOptions).subscribe({
-      next: (response: QuotesResponse) => {
-        this.quotes = response.data;
-        this.totalRecords = response.totalRecords;
-        this.quotesLoading = false;
+    this.quoteService.getCurrentSellerQuoteRequest(requestOptions).subscribe({
+      next: (response: PaginatedResponse<IRequestForQuote>) => {
+        this.quotesResponse = response;
       },
       error: error => {
-        console.error('Error loading quotes:', error);
+        console.log(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: "Couldn't load quotes",
+          life: 5000,
+        });
+        this.quotesResponse = {
+          success: false,
+          data: this.quotesPlaceholder,
+          pagination: {
+            page: 1,
+            limit: 10,
+            total: 6,
+            totalPages: 1,
+          },
+        };
         this.quotesLoading = false;
-        //don't forget to display an error message in Toast
       },
     });
   }
 
-  private getQuotesFromBackend(options: RequestOptions): Observable<QuotesResponse> {
-    console.log('Loading quotes with query params:', options);
-    // return this.apiService.get<QuotesResponse>('quotes', options);
-    return of({
-      data: this.quotesPlaceholder,
-      totalRecords: 0,
-      page: 1,
-      size: 10,
-    });
-  }
+  // table columns definition
   cols = [
     {
       field: 'id',
@@ -83,7 +86,7 @@ export class QuotesRequestsComponent implements OnInit {
       filterableColumn: false,
     },
     {
-      field: 'buyer.name',
+      field: 'buyer.company.name',
       header: 'Company Name',
       filterableColumn: true,
       filterType: 'input',
@@ -130,6 +133,71 @@ export class QuotesRequestsComponent implements OnInit {
     }
   }
 
+  // open create quote modal
+  openCreateQuoteModal(quoteRequest: IRequestForQuote) {
+    console.log(quoteRequest, this.createQuoteModalVisible());
+    this.beingQuotedQuoteRequest = quoteRequest;
+    this.createQuoteModalVisible.set(true);
+  }
+  // create quote, then close modal, then reload quotes
+  CreateQuote(event: Partial<CreateQuoteDto>) {
+    this.creatingQuote = true;
+    this.quoteService.createQuote(event as CreateQuoteDto).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Quote sent successfully',
+          life: 5000,
+        });
+        this.loadQuoteRequests(this.currentRequestOptions);
+        this.creatingQuote = false;
+        this.createQuoteModalVisible.set(false);
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: "Couldn't send quote",
+          life: 5000,
+        });
+        this.creatingQuote = false;
+      },
+    });
+  }
+
+  markQuoteRequestAsSeen(quoteRequest: IRequestForQuote) {
+    this.quoteService.updateQuoteRequestStatus({ id: quoteRequest.id, status: 'seen' }).subscribe({
+      next: () => {
+        quoteRequest.status = 'seen';
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: "Couldn't mark quote request as seen",
+          life: 5000,
+        });
+      },
+    });
+  }
+  markQuoteRequestAsRejected(quoteRequest: IRequestForQuote) {
+    this.quoteService
+      .updateQuoteRequestStatus({ id: quoteRequest.id, status: 'rejected' })
+      .subscribe({
+        next: () => {
+          quoteRequest.status = 'rejected';
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: "Couldn't mark quote request as rejected",
+            life: 5000,
+          });
+        },
+      });
+  }
   quotesPlaceholder = [
     {
       id: '1',

@@ -32,19 +32,19 @@
   </div>
   <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
     <div class="px-6 flex flex-col gap-1">
-      <span class="font-bold text-2xl"> Recent Quotes </span>
+      <span class="font-bold text-2xl"> Requests for Quotation </span>
       <span class="text-sm text-secondary">
-        Overview of recent quotes, highlighting those needing attention
+        Overview of recent request for quotation, highlighting those needing attention
       </span>
     </div>
     <div>
       <app-data-table
         [cols]="cols"
-        [rows]="rows"
-        [totalRecords]="totalRecords"
+        [rows]="10"
+        [totalRecords]="quotesResponse?.pagination?.total || 0"
         [dataLoading]="quotesLoading"
-        [data]="quotes"
-        (loadDataEvent)="loadQuotes($event)"
+        [data]="quotesResponse?.data || []"
+        (loadDataEvent)="loadQuoteRequests($event)"
         [multiSortMeta]="multiSortMeta"
         [bodyTemplate]="customBodyTemplate"
       >
@@ -52,14 +52,22 @@
     </div>
   </div>
 </div>
+@if (createQuoteModalVisible()) {
+  <app-create-quote-modal
+    [(visible)]="createQuoteModalVisible"
+    [quoteRequest]="beingQuotedQuoteRequest"
+    [loading]="creatingQuote"
+    (quoteSent)="CreateQuote($event)"
+  />
+}
 
 <ng-template #customBodyTemplate let-rowData let-rowIndex="rowIndex">
   <tr [class]="rowData.status === 'new' ? 'surface-50' : ''">
-    <td class="text-center">{{ rowData.id }}</td>
-    <td class="text-center">{{ rowData.buyer.name }}</td>
-    <td class="text-center">{{ rowData.product.name }}</td>
-    <td class="text-center text-nowrap">{{ rowData.date }}</td>
-    <td class="text-center">
+    <td class="text-center w-[5%] shrink-1">{{ rowData.id }}</td>
+    <td class="text-center w-[15%] text-nowrap">{{ rowData.buyer.name }}</td>
+    <td class="text-center w-[20%] text-nowrap">{{ rowData.product.name }}</td>
+    <td class="text-center w-[20%] text-nowrap">{{ rowData.date }}</td>
+    <td class="text-center w-[10%]">
       <p-badge
         [value]="rowData.status"
         [severity]="rowData.status === 'New' ? 'success' : 'warn'"
@@ -67,21 +75,41 @@
         [styleClass]="'text-surface-500 font-normal  bg-transparent-75 px-5 rounded-4xl'"
       />
     </td>
-    <td class="flex justify-around">
-      <p-button
-        [icon]="'pi pi-comment'"
-        styleClass="p-button-text"
-        label="chat"
-        [rounded]="true"
-        [outlined]="true"
-        [raised]="true"
-      />
-      <p-button
-        [icon]="'pi pi-eye'"
-        styleClass="p-button-text"
-        [rounded]="true"
-        [outlined]="true"
-      />
+    <td class="flex justify-center shrink-1">
+      <div class="flex justify-around w-80">
+        <div class="flex gap-5">
+          <p-button [icon]="'pi pi-comment'" label="chat" [rounded]="true" [raised]="true" />
+          <p-button
+            icon="pi pi-receipt"
+            rounded="true"
+            outlined="true"
+            raised="true"
+            label="Quote"
+            (onClick)="openCreateQuoteModal(rowData)"
+          />
+        </div>
+        @if (rowData.status.toLowerCase() === 'new') {
+          <p-button
+            [icon]="'pi pi-eye'"
+            styleClass=""
+            [rounded]="true"
+            [outlined]="true"
+            title="mark as seen"
+            (onClick)="markQuoteRequestAsSeen(rowData)"
+          />
+          <p-button
+            [icon]="'pi pi-times'"
+            styleClass=""
+            [severity]="'danger'"
+            [rounded]="true"
+            [outlined]="true"
+            title="Reject"
+            (onClick)="markQuoteRequestAsRejected(rowData)"
+          />
+        }
+      </div>
     </td>
   </tr>
 </ng-template>
+
+<p-toast />
