@@ -11,7 +11,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
-import { passwordMatchValidator } from '../../validators/password.validator';
+import { passwordMatchValidator } from '../../../../shared/validators/password.validator';
 
 @Component({
   selector: 'app-reset-password',
