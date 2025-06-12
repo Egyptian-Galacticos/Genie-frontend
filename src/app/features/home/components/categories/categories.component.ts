@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterViewInit, ElementRef, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, AfterViewInit, ElementRef, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { CarouselModule, CarouselResponsiveOptions } from 'primeng/carousel';
 
 interface Category {
@@ -17,6 +17,7 @@ interface Category {
 })
 export class CategoriesComponent implements OnInit, AfterViewInit {
   private elementRef = inject(ElementRef<HTMLElement>);
+  private platformId = inject(PLATFORM_ID);
 
   categories: Category[] = [];
   responsiveOptions: CarouselResponsiveOptions[] = [];
@@ -71,7 +72,13 @@ export class CategoriesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     setTimeout(() => {
+      if (typeof IntersectionObserver === 'undefined') return;
+
       const animateElements = this.elementRef.nativeElement.querySelectorAll(
         '.animate-item'
       ) as NodeListOf<HTMLElement>;
