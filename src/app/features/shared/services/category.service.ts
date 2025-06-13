@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, map, catchError, of } from 'rxjs';
-import { ApiService } from './api.service';
-import { Category, CategoryResponse } from '../interfaces/category.interface';
+import { ApiService } from '../../../core/services/api.service';
+import { Category, CategoryResponse } from '../../../core/interfaces/category.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class CategoryService {
    * @returns Observable of categories array
    */
   getCategories(): Observable<Category[]> {
-    return this.apiService.get<CategoryResponse>('api/v1/categories').pipe(
+    return this.apiService.get<CategoryResponse>('categories').pipe(
       map(response => {
         if (response.success && response.data) {
           return response.data;

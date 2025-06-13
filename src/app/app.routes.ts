@@ -18,23 +18,19 @@ export const routes: Routes = [
       {
         path: 'contact',
         loadComponent: () =>
-          import('./features/home/components/contact-us/contact-us.component').then(
-            m => m.ContactUsComponent
-          ),
+          import('./pages/contact-us/contact-us.component').then(m => m.ContactUsComponent),
       },
       {
         path: 'about',
         loadComponent: () =>
-          import('./features/home/components/about-us/about-us.component').then(
-            m => m.AboutUsComponent
-          ),
+          import('./pages/about-us/about-us.component').then(m => m.AboutUsComponent),
       },
       {
         path: 'terms-and-conditions',
         loadComponent: () =>
-          import(
-            './features/home/components/terms-and-conditions/terms-and-conditions.component'
-          ).then(m => m.TermsAndConditionsComponent),
+          import('./pages/terms-and-conditions/terms-and-conditions.component').then(
+            m => m.TermsAndConditionsComponent
+          ),
       },
     ],
   },

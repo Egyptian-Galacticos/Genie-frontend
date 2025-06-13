@@ -12,7 +12,7 @@ import { CarouselModule, CarouselResponsiveOptions } from 'primeng/carousel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { Subject, takeUntil } from 'rxjs';
-import { CategoryService } from '../../../../core/services/category.service';
+import { CategoryService } from '../../../shared/services/category.service';
 import { Category } from '../../../../core/interfaces/category.interface';
 
 @Component({
