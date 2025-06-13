@@ -1,0 +1,161 @@
+<section class="py-12 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4">
+    <h1 class="text-4xl font-bold text-gray-900 mb-12 text-center">
+      Discover your next business opportunity
+    </h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="bg-white rounded-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-semibold text-gray-900">Top ranking</h2>
+          <a href="#" class="text-sm text-gray-600 hover:text-primary-600 underline">View more</a>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <h3 class="text-lg font-medium text-gray-900">Most popular</h3>
+            <p class="text-sm text-gray-600">LCL+Trucking</p>
+          </div>
+
+          <div class="text-sm text-gray-600">Popularity score: 4.5</div>
+
+          <div class="carousel-container">
+            <p-carousel
+              [value]="carouselImages"
+              [numVisible]="1"
+              [numScroll]="1"
+              [circular]="true"
+              [autoplayInterval]="3000"
+              [showNavigators]="true"
+              [showIndicators]="true"
+              styleClass="main-carousel"
+            >
+              <ng-template pTemplate="item" let-image>
+                <div class="carousel-item">
+                  <img
+                    [src]="image.src"
+                    [alt]="image.alt"
+                    class="w-full h-64 object-cover rounded-lg"
+                  />
+                </div>
+              </ng-template>
+            </p-carousel>
+          </div>
+
+          <div class="thumbnail-carousel">
+            <p-carousel
+              [value]="topRanking.thumbnails"
+              [numVisible]="3"
+              [numScroll]="1"
+              [circular]="true"
+              [showNavigators]="false"
+              [showIndicators]="false"
+              styleClass="thumbnail-carousel"
+            >
+              <ng-template pTemplate="item" let-thumbnail let-i="index">
+                <div class="px-1">
+                  <div
+                    class="w-16 h-16 rounded overflow-hidden border border-gray-200 cursor-pointer hover:border-primary-300 transition-colors"
+                    tabindex="0"
+                    (click)="selectMainImage(i)"
+                    (keydown.enter)="selectMainImage(i)"
+                    (keydown.space)="selectMainImage(i)"
+                    [ngClass]="{ 'border-primary-500': selectedImageIndex === i }"
+                  >
+                    <img
+                      [src]="thumbnail.src"
+                      [alt]="thumbnail.alt"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </ng-template>
+            </p-carousel>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-semibold text-gray-900">New arrivals</h2>
+          <a href="#" class="text-sm text-gray-600 hover:text-primary-600 underline">View more</a>
+        </div>
+
+        <div class="space-y-6">
+          <h3 class="text-lg font-medium text-gray-900">108,000+ products added today</h3>
+
+          <div class="grid grid-cols-2 gap-3">
+            @for (arrival of newArrivals; track $index) {
+              <div
+                class="aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer hover:border-primary-300 transition-colors"
+              >
+                <img
+                  [src]="arrival.image"
+                  [alt]="arrival.alt"
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            }
+          </div>
+
+          <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+            <div class="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
+              <img
+                [src]="newThisWeek.image"
+                alt="New this week"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900">{{ newThisWeek.title }}</h4>
+              <p class="text-sm text-gray-600">{{ newThisWeek.subtitle }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-semibold text-gray-900">Top deals</h2>
+          <a href="#" class="text-sm text-gray-600 hover:text-primary-600 underline">View more</a>
+        </div>
+
+        <div class="space-y-6">
+          <div class="cursor-pointer group">
+            <div class="flex items-center gap-4">
+              <div
+                class="w-20 h-20 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0 group-hover:border-primary-300 transition-colors"
+              >
+                <img
+                  [src]="topDeals[0].image"
+                  alt="{{ topDeals[0].title }}"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <h3 class="font-medium text-gray-900 group-hover:text-primary-600 transition-colors">
+                {{ topDeals[0].title }}
+              </h3>
+            </div>
+          </div>
+
+          <div class="cursor-pointer group">
+            <h3
+              class="font-medium text-gray-900 mb-4 group-hover:text-primary-600 transition-colors"
+            >
+              {{ topDeals[1].title }}
+            </h3>
+            <div
+              class="rounded-lg overflow-hidden border border-gray-200 group-hover:border-primary-300 transition-colors"
+            >
+              <img
+                [src]="topDeals[1].image"
+                alt="{{ topDeals[1].title }}"
+                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

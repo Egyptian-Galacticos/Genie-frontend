@@ -1,9 +1,43 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/guards/auth.guard';
 import { guestGuard } from './core/auth/guards/guest.guard';
+import { MainLayoutComponent } from './core/layout/main-layout/main-layout.component';
+import { HomePageComponent } from './features/home/home-page/home-page.component';
 import { emailVerificationGuard } from './core/auth/guards/email-verification.guard';
 
 export const routes: Routes = [
+  {
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: '',
+        component: HomePageComponent,
+        title: 'Homepage - Genie',
+      },
+      {
+        path: 'contact',
+        loadComponent: () =>
+          import('./features/home/components/contact-us/contact-us.component').then(
+            m => m.ContactUsComponent
+          ),
+      },
+      {
+        path: 'about',
+        loadComponent: () =>
+          import('./features/home/components/about-us/about-us.component').then(
+            m => m.AboutUsComponent
+          ),
+      },
+      {
+        path: 'terms-and-conditions',
+        loadComponent: () =>
+          import(
+            './features/home/components/terms-and-conditions/terms-and-conditions.component'
+          ).then(m => m.TermsAndConditionsComponent),
+      },
+    ],
+  },
   {
     path: 'auth/email-pending',
     loadComponent: () =>

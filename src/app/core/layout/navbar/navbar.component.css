@@ -1,0 +1,3 @@
+.group:hover span {
+  animation: slide-right 0.3s ease-in-out forwards;
+}

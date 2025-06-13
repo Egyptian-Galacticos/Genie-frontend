@@ -1,0 +1,100 @@
+<section
+  class="relative min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden pt-20"
+>
+  <!-- Main Content -->
+  <div class="relative z-10 container mx-auto px-4 pt-24 pb-20">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16" @staggerFadeIn>
+        <div
+          class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 mb-8"
+          @scaleIn
+        >
+          <div class="w-2 h-2 bg-accent-400 rounded-full animate-pulse"></div>
+          <span class="text-white/90 text-sm font-medium"
+            >Trusted by 10,000+ businesses worldwide</span
+          >
+        </div>
+
+        <h1
+          class="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight"
+          @fadeInUp
+        >
+          Connect.
+          <span
+            class="bg-gradient-to-r from-accent-400 via-primary-400 to-accent2-400 bg-clip-text text-transparent"
+          >
+            Trade.
+          </span>
+          <br />
+          Grow.
+        </h1>
+
+        <p
+          class="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto mb-12 leading-relaxed"
+          @fadeInUp
+        >
+          The world's most advanced B2B marketplace connecting businesses with verified suppliers,
+          premium products, and endless opportunities for growth.
+        </p>
+
+        <div class="flex flex-col lg:flex-row items-center justify-center gap-6 mb-16" @fadeInUp>
+          <div class="relative w-full max-w-2xl">
+            <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+              <i class="pi pi-search text-gray-400 text-lg"></i>
+            </div>
+            <input
+              type="text"
+              placeholder="Search for products, suppliers, or categories..."
+              class="w-full pl-14 pr-6 py-5 bg-white/95 backdrop-blur-sm border-0 rounded-2xl text-gray-900 placeholder-gray-500 text-lg focus:ring-4 focus:ring-primary-500/50 focus:outline-none shadow-2xl"
+            />
+          </div>
+
+          <button
+            class="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-10 py-5 rounded-2xl font-semibold text-lg shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-105 flex items-center gap-3"
+          >
+            <i class="pi pi-search"></i>
+            Search Now
+          </button>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="flex flex-wrap justify-center gap-4 mb-16" @fadeInUp>
+          <button
+            class="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
+          >
+            Electronics
+          </button>
+          <button
+            class="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
+          >
+            Industrial Equipment
+          </button>
+          <button
+            class="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
+          >
+            Healthcare
+          </button>
+          <button
+            class="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
+          >
+            Automotive
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16" @staggerFadeIn>
+        @for (stat of stats; track stat.label) {
+          <div class="text-center" @scaleIn>
+            <div
+              class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105"
+            >
+              <div class="text-3xl md:text-4xl font-bold text-white mb-2">{{ stat.number }}</div>
+              <div class="text-white/70 font-medium">{{ stat.label }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
