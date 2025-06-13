@@ -1,0 +1,314 @@
+<section
+  class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+  style="background: linear-gradient(135deg, var(--p-surface-50) 0%, var(--p-surface-100) 100%)"
+>
+  <!-- Background decorative elements -->
+  <div
+    class="absolute top-10 left-10 w-32 h-32 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-primary-500), var(--p-primary-300))"
+  ></div>
+  <div
+    class="absolute bottom-10 right-10 w-20 h-20 rounded-full opacity-10"
+    style="background: linear-gradient(45deg, var(--p-blue-500), var(--p-blue-300))"
+  ></div>
+  <div
+    class="absolute top-1/2 right-1/4 w-16 h-16 rounded-full opacity-5"
+    style="background: linear-gradient(45deg, var(--p-green-500), var(--p-green-300))"
+  ></div>
+
+  <div class="w-full max-w-lg relative z-10">
+    <div
+      class="rounded-3xl p-10 relative"
+      style="
+        background: var(--p-surface-0);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--p-surface-border);
+        backdrop-filter: blur(10px);
+      "
+    >
+      @if (isLoading()) {
+        <!-- Loading State -->
+        <div class="text-center">
+          <div class="mb-6">
+            <div
+              class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 relative"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  color-mix(in srgb, var(--p-primary-500) 15%, transparent),
+                  color-mix(in srgb, var(--p-primary-400) 10%, transparent)
+                );
+              "
+            >
+              <div
+                class="w-16 h-16 rounded-full flex items-center justify-center relative"
+                style="
+                  background: linear-gradient(135deg, var(--p-primary-500), var(--p-primary-400));
+                "
+              >
+                <p-progressSpinner
+                  styleClass="w-8 h-8"
+                  strokeWidth="4"
+                  fill="transparent"
+                ></p-progressSpinner>
+              </div>
+            </div>
+          </div>
+          <h1 class="text-4xl font-bold mb-4" style="color: var(--p-text-color)">
+            Verifying Company Email
+          </h1>
+          <p class="text-lg leading-relaxed" style="color: var(--p-text-muted-color)">
+            Please wait while we verify your company email address...
+          </p>
+        </div>
+      } @else {
+        @if (verificationSuccess()) {
+          <!-- Success State -->
+          <div class="text-center mb-10">
+            <div class="mb-6">
+              <div
+                class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 relative"
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    color-mix(in srgb, var(--p-green-500) 15%, transparent),
+                    color-mix(in srgb, var(--p-green-400) 10%, transparent)
+                  );
+                "
+              >
+                <div
+                  class="w-16 h-16 rounded-full flex items-center justify-center relative"
+                  style="
+                    background: linear-gradient(135deg, var(--p-green-500), var(--p-green-400));
+                  "
+                >
+                  <i class="pi pi-building text-2xl text-white"></i>
+                  <div
+                    class="absolute inset-0 rounded-full animate-pulse"
+                    style="background: var(--p-green-500); opacity: 0.3"
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <h1 class="text-4xl font-bold mb-4" style="color: var(--p-text-color)">
+              Company Email Verified!
+            </h1>
+            <p class="text-lg leading-relaxed" style="color: var(--p-text-muted-color)">
+              Your company email address has been successfully verified
+            </p>
+          </div>
+
+          <!-- Success Message -->
+          <div
+            class="p-6 rounded-xl border-l-4 mb-8"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-green-500) 8%, transparent),
+                color-mix(in srgb, var(--p-green-400) 5%, transparent)
+              );
+              border-left-color: var(--p-green-500);
+              border: 1px solid color-mix(in srgb, var(--p-green-400) 30%, transparent);
+            "
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <i class="pi pi-check-circle text-lg" style="color: var(--p-green-500)"></i>
+              <h3 class="text-lg font-semibold" style="color: var(--p-text-color)">
+                Verification Complete
+              </h3>
+            </div>
+            <p class="text-sm leading-relaxed" style="color: var(--p-text-muted-color)">
+              {{ successMessage() }}
+            </p>
+          </div>
+        } @else if (alreadyVerified()) {
+          <!-- Already Verified State -->
+          <div class="text-center mb-10">
+            <div class="mb-6">
+              <div
+                class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 relative"
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    color-mix(in srgb, var(--p-blue-500) 15%, transparent),
+                    color-mix(in srgb, var(--p-blue-400) 10%, transparent)
+                  );
+                "
+              >
+                <div
+                  class="w-16 h-16 rounded-full flex items-center justify-center relative"
+                  style="background: linear-gradient(135deg, var(--p-blue-500), var(--p-blue-400))"
+                >
+                  <i class="pi pi-shield text-2xl text-white"></i>
+                  <div
+                    class="absolute inset-0 rounded-full animate-pulse"
+                    style="background: var(--p-blue-500); opacity: 0.3"
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <h1 class="text-4xl font-bold mb-4" style="color: var(--p-text-color)">
+              Already Verified
+            </h1>
+            <p class="text-lg leading-relaxed" style="color: var(--p-text-muted-color)">
+              This company email has already been verified
+            </p>
+          </div>
+
+          <!-- Already Verified Message -->
+          <div
+            class="p-6 rounded-xl border-l-4 mb-8"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-blue-500) 8%, transparent),
+                color-mix(in srgb, var(--p-blue-400) 5%, transparent)
+              );
+              border-left-color: var(--p-blue-500);
+              border: 1px solid color-mix(in srgb, var(--p-blue-400) 30%, transparent);
+            "
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <i class="pi pi-info-circle text-lg" style="color: var(--p-blue-500)"></i>
+              <h3 class="text-lg font-semibold" style="color: var(--p-text-color)">
+                No Action Required
+              </h3>
+            </div>
+            <p class="text-sm leading-relaxed" style="color: var(--p-text-muted-color)">
+              Your company email address was previously verified. You can continue using all
+              features.
+            </p>
+          </div>
+        } @else {
+          <!-- Error State -->
+          <div class="text-center mb-10">
+            <div class="mb-6">
+              <div
+                class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 relative"
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    color-mix(in srgb, var(--p-red-500) 15%, transparent),
+                    color-mix(in srgb, var(--p-red-400) 10%, transparent)
+                  );
+                "
+              >
+                <div
+                  class="w-16 h-16 rounded-full flex items-center justify-center relative"
+                  style="background: linear-gradient(135deg, var(--p-red-500), var(--p-red-400))"
+                >
+                  <i class="pi pi-times-circle text-2xl text-white"></i>
+                  <div
+                    class="absolute inset-0 rounded-full animate-pulse"
+                    style="background: var(--p-red-500); opacity: 0.3"
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <h1 class="text-4xl font-bold mb-4" style="color: var(--p-text-color)">
+              Verification Failed
+            </h1>
+            <p class="text-lg leading-relaxed" style="color: var(--p-text-muted-color)">
+              We couldn't verify your company email address
+            </p>
+          </div>
+
+          <!-- Error Message -->
+          <div
+            class="p-6 rounded-xl border-l-4 mb-8"
+            style="
+              background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--p-red-500) 8%, transparent),
+                color-mix(in srgb, var(--p-red-400) 5%, transparent)
+              );
+              border-left-color: var(--p-red-500);
+              border: 1px solid color-mix(in srgb, var(--p-red-400) 30%, transparent);
+            "
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <i class="pi pi-exclamation-triangle text-lg" style="color: var(--p-red-500)"></i>
+              <h3 class="text-lg font-semibold" style="color: var(--p-text-color)">
+                Verification Error
+              </h3>
+            </div>
+            <p class="text-sm leading-relaxed mb-4" style="color: var(--p-text-muted-color)">
+              {{ errorMessage() }}
+            </p>
+            <div
+              class="text-sm p-4 rounded-xl"
+              style="
+                background: var(--p-surface-100);
+                border: 1px solid color-mix(in srgb, var(--p-red-400) 20%, transparent);
+              "
+            >
+              <div class="flex items-start gap-3">
+                <i class="pi pi-lightbulb mt-0.5" style="color: var(--p-red-500)"></i>
+                <div class="space-y-2">
+                  <div class="font-semibold" style="color: var(--p-text-color)">
+                    What you can do:
+                  </div>
+                  <ul
+                    class="text-xs space-y-1 list-disc ml-4"
+                    style="color: var(--p-text-muted-color)"
+                  >
+                    <li>Check if the verification link is expired</li>
+                    <li>Request a new company verification email</li>
+                    <li>Contact support if the issue persists</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col gap-4">
+          @if (verificationSuccess() || alreadyVerified()) {
+            <p-button
+              label="Go to Dashboard"
+              icon="pi pi-home"
+              routerLink="/dashboard"
+              styleClass="w-full transition-all duration-300 hover:scale-105"
+              size="large"
+              [style]="{ 'border-radius': '12px' }"
+            ></p-button>
+          } @else {
+            <p-button
+              label="Request New Verification"
+              icon="pi pi-refresh"
+              routerLink="/auth/company-send"
+              styleClass="w-full transition-all duration-300 hover:scale-105"
+              size="large"
+              [style]="{ 'border-radius': '12px' }"
+            ></p-button>
+          }
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <p-button
+              label="Back to Login"
+              icon="pi pi-arrow-left"
+              routerLink="/auth/login"
+              styleClass="w-full transition-all duration-300 hover:scale-105"
+              severity="secondary"
+              [outlined]="true"
+              size="large"
+              [style]="{ 'border-radius': '12px' }"
+            ></p-button>
+
+            <p-button
+              label="Contact Support"
+              icon="pi pi-envelope"
+              (onClick)="contactSupport()"
+              styleClass="w-full transition-all duration-300 hover:scale-105"
+              severity="help"
+              [outlined]="true"
+              size="large"
+              [style]="{ 'border-radius': '12px' }"
+            ></p-button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

@@ -7,6 +7,8 @@ import { SelectModule } from 'primeng/select';
 import { MessageModule } from 'primeng/message';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import {
   CountryOption,
   UserRoleOption,
@@ -26,6 +28,8 @@ import { phoneNumberValidator } from '../../../../validators/phone-number.valida
     MessageModule,
     CardModule,
     ButtonModule,
+    IconFieldModule,
+    InputIconModule,
     PhoneInputComponent,
   ],
   templateUrl: './company-info-step.component.html',

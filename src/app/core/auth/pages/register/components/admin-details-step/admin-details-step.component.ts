@@ -6,6 +6,8 @@ import { MessageModule } from 'primeng/message';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { AdminFormData } from '../../../../interfaces/register.interface';
 import { phoneNumberValidator } from '../../../../validators/phone-number.validator';
 import { passwordMatchValidator } from '../../../../validators/password.validator';
@@ -21,6 +23,8 @@ import { PhoneInputComponent } from '../phone-input.component';
     CardModule,
     ButtonModule,
     DividerModule,
+    IconFieldModule,
+    InputIconModule,
     PhoneInputComponent,
   ],
   templateUrl: './admin-details-step.component.html',
@@ -58,7 +62,16 @@ export class AdminDetailsStepComponent implements OnInit {
         first_name: ['', [Validators.required, Validators.minLength(2)]],
         last_name: ['', [Validators.required, Validators.minLength(2)]],
         email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(8)]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(
+              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\-_#.])[A-Za-z\d@$!%*?&\-_#.]{8,}$/
+            ),
+          ],
+        ],
         password_confirmation: ['', [Validators.required, Validators.minLength(8)]],
         phone_number: ['', [Validators.required, phoneNumberValidator()]],
         commercialRegistration: [''],

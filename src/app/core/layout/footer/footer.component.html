@@ -1,0 +1,128 @@
+<footer class="bg-surface-800 text-surface-50 py-12">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- Company Info -->
+      <div class="col-span-1">
+        <h3 class="text-xl font-bold mb-4">Genie</h3>
+        <p class="text-surface-300 mb-4">
+          Your trusted marketplace for quality products and reliable suppliers.
+        </p>
+        <div class="flex space-x-4">
+          <a href="#" class="text-surface-300 hover:text-primary-300 transition-colors">
+            <i class="pi pi-facebook text-xl"></i>
+          </a>
+          <a href="#" class="text-surface-300 hover:text-primary-300 transition-colors">
+            <i class="pi pi-twitter text-xl"></i>
+          </a>
+          <a href="#" class="text-surface-300 hover:text-primary-300 transition-colors">
+            <i class="pi pi-instagram text-xl"></i>
+          </a>
+          <a href="#" class="text-surface-300 hover:text-primary-300 transition-colors">
+            <i class="pi pi-linkedin text-xl"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-span-1">
+        <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+        <ul class="space-y-2">
+          <li>
+            <a routerLink="/" class="text-surface-300 hover:text-primary-300 transition-colors"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/products"
+              class="text-surface-300 hover:text-primary-300 transition-colors"
+              >Products</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/suppliers"
+              class="text-surface-300 hover:text-primary-300 transition-colors"
+              >Suppliers</a
+            >
+          </li>
+          <li>
+            <a routerLink="/about" class="text-surface-300 hover:text-primary-300 transition-colors"
+              >About Us</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/contact"
+              class="text-surface-300 hover:text-primary-300 transition-colors"
+              >Contact</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Categories -->
+      <div class="col-span-1">
+        <h3 class="text-xl font-bold mb-4">Categories</h3>
+        <ul class="space-y-2">
+          <li>
+            <a href="#" class="text-surface-300 hover:text-primary-300 transition-colors"
+              >Electronics</a
+            >
+          </li>
+          <li>
+            <a href="#" class="text-surface-300 hover:text-primary-300 transition-colors"
+              >Fashion</a
+            >
+          </li>
+          <li>
+            <a href="#" class="text-surface-300 hover:text-primary-300 transition-colors"
+              >Home & Garden</a
+            >
+          </li>
+          <li>
+            <a href="#" class="text-surface-300 hover:text-primary-300 transition-colors"
+              >Beauty & Health</a
+            >
+          </li>
+          <li>
+            <a href="#" class="text-surface-300 hover:text-primary-300 transition-colors"
+              >Sports & Outdoors</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-span-1">
+        <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+        <ul class="space-y-2">
+          <li class="flex items-start">
+            <i class="pi pi-map-marker mr-2 mt-1"></i>
+            <span class="text-surface-300">123 Business Street, Tech City, 10001</span>
+          </li>
+          <li class="flex items-center">
+            <i class="pi pi-phone mr-2"></i>
+            <span class="text-surface-300">+1 (555) 123-4567</span>
+          </li>
+          <li class="flex items-center">
+            <i class="pi pi-envelope mr-2"></i>
+            <span class="text-surface-300">info&#64;genie.com</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="border-t border-surface-700 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between text-surface-400 text-center md:text-left gap-4"
+    >
+      <p class="text-sm">© {{ currentYear }} Genie. All rights reserved.</p>
+      <a
+        routerLink="/terms-and-conditions"
+        class="text-sm text-surface-300 hover:text-primary-300 transition-colors"
+      >
+        Terms & Conditions
+      </a>
+    </div>
+  </div>
+</footer>

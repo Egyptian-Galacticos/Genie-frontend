@@ -1,0 +1,36 @@
+.animate-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+  transition-delay: var(--animate-delay, 0s);
+}
+
+.animate-item.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.categories-carousel ::ng-deep .p-carousel-content {
+  overflow: visible;
+}
+
+.categories-carousel ::ng-deep .p-carousel-container {
+  overflow: visible;
+}
+
+.category-item {
+  outline: none;
+}
+
+.category-item:focus-within > div {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+::ng-deep .p-progress-spinner-circle {
+  stroke: var(--primary-color);
+}
+
+::ng-deep .p-message.p-message-error {
+  border-radius: 8px;
+}
