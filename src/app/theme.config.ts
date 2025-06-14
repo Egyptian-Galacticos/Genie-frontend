@@ -815,5 +815,71 @@ export const CustomAura = definePreset(Aura, {
         },
       },
     },
+    dialog: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+            borderRadius: '12px',
+            shadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          },
+          header: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+            borderBottom: '1px solid #e2e8f0',
+            borderRadius: '12px 12px 0 0',
+            padding: '1.5rem',
+          },
+          content: {
+            background: '#ffffff',
+            color: '#0f172a',
+            padding: '1.5rem',
+          },
+          footer: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+            borderTop: '1px solid #e2e8f0',
+            borderRadius: '0 0 12px 12px',
+            padding: '1rem 1.5rem',
+            gap: '0.75rem',
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            color: '#f8fafc',
+            borderRadius: '12px',
+            shadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
+          },
+          header: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            color: '#f8fafc',
+            borderBottom: '1px solid #334155',
+            borderRadius: '12px 12px 0 0',
+            padding: '1.5rem',
+          },
+          content: {
+            background: '#1e293b',
+            color: '#f8fafc',
+            padding: '1.5rem',
+          },
+          footer: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            color: '#f8fafc',
+            borderTop: '1px solid #334155',
+            borderRadius: '0 0 12px 12px',
+            padding: '1rem 1.5rem',
+            gap: '0.75rem',
+          },
+        },
+      },
+    },
   },
 });
