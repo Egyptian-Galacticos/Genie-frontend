@@ -168,7 +168,7 @@ export class UserComponent implements OnInit {
     const permissions = this.permissions();
     if (permissions.isUserEmailVerified) {
       return 'Email is verified and cannot be changed';
-    } else if (!permissions.canUpdateUserEmail) {
+    } else if (!permissions.canUpdateEmail) {
       return 'Email cannot be updated while verification is pending';
     } else {
       return 'Email verification pending - you can update your email until verified';
