@@ -27,357 +27,335 @@
     </p>
   </div>
 
-  @if (loading()) {
-    <div class="flex items-center justify-center py-12 sm:py-16">
-      <div class="w-full max-w-md sm:max-w-2xl">
-        <div class="flex flex-col items-center mb-6 sm:mb-8">
-          <p-skeleton shape="circle" size="3rem" class="sm:size-16 mb-3 sm:mb-4"></p-skeleton>
-          <p-skeleton width="10rem" height="1.5rem" class="sm:w-48 sm:h-7 mb-2"></p-skeleton>
-          <p-skeleton width="14rem" height="1rem" class="sm:w-64 sm:h-5 mb-4 sm:mb-6"></p-skeleton>
+  <div
+    class="p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow-sm"
+    style="background: var(--p-surface-0)"
+  >
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+        <div class="space-y-2 sm:space-y-3">
+          <label
+            for="first_name"
+            class="block text-sm font-medium"
+            style="color: var(--p-text-color)"
+          >
+            First Name *
+          </label>
+          <div class="relative">
+            <p-iconfield class="w-full">
+              <p-inputicon class="pi pi-user" />
+              <input
+                id="first_name"
+                type="text"
+                pInputText
+                formControlName="first_name"
+                class="w-full h-10 sm:h-11"
+                [class.ng-invalid]="isFieldInvalid('first_name')"
+                placeholder="Enter your first name"
+              />
+            </p-iconfield>
+          </div>
+          @if (isFieldInvalid('first_name')) {
+            <div
+              class="p-3 rounded-xl border-l-4"
+              style="
+                background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
+                border-left-color: var(--p-red-500);
+              "
+            >
+              <div class="flex items-center gap-2">
+                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+                <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                  {{ getFieldError('first_name') }}
+                </span>
+              </div>
+            </div>
+          }
         </div>
-        <div class="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-          <p-skeleton width="100%" height="2.5rem" class="sm:h-11"></p-skeleton>
-          <p-skeleton width="100%" height="2.5rem" class="sm:h-11"></p-skeleton>
-          <p-skeleton width="100%" height="2.5rem" class="sm:h-11"></p-skeleton>
-        </div>
-        <div class="flex justify-end">
-          <p-skeleton width="7rem" height="2.5rem" class="sm:w-32 sm:h-11"></p-skeleton>
+
+        <div class="space-y-2 sm:space-y-3">
+          <label
+            for="last_name"
+            class="block text-sm font-medium"
+            style="color: var(--p-text-color)"
+          >
+            Last Name *
+          </label>
+          <div class="relative">
+            <p-iconfield class="w-full">
+              <p-inputicon class="pi pi-user" />
+              <input
+                id="last_name"
+                type="text"
+                pInputText
+                formControlName="last_name"
+                class="w-full h-10 sm:h-11"
+                [class.ng-invalid]="isFieldInvalid('last_name')"
+                placeholder="Enter your last name"
+              />
+            </p-iconfield>
+          </div>
+          @if (isFieldInvalid('last_name')) {
+            <div
+              class="p-3 rounded-xl border-l-4"
+              style="
+                background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
+                border-left-color: var(--p-red-500);
+              "
+            >
+              <div class="flex items-center gap-2">
+                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+                <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                  {{ getFieldError('last_name') }}
+                </span>
+              </div>
+            </div>
+          }
         </div>
       </div>
-    </div>
-  } @else {
-    <div
-      class="p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow-sm"
-      style="background: var(--p-surface-0)"
-    >
-      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-          <div class="space-y-2 sm:space-y-3">
-            <label
-              for="first_name"
-              class="block text-sm font-medium"
-              style="color: var(--p-text-color)"
-            >
-              First Name *
-            </label>
-            <div class="relative">
-              <p-iconfield class="w-full">
-                <p-inputicon class="pi pi-user" />
-                <input
-                  id="first_name"
-                  type="text"
-                  pInputText
-                  formControlName="first_name"
-                  class="w-full h-10 sm:h-11"
-                  [class.ng-invalid]="isFieldInvalid('first_name')"
-                  placeholder="Enter your first name"
-                />
-              </p-iconfield>
-            </div>
-            @if (isFieldInvalid('first_name')) {
-              <div
-                class="p-3 rounded-xl border-l-4"
-                style="
-                  background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
-                  border-left-color: var(--p-red-500);
-                "
-              >
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
-                  <span class="text-sm font-medium" style="color: var(--p-red-700)">
-                    {{ getFieldError('first_name') }}
-                  </span>
-                </div>
-              </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+        <div class="space-y-2 sm:space-y-3">
+          <label for="email" class="block text-sm font-medium" style="color: var(--p-text-color)">
+            Email Address *
+          </label>
+          <div class="relative">
+            <p-iconfield class="w-full">
+              <p-inputicon class="pi pi-envelope" />
+              <input
+                id="email"
+                type="email"
+                pInputText
+                formControlName="email"
+                class="w-full h-10 sm:h-11"
+                [class.ng-invalid]="isFieldInvalid('email')"
+                placeholder="Enter your email address"
+                [pTooltip]="getEmailTooltipText()"
+                tooltipPosition="top"
+              />
+            </p-iconfield>
+            @if (permissions().isUserEmailVerified) {
+              <i
+                class="pi pi-check-circle absolute right-3 top-1/2 transform -translate-y-1/2 text-sm pointer-events-none"
+                style="color: var(--p-green-500)"
+              ></i>
+            } @else if (!permissions().canUpdateEmail) {
+              <i
+                class="pi pi-lock absolute right-3 top-1/2 transform -translate-y-1/2 text-sm pointer-events-none"
+                style="color: var(--p-orange-500)"
+              ></i>
             }
           </div>
 
-          <div class="space-y-2 sm:space-y-3">
-            <label
-              for="last_name"
-              class="block text-sm font-medium"
-              style="color: var(--p-text-color)"
+          @if (isFieldInvalid('email')) {
+            <div
+              class="p-3 rounded-xl border-l-4"
+              style="
+                background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
+                border-left-color: var(--p-red-500);
+              "
             >
-              Last Name *
-            </label>
-            <div class="relative">
-              <p-iconfield class="w-full">
-                <p-inputicon class="pi pi-user" />
-                <input
-                  id="last_name"
-                  type="text"
-                  pInputText
-                  formControlName="last_name"
-                  class="w-full h-10 sm:h-11"
-                  [class.ng-invalid]="isFieldInvalid('last_name')"
-                  placeholder="Enter your last name"
-                />
-              </p-iconfield>
-            </div>
-            @if (isFieldInvalid('last_name')) {
-              <div
-                class="p-3 rounded-xl border-l-4"
-                style="
-                  background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
-                  border-left-color: var(--p-red-500);
-                "
-              >
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
-                  <span class="text-sm font-medium" style="color: var(--p-red-700)">
-                    {{ getFieldError('last_name') }}
-                  </span>
-                </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+                <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                  {{ getFieldError('email') }}
+                </span>
               </div>
-            }
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-          <div class="space-y-2 sm:space-y-3">
-            <label for="email" class="block text-sm font-medium" style="color: var(--p-text-color)">
-              Email Address *
-            </label>
-            <div class="relative">
-              <p-iconfield class="w-full">
-                <p-inputicon class="pi pi-envelope" />
-                <input
-                  id="email"
-                  type="email"
-                  pInputText
-                  formControlName="email"
-                  class="w-full h-10 sm:h-11"
-                  [class.ng-invalid]="isFieldInvalid('email')"
-                  placeholder="Enter your email address"
-                  [pTooltip]="getEmailTooltipText()"
-                  tooltipPosition="top"
-                />
-              </p-iconfield>
-              @if (permissions().isUserEmailVerified) {
-                <i
-                  class="pi pi-check-circle absolute right-3 top-1/2 transform -translate-y-1/2 text-sm pointer-events-none"
-                  style="color: var(--p-green-500)"
-                ></i>
-              } @else if (!permissions().canUpdateEmail) {
-                <i
-                  class="pi pi-lock absolute right-3 top-1/2 transform -translate-y-1/2 text-sm pointer-events-none"
-                  style="color: var(--p-orange-500)"
-                ></i>
-              }
             </div>
-
-            @if (isFieldInvalid('email')) {
-              <div
-                class="p-3 rounded-xl border-l-4"
-                style="
-                  background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
-                  border-left-color: var(--p-red-500);
-                "
-              >
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
-                  <span class="text-sm font-medium" style="color: var(--p-red-700)">
-                    {{ getFieldError('email') }}
-                  </span>
-                </div>
-              </div>
-            }
-            @if (!permissions().isUserEmailVerified && user()?.email) {
-              <div
-                class="p-4 rounded-xl border-l-4 shadow-sm"
-                style="
-                  background: linear-gradient(
-                    135deg,
-                    color-mix(in srgb, var(--p-primary-500) 8%, transparent),
-                    color-mix(in srgb, var(--p-primary-400) 5%, transparent)
-                  );
-                  border-left-color: var(--p-primary-500);
-                  border: 1px solid color-mix(in srgb, var(--p-primary-400) 20%, transparent);
-                "
-              >
-                <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                  <div class="flex items-start gap-3 flex-1">
-                    <div
-                      class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                      style="background: var(--p-primary-500)"
-                    >
-                      <i class="pi pi-exclamation-triangle text-white text-sm"></i>
-                    </div>
-                    <div class="space-y-1 min-w-0">
-                      <h4 class="text-sm font-semibold" style="color: var(--p-text-color)">
-                        Email verification required
-                      </h4>
-                      <p class="text-xs leading-relaxed" style="color: var(--p-text-muted-color)">
-                        Please verify your email address to secure your account and access all
-                        features
-                      </p>
-                    </div>
+          }
+          @if (!permissions().isUserEmailVerified && user()?.email) {
+            <div
+              class="p-4 rounded-xl border-l-4 shadow-sm"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  color-mix(in srgb, var(--p-primary-500) 8%, transparent),
+                  color-mix(in srgb, var(--p-primary-400) 5%, transparent)
+                );
+                border-left-color: var(--p-primary-500);
+                border: 1px solid color-mix(in srgb, var(--p-primary-400) 20%, transparent);
+              "
+            >
+              <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                <div class="flex items-start gap-3 flex-1">
+                  <div
+                    class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                    style="background: var(--p-primary-500)"
+                  >
+                    <i class="pi pi-exclamation-triangle text-white text-sm"></i>
                   </div>
-                  <div class="flex-shrink-0 sm:ml-auto">
-                    <p-button
-                      label="Verify Email"
-                      icon="pi pi-external-link"
-                      size="small"
-                      [outlined]="true"
-                      (onClick)="goToEmailVerification()"
-                      styleClass="text-xs px-4 py-2 h-8 font-medium hover:scale-105 transition-all duration-200 shadow-sm"
-                      [style]="{ 'border-radius': '8px' }"
-                    ></p-button>
+                  <div class="space-y-1 min-w-0">
+                    <h4 class="text-sm font-semibold" style="color: var(--p-text-color)">
+                      Email verification required
+                    </h4>
+                    <p class="text-xs leading-relaxed" style="color: var(--p-text-muted-color)">
+                      Please verify your email address to secure your account and access all
+                      features
+                    </p>
                   </div>
                 </div>
+                <div class="flex-shrink-0 sm:ml-auto">
+                  <p-button
+                    label="Verify Email"
+                    icon="pi pi-external-link"
+                    size="small"
+                    [outlined]="true"
+                    (onClick)="goToEmailVerification()"
+                    styleClass="text-xs px-4 py-2 h-8 font-medium hover:scale-105 transition-all duration-200 shadow-sm"
+                    [style]="{ 'border-radius': '8px' }"
+                  ></p-button>
+                </div>
               </div>
-            }
+            </div>
+          }
+        </div>
+
+        <div class="space-y-2 sm:space-y-3">
+          <label
+            for="phone_number"
+            class="block text-sm font-medium"
+            style="color: var(--p-text-color)"
+          >
+            Phone Number *
+          </label>
+          <div class="relative">
+            <app-phone-input
+              formControlName="phone_number"
+              placeholder="+1 (555) 123-4567"
+              class="w-full"
+            ></app-phone-input>
+          </div>
+          @if (isFieldInvalid('phone_number')) {
+            <div
+              class="p-3 rounded-xl border-l-4"
+              style="
+                background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
+                border-left-color: var(--p-red-500);
+              "
+            >
+              <div class="flex items-center gap-2">
+                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
+                <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                  {{ getFieldError('phone_number') }}
+                </span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2 sm:pt-4">
+        <p-button
+          type="submit"
+          label="Save Changes"
+          icon="pi pi-check"
+          [loading]="saving()"
+          styleClass="w-full sm:w-auto min-h-10 sm:min-h-11"
+        ></p-button>
+      </div>
+    </form>
+  </div>
+
+  @if (user()) {
+    <div class="mt-6 lg:mt-8">
+      <div class="p-4 sm:p-6 rounded-2xl shadow-lg" style="background: var(--p-surface-0)">
+        <h3 class="text-lg font-semibold mb-4" style="color: var(--p-text-color)">
+          Profile Summary
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+          <div
+            class="p-3 sm:p-4 rounded-xl hover:shadow-md transition-shadow"
+            style="background: var(--p-surface-100)"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                style="background: linear-gradient(135deg, var(--p-blue-500), var(--p-blue-400))"
+              >
+                <i class="pi pi-user text-white text-sm"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-xs font-medium mb-1" style="color: var(--p-text-muted-color)">
+                  Full Name
+                </p>
+                <p class="text-sm font-semibold truncate" style="color: var(--p-text-color)">
+                  {{ user()?.full_name }}
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div class="space-y-2 sm:space-y-3">
-            <label
-              for="phone_number"
-              class="block text-sm font-medium"
-              style="color: var(--p-text-color)"
-            >
-              Phone Number *
-            </label>
-            <div class="relative">
-              <app-phone-input
-                formControlName="phone_number"
-                placeholder="+1 (555) 123-4567"
-                class="w-full"
-              ></app-phone-input>
-            </div>
-            @if (isFieldInvalid('phone_number')) {
+          <div
+            class="p-3 sm:p-4 rounded-xl hover:shadow-md transition-shadow"
+            style="background: var(--p-surface-100)"
+          >
+            <div class="flex items-center gap-3">
               <div
-                class="p-3 rounded-xl border-l-4"
+                class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                style="background: linear-gradient(135deg, var(--p-green-500), var(--p-green-400))"
+              >
+                <i class="pi pi-envelope text-white text-sm"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-xs font-medium mb-1" style="color: var(--p-text-muted-color)">
+                  Email Status
+                </p>
+                <p class="text-sm font-semibold" style="color: var(--p-text-color)">
+                  {{ user()?.is_email_verified ? 'Verified' : 'Pending' }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="p-3 sm:p-4 rounded-xl hover:shadow-md transition-shadow"
+            style="background: var(--p-surface-100)"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
                 style="
-                  background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
-                  border-left-color: var(--p-red-500);
+                  background: linear-gradient(135deg, var(--p-purple-500), var(--p-purple-400));
                 "
               >
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
-                  <span class="text-sm font-medium" style="color: var(--p-red-700)">
-                    {{ getFieldError('phone_number') }}
-                  </span>
-                </div>
+                <i class="pi pi-phone text-white text-sm"></i>
               </div>
-            }
+              <div class="min-w-0 flex-1">
+                <p class="text-xs font-medium mb-1" style="color: var(--p-text-muted-color)">
+                  Phone
+                </p>
+                <p class="text-sm font-semibold truncate" style="color: var(--p-text-color)">
+                  {{ user()?.phone_number || 'Not set' }}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="flex justify-end pt-2 sm:pt-4">
-          <p-button
-            type="submit"
-            label="Save Changes"
-            icon="pi pi-check"
-            [loading]="saving()"
-            styleClass="w-full sm:w-auto min-h-10 sm:min-h-11"
-          ></p-button>
-        </div>
-      </form>
-    </div>
-
-    @if (user()) {
-      <div class="mt-6 lg:mt-8">
-        <div class="p-4 sm:p-6 rounded-2xl shadow-lg" style="background: var(--p-surface-0)">
-          <h3 class="text-lg font-semibold mb-4" style="color: var(--p-text-color)">
-            Profile Summary
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
-            <div
-              class="p-3 sm:p-4 rounded-xl hover:shadow-md transition-shadow"
-              style="background: var(--p-surface-100)"
-            >
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                  style="background: linear-gradient(135deg, var(--p-blue-500), var(--p-blue-400))"
-                >
-                  <i class="pi pi-user text-white text-sm"></i>
-                </div>
-                <div class="min-w-0 flex-1">
-                  <p class="text-xs font-medium mb-1" style="color: var(--p-text-muted-color)">
-                    Full Name
-                  </p>
-                  <p class="text-sm font-semibold truncate" style="color: var(--p-text-color)">
-                    {{ user()?.full_name }}
-                  </p>
-                </div>
+          <div
+            class="p-3 sm:p-4 rounded-xl hover:shadow-md transition-shadow"
+            style="background: var(--p-surface-100)"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                style="
+                  background: linear-gradient(135deg, var(--p-orange-500), var(--p-orange-400));
+                "
+              >
+                <i class="pi pi-calendar text-white text-sm"></i>
               </div>
-            </div>
-
-            <div
-              class="p-3 sm:p-4 rounded-xl hover:shadow-md transition-shadow"
-              style="background: var(--p-surface-100)"
-            >
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                  style="
-                    background: linear-gradient(135deg, var(--p-green-500), var(--p-green-400));
-                  "
-                >
-                  <i class="pi pi-envelope text-white text-sm"></i>
-                </div>
-                <div class="min-w-0 flex-1">
-                  <p class="text-xs font-medium mb-1" style="color: var(--p-text-muted-color)">
-                    Email Status
-                  </p>
-                  <p class="text-sm font-semibold" style="color: var(--p-text-color)">
-                    {{ user()?.is_email_verified ? 'Verified' : 'Pending' }}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="p-3 sm:p-4 rounded-xl hover:shadow-md transition-shadow"
-              style="background: var(--p-surface-100)"
-            >
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                  style="
-                    background: linear-gradient(135deg, var(--p-purple-500), var(--p-purple-400));
-                  "
-                >
-                  <i class="pi pi-phone text-white text-sm"></i>
-                </div>
-                <div class="min-w-0 flex-1">
-                  <p class="text-xs font-medium mb-1" style="color: var(--p-text-muted-color)">
-                    Phone
-                  </p>
-                  <p class="text-sm font-semibold truncate" style="color: var(--p-text-color)">
-                    {{ user()?.phone_number || 'Not set' }}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="p-3 sm:p-4 rounded-xl hover:shadow-md transition-shadow"
-              style="background: var(--p-surface-100)"
-            >
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                  style="
-                    background: linear-gradient(135deg, var(--p-orange-500), var(--p-orange-400));
-                  "
-                >
-                  <i class="pi pi-calendar text-white text-sm"></i>
-                </div>
-                <div class="min-w-0 flex-1">
-                  <p class="text-xs font-medium mb-1" style="color: var(--p-text-muted-color)">
-                    Status
-                  </p>
-                  <p class="text-sm font-semibold" style="color: var(--p-text-color)">
-                    {{ user()?.status | titlecase }}
-                  </p>
-                </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-xs font-medium mb-1" style="color: var(--p-text-muted-color)">
+                  Status
+                </p>
+                <p class="text-sm font-semibold" style="color: var(--p-text-color)">
+                  {{ user()?.status | titlecase }}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    }
+    </div>
   }
 </div>

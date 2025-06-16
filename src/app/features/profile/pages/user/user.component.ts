@@ -13,10 +13,9 @@ import { PanelModule } from 'primeng/panel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageService } from 'primeng/api';
 import { ProfileService } from '../../services/profile.service';
-import { User, Profile } from '../../interfaces/profile.interface';
+import { User } from '../../interfaces/profile.interface';
 import { PhoneInputComponent } from '../../../../shared/components/phone-input/phone-input.component';
 import { phoneNumberValidator } from '../../../../shared/validators/phone-number.validator';
-import { SkeletonModule } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
@@ -34,7 +33,6 @@ import { TooltipModule } from 'primeng/tooltip';
     PanelModule,
     ProgressSpinnerModule,
     PhoneInputComponent,
-    SkeletonModule,
     TooltipModule,
   ],
   templateUrl: './user.component.html',
@@ -46,7 +44,6 @@ export class UserComponent implements OnInit {
   private messageService = inject(MessageService);
 
   userForm!: FormGroup;
-  loading = signal(false);
   saving = signal(false);
 
   user = this.profileService.user;
@@ -55,7 +52,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
-    this.loadUserData();
+    this.populateFormFromProfile();
   }
 
   private initializeForm() {
@@ -70,30 +67,11 @@ export class UserComponent implements OnInit {
     });
   }
 
-  loadUserData() {
+  populateFormFromProfile() {
     const currentUser = this.profileService.user();
     if (currentUser) {
       this.populateForm(currentUser);
-      return;
     }
-
-    this.loading.set(true);
-    this.profileService.loadProfile().subscribe({
-      next: (data: Profile) => {
-        if (data?.user) {
-          this.populateForm(data.user);
-        }
-        this.loading.set(false);
-      },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load user data',
-        });
-        this.loading.set(false);
-      },
-    });
   }
 
   private populateForm(userData: User) {
