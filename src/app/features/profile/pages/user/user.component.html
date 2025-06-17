@@ -164,48 +164,16 @@
             </div>
           }
           @if (!permissions().isUserEmailVerified && user()?.email) {
-            <div
-              class="p-4 rounded-xl border-l-4 shadow-sm"
-              style="
-                background: linear-gradient(
-                  135deg,
-                  color-mix(in srgb, var(--p-primary-500) 8%, transparent),
-                  color-mix(in srgb, var(--p-primary-400) 5%, transparent)
-                );
-                border-left-color: var(--p-primary-500);
-                border: 1px solid color-mix(in srgb, var(--p-primary-400) 20%, transparent);
-              "
-            >
-              <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                <div class="flex items-start gap-3 flex-1">
-                  <div
-                    class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                    style="background: var(--p-primary-500)"
-                  >
-                    <i class="pi pi-exclamation-triangle text-white text-sm"></i>
-                  </div>
-                  <div class="space-y-1 min-w-0">
-                    <h4 class="text-sm font-semibold" style="color: var(--p-text-color)">
-                      Email verification required
-                    </h4>
-                    <p class="text-xs leading-relaxed" style="color: var(--p-text-muted-color)">
-                      Please verify your email address to secure your account and access all
-                      features
-                    </p>
-                  </div>
-                </div>
-                <div class="flex-shrink-0 sm:ml-auto">
-                  <p-button
-                    label="Verify Email"
-                    icon="pi pi-external-link"
-                    size="small"
-                    [outlined]="true"
-                    (onClick)="goToEmailVerification()"
-                    styleClass="text-xs px-4 py-2 h-8 font-medium hover:scale-105 transition-all duration-200 shadow-sm"
-                    [style]="{ 'border-radius': '8px' }"
-                  ></p-button>
-                </div>
-              </div>
+            <div class="flex-shrink-0 sm:ml-auto">
+              <p-button
+                label="Resend verification Email"
+                icon="pi pi-external-link"
+                size="small"
+                [link]="true"
+                (onClick)="goToEmailVerification()"
+                styleClass="text-xs px-4 py-2 h-8 font-medium hover:scale-105 transition-all duration-200 shadow-sm"
+                [style]="{ 'border-radius': '8px' }"
+              ></p-button>
             </div>
           }
         </div>
