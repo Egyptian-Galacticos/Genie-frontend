@@ -56,20 +56,13 @@
             </p-iconfield>
           </div>
           @if (isFieldInvalid('first_name')) {
-            <div
-              class="p-3 rounded-xl border-l-4"
-              style="
-                background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
-                border-left-color: var(--p-red-500);
-              "
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('first_name')"
+              styleClass="mt-2 w-full"
             >
-              <div class="flex items-center gap-2">
-                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
-                <span class="text-sm font-medium" style="color: var(--p-red-700)">
-                  {{ getFieldError('first_name') }}
-                </span>
-              </div>
-            </div>
+            </p-message>
           }
         </div>
 
@@ -96,20 +89,13 @@
             </p-iconfield>
           </div>
           @if (isFieldInvalid('last_name')) {
-            <div
-              class="p-3 rounded-xl border-l-4"
-              style="
-                background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
-                border-left-color: var(--p-red-500);
-              "
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('last_name')"
+              styleClass="mt-2 w-full"
             >
-              <div class="flex items-center gap-2">
-                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
-                <span class="text-sm font-medium" style="color: var(--p-red-700)">
-                  {{ getFieldError('last_name') }}
-                </span>
-              </div>
-            </div>
+            </p-message>
           }
         </div>
       </div>
@@ -148,20 +134,13 @@
           </div>
 
           @if (isFieldInvalid('email')) {
-            <div
-              class="p-3 rounded-xl border-l-4"
-              style="
-                background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
-                border-left-color: var(--p-red-500);
-              "
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('email')"
+              styleClass="mt-2 w-full"
             >
-              <div class="flex items-center gap-2">
-                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
-                <span class="text-sm font-medium" style="color: var(--p-red-700)">
-                  {{ getFieldError('email') }}
-                </span>
-              </div>
-            </div>
+            </p-message>
           }
           @if (!permissions().isUserEmailVerified && user()?.email) {
             <div class="flex-shrink-0 sm:ml-auto">
@@ -194,20 +173,13 @@
             ></app-phone-input>
           </div>
           @if (isFieldInvalid('phone_number')) {
-            <div
-              class="p-3 rounded-xl border-l-4"
-              style="
-                background: color-mix(in srgb, var(--p-red-50) 80%, transparent);
-                border-left-color: var(--p-red-500);
-              "
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('phone_number')"
+              styleClass="mt-2 w-full"
             >
-              <div class="flex items-center gap-2">
-                <i class="pi pi-exclamation-triangle text-sm" style="color: var(--p-red-500)"></i>
-                <span class="text-sm font-medium" style="color: var(--p-red-700)">
-                  {{ getFieldError('phone_number') }}
-                </span>
-              </div>
-            </div>
+            </p-message>
           }
         </div>
       </div>
