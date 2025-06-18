@@ -554,6 +554,7 @@
               placeholder="Select country"
               [class]="'w-full ' + (isFieldInvalid('address.country') ? 'ng-invalid' : '')"
               styleClass="w-full"
+              appendTo="body"
             />
           </div>
           @if (isFieldInvalid('address.country')) {
