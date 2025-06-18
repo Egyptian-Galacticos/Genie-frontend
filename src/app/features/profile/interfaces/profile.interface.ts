@@ -71,3 +71,10 @@ export interface MessageResponse {
   success: boolean;
   message: string;
 }
+
+export interface SellerUpgradeRequest {
+  tax_id: string;
+  commercial_registration: string;
+  website?: string;
+  description?: string;
+}
