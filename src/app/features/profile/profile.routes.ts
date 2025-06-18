@@ -28,6 +28,14 @@ export const profileRoutes: Routes = [
         title: 'Change Password - Genie',
       },
       {
+        path: 'seller-upgrade',
+        loadComponent: () =>
+          import('./pages/seller-upgrade/seller-upgrade.component').then(
+            m => m.SellerUpgradeComponent
+          ),
+        title: 'Upgrade to Seller - Genie',
+      },
+      {
         path: 'deactivation',
         loadComponent: () =>
           import('./pages/deactivation/deactivation.component').then(m => m.DeactivationComponent),

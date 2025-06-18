@@ -30,8 +30,9 @@ export class ProfileComponent implements OnInit {
   profile = this.profileService.profile;
   loading = this.profileService.loading;
   error = this.profileService.error;
+  canUpgradeToSeller = this.profileService.canUpgradeToSeller;
 
-  navigationItems = [
+  baseNavigationItems = [
     {
       label: 'User Data',
       routerLink: '/profile/user',
@@ -58,8 +59,21 @@ export class ProfileComponent implements OnInit {
     },
   ];
 
+  sellerUpgradeItem = {
+    label: 'Upgrade to Seller',
+    routerLink: '/profile/seller-upgrade',
+    route: '/profile/seller-upgrade',
+    icon: 'pi pi-shop',
+  };
+
   get menuItems() {
-    return this.navigationItems;
+    const items = [...this.baseNavigationItems];
+
+    if (this.canUpgradeToSeller()) {
+      items.splice(-1, 0, this.sellerUpgradeItem);
+    }
+
+    return items;
   }
 
   ngOnInit() {
