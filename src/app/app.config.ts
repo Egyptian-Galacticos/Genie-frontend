@@ -7,6 +7,7 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { CustomAura } from './theme.config';
 import { authInterceptor } from './core/auth/interceptors/auth.interceptor';
+import { provideStore } from '@ngrx/store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,5 +30,6 @@ export const appConfig: ApplicationConfig = {
       },
       ripple: true,
     }),
+    provideStore(),
   ],
 };
