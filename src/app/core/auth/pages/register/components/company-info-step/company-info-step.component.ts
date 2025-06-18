@@ -14,8 +14,8 @@ import {
   UserRoleOption,
   CompanyFormData,
 } from '../../../../interfaces/register.interface';
-import { PhoneInputComponent } from '../phone-input.component';
-import { phoneNumberValidator } from '../../../../validators/phone-number.validator';
+import { PhoneInputComponent } from '../../../../../../shared/components/phone-input/phone-input.component';
+import { phoneNumberValidator } from '../../../../../../shared/validators/phone-number.validator';
 
 @Component({
   selector: 'app-company-info-step',

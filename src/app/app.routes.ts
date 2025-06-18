@@ -84,6 +84,12 @@ export const routes: Routes = [
     canActivate: [authGuard, emailVerificationGuard],
   },
   {
+    path: 'profile',
+    loadChildren: () => import('./features/profile/profile.routes').then(m => m.profileRoutes),
+    title: 'Profile - Genie',
+    canActivate: [authGuard],
+  },
+  {
     path: 'unauthorized',
     loadComponent: () =>
       import('./pages/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent),
