@@ -333,11 +333,11 @@ export class CompanyComponent implements OnInit {
     const field = this.companyForm.get(fieldName);
     if (!field?.errors) return '';
 
-    const displayName = this.getDisplayName(fieldName);
+    const fieldLabel = this.getFieldLabel(fieldName);
 
-    if (field.errors['required']) return `${displayName} is required`;
+    if (field.errors['required']) return `${fieldLabel} is required`;
     if (field.errors['email']) return 'Please enter a valid email address';
-    if (field.errors['minlength']) return `${displayName} is too short`;
+    if (field.errors['minlength']) return `${fieldLabel} is too short`;
     if (field.errors['invalidPhoneNumber']) return 'Please enter a valid phone number';
 
     return '';
@@ -346,6 +346,29 @@ export class CompanyComponent implements OnInit {
   private getDisplayName(fieldName: string): string {
     const name = fieldName.includes('.') ? fieldName.split('.').pop() : fieldName;
     return name?.replace('_', ' ') || fieldName;
+  }
+
+  private getFieldLabel(fieldName: string): string {
+    const labels: Record<string, string> = {
+      name: 'Company Name',
+      email: 'Company Email',
+      tax_id: 'Tax ID',
+      commercial_registration: 'Commercial Registration',
+      company_phone: 'Company Phone',
+      website: 'Website',
+      description: 'Company Description',
+      'address.street': 'Street Address',
+      'address.city': 'City',
+      'address.state': 'State/Province',
+      'address.country': 'Country',
+      'address.zip_code': 'ZIP/Postal Code',
+      street: 'Street Address',
+      city: 'City',
+      state: 'State/Province',
+      country: 'Country',
+      zip_code: 'ZIP/Postal Code',
+    };
+    return labels[fieldName] || this.getDisplayName(fieldName);
   }
 
   getSummaryIconClasses(color: string): string {
