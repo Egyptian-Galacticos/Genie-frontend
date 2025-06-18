@@ -10,6 +10,7 @@ import {
   ProfileApiResponse,
   UserUpdateRequest,
   MessageResponse,
+  SellerUpgradeRequest,
 } from '../interfaces/profile.interface';
 
 @Injectable({
@@ -170,6 +171,34 @@ export class ProfileService {
       'Failed to deactivate account'
     );
   }
+
+  /**
+   * Upgrade user to seller
+   */
+  upgradeToSeller(sellerData: SellerUpgradeRequest): Observable<Profile> {
+    return this.handleRequest(
+      this.apiService.post<ApiResponse<ProfileApiResponse>>('seller/upgrade', sellerData).pipe(
+        map(response => this.transformApiResponse(response.data)),
+        tap(profile => this._profile.set(profile))
+      ),
+      'Failed to upgrade to seller'
+    );
+  }
+
+  /**
+   * Check if user can upgrade to seller
+   */
+  readonly canUpgradeToSeller = computed(() => {
+    const roles = this.roles();
+    const user = this.user();
+
+    if (!user) return false;
+
+    const isSeller = roles.includes('seller');
+    const isPending = user.status === 'pending';
+
+    return !isSeller && !isPending;
+  });
 
   /**
    * Refresh profile data
