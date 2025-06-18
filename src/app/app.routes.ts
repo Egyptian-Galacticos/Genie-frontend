@@ -32,6 +32,12 @@ export const routes: Routes = [
             m => m.TermsAndConditionsComponent
           ),
       },
+      {
+        path: 'profile',
+        loadChildren: () => import('./features/profile/profile.routes').then(m => m.profileRoutes),
+        title: 'Profile - Genie',
+        canActivate: [authGuard],
+      },
     ],
   },
   {
@@ -83,12 +89,7 @@ export const routes: Routes = [
     title: 'Dashboard - Genie',
     canActivate: [authGuard, emailVerificationGuard],
   },
-  {
-    path: 'profile',
-    loadChildren: () => import('./features/profile/profile.routes').then(m => m.profileRoutes),
-    title: 'Profile - Genie',
-    canActivate: [authGuard],
-  },
+
   {
     path: 'unauthorized',
     loadComponent: () =>
