@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, isDevMode } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -8,6 +8,10 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { CustomAura } from './theme.config';
 import { authInterceptor } from './core/auth/interceptors/auth.interceptor';
 import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { productsReducer } from './features/products/store/products.reducer';
+import { ProductsEffects } from './features/products/store/products.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,6 +34,24 @@ export const appConfig: ApplicationConfig = {
       },
       ripple: true,
     }),
-    provideStore(),
+    provideStore(
+      {
+        products: productsReducer,
+      },
+      {
+        runtimeChecks: {
+          strictStateImmutability: true,
+          strictActionImmutability: true,
+          strictStateSerializability: true,
+          strictActionSerializability: true,
+        },
+      }
+    ),
+    provideEffects([ProductsEffects]),
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: !isDevMode(),
+      connectInZone: true,
+    }),
   ],
 };
