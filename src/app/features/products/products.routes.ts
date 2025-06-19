@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { productTitleResolver } from './resolvers/product-title.resolver';
 
 export const PRODUCTS_ROUTES: Routes = [
   {
@@ -9,6 +10,7 @@ export const PRODUCTS_ROUTES: Routes = [
   },
   {
     path: ':slug',
+    title: productTitleResolver,
     loadComponent: () =>
       import('./pages/product-detail/product-detail.component').then(c => c.ProductDetailComponent),
   },
