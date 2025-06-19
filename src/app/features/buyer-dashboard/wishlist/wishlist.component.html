@@ -1,0 +1,56 @@
+<!-- Wishlist Page Container -->
+<div class="px-6 flex flex-col gap-6 min-h-full w-full">
+  <!-- Main Content Card -->
+  <div class="flex flex-col pb-2 pt-6 bg-card rounded-xl shadow flex-grow min-h-100">
+    <!-- Header Section -->
+    <div class="px-6 flex flex-col gap-1">
+      <span class="font-bold text-3xl">Your Wishlist</span>
+      <span class="text-sm text-secondary"> Overview of recent items added to your wishlist </span>
+
+      <!-- Content Section with Loading, Error, and Product States -->
+      <div class="mt-4">
+        <!-- Loading State -->
+        @if (isLoading) {
+          <div class="py-16 flex items-center justify-center">
+            <div class="text-center">
+              <div
+                class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"
+              ></div>
+              <p class="text-secondary">Loading your wishlist...</p>
+            </div>
+          </div>
+        }
+        <!-- Error State -->
+        @else if (error) {
+          <div class="py-16 flex items-center justify-center">
+            <div class="text-center">
+              <div class="text-red-500 mb-4">
+                <i class="pi pi-exclamation-triangle text-4xl"></i>
+              </div>
+              <p class="text-red-600 font-medium">{{ error }}</p>
+            </div>
+          </div>
+        }
+        <!-- Products Grid -->
+        @else {
+          <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-8">
+            @for (p of products; track p.id) {
+              <app-product-card
+                class="rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow"
+                [product]="p"
+                (remove)="onRemove($event)"
+              >
+              </app-product-card>
+            }
+          </div>
+        }
+      </div>
+    </div>
+    <!-- Empty State Message -->
+    @if (products.length === 0 && !isLoading && !error) {
+      <div class="py-16 flex items-center justify-center text-secondary">
+        No items in your wishlist.
+      </div>
+    }
+  </div>
+</div>
