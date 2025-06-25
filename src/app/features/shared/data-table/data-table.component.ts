@@ -1,6 +1,6 @@
 import { Component, input, model, output, TemplateRef } from '@angular/core';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
-import { dataTableColumn, IRequestForQuote } from '../utils/interfaces';
+import { dataTableColumn } from '../utils/interfaces';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SortMeta } from 'primeng/api';
 import { RequestOptions } from '../../../core/interfaces/api.interface';
@@ -9,23 +9,27 @@ import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { SkeletonModule } from 'primeng/skeleton';
 import { NgTemplateOutlet } from '@angular/common';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-data-table',
   imports: [
     TableModule,
     MultiSelectModule,
+    SelectModule,
+    BadgeModule,
     FormsModule,
     ButtonModule,
     BadgeModule,
     SkeletonModule,
     NgTemplateOutlet,
+    FormsModule,
   ],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.css',
 })
-export class DataTableComponent {
-  data = model.required<IRequestForQuote[]>();
+export class DataTableComponent<T> {
+  data = model.required<T[]>();
   rows = model.required<number>();
   multiSortMeta = model.required<SortMeta[]>();
   totalRecords = model.required<number>();
@@ -33,15 +37,15 @@ export class DataTableComponent {
   dataLoading = input.required<boolean>();
   loadDataEvent = output<RequestOptions>();
   bodyTemplate = input.required<TemplateRef<unknown>>();
+  selectedItems = model<T[]>();
+  selectionMode = input.required<'single' | 'multiple' | null>();
 
   loadData(event: TableLazyLoadEvent) {
-    console.log(event);
     const requestOptions = this.buildRequestOptions(event);
-
     this.loadDataEvent.emit(requestOptions);
   }
 
-  clear(table: Table) {
+  clear(table: Table<T>) {
     table.clear();
   }
 
@@ -93,5 +97,9 @@ export class DataTableComponent {
       }
     }
     return options;
+  }
+
+  onSelectionChange(selection: T[]) {
+    this.selectedItems.set(selection);
   }
 }
