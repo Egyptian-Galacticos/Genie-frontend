@@ -27,9 +27,25 @@ export class MenuComponent implements OnInit {
                 routerLink: ['/dashboard/seller'],
               },
               {
-                label: 'Customers',
-                icon: 'pi pi-fw pi-users',
-                routerLink: ['/dashboard/seller/customers'],
+                label: 'Products',
+                icon: 'pi pi-fw pi-box',
+                items: [
+                  {
+                    label: 'All Products',
+                    icon: 'pi pi-fw pi-box',
+                    routerLink: ['/dashboard/seller/products'],
+                  },
+                  {
+                    label: 'Add Product',
+                    icon: 'pi pi-fw pi-plus',
+                    routerLink: ['/dashboard/seller/products/add'],
+                  },
+                  {
+                    label: 'Bulk Upload',
+                    icon: 'pi pi-fw pi-upload',
+                    routerLink: ['/dashboard/seller/products/bulk-upload'],
+                  },
+                ],
               },
               {
                 label: 'Quotes',
@@ -48,6 +64,11 @@ export class MenuComponent implements OnInit {
                 ],
               },
               {
+                label: 'Customers',
+                icon: 'pi pi-fw pi-users',
+                routerLink: ['/dashboard/seller/customers'],
+              },
+              {
                 label: 'Contracts',
                 icon: 'pi pi-fw pi-paperclip',
                 items: [
@@ -55,27 +76,6 @@ export class MenuComponent implements OnInit {
                     label: 'All Contracts',
                     icon: 'pi pi-fw pi-paperclip',
                     routerLink: ['/dashboard/seller/contracts'],
-                  },
-                ],
-              },
-              {
-                label: 'Products',
-                icon: 'pi pi-fw pi-box',
-                items: [
-                  {
-                    label: 'All Products',
-                    icon: 'pi pi-fw pi-box',
-                    routerLink: ['/dashboard/seller/products'],
-                  },
-                  {
-                    label: 'Add Product',
-                    icon: 'pi pi-fw pi-plus',
-                    routerLink: ['/dashboard/seller/products/add'],
-                  },
-                  {
-                    label: 'Bulk Upload',
-                    icon: 'pi pi-fw pi-upload',
-                    routerLink: ['/dashboard/seller/products/bulk-upload'],
                   },
                 ],
               },
