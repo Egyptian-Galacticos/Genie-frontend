@@ -41,12 +41,13 @@
       <app-data-table
         [cols]="cols"
         [rows]="10"
-        [totalRecords]="quotesResponse?.pagination?.total || 0"
+        [totalRecords]="quotesResponse?.meta?.total || 0"
         [dataLoading]="quotesLoading"
         [data]="quotesResponse?.data || []"
         (loadDataEvent)="loadQuoteRequests($event)"
         [multiSortMeta]="multiSortMeta"
         [bodyTemplate]="customBodyTemplate"
+        [selectionMode]="null"
       >
       </app-data-table>
     </div>
@@ -62,54 +63,61 @@
 }
 
 <ng-template #customBodyTemplate let-rowData let-rowIndex="rowIndex">
-  <tr [class]="rowData.status === 'new' ? 'surface-50' : ''">
-    <td class="text-center w-[5%] shrink-1">{{ rowData.id }}</td>
-    <td class="text-center w-[15%] text-nowrap">{{ rowData.buyer.name }}</td>
-    <td class="text-center w-[20%] text-nowrap">{{ rowData.product.name }}</td>
-    <td class="text-center w-[20%] text-nowrap">{{ rowData.date }}</td>
-    <td class="text-center w-[10%]">
-      <p-badge
-        [value]="rowData.status"
-        [severity]="rowData.status === 'New' ? 'success' : 'warn'"
-        [badgeSize]="'large'"
-        [styleClass]="'text-surface-500 font-normal  bg-transparent-75 px-5 rounded-4xl'"
-      />
-    </td>
-    <td class="flex justify-center shrink-1">
-      <div class="flex justify-around w-80">
-        <div class="flex gap-5">
-          <p-button [icon]="'pi pi-comment'" label="chat" [rounded]="true" [raised]="true" />
-          <p-button
-            icon="pi pi-receipt"
-            rounded="true"
-            outlined="true"
-            raised="true"
-            label="Quote"
-            (onClick)="openCreateQuoteModal(rowData)"
-          />
-        </div>
-        @if (rowData.status.toLowerCase() === 'new') {
-          <p-button
-            [icon]="'pi pi-eye'"
-            styleClass=""
-            [rounded]="true"
-            [outlined]="true"
-            title="mark as seen"
-            (onClick)="markQuoteRequestAsSeen(rowData)"
-          />
-          <p-button
-            [icon]="'pi pi-times'"
-            styleClass=""
-            [severity]="'danger'"
-            [rounded]="true"
-            [outlined]="true"
-            title="Reject"
-            (onClick)="markQuoteRequestAsRejected(rowData)"
-          />
-        }
+  <td class="text-center w-[5%] shrink-1">{{ rowData.id }}</td>
+  <td class="text-center w-[15%] text-nowrap">{{ rowData?.buyer?.company?.name || 'N/A' }}</td>
+  <td class="text-center w-[20%] text-nowrap">{{ rowData.initial_product?.name || 'N/A' }}</td>
+  <td class="text-center w-[20%] text-nowrap">{{ rowData.date | date }}</td>
+  <td class="text-center w-[10%]">
+    <p-badge
+      [value]="rowData.status"
+      [severity]="getStatusSeverity(rowData.status)"
+      [badgeSize]="'large'"
+      styleClass="text-nowrap"
+    />
+  </td>
+  <td class="flex justify-center shrink-1">
+    <div class="flex justify-around w-80">
+      <div class="flex gap-5">
+        <p-button [icon]="'pi pi-comment'" label="chat" [rounded]="true" [raised]="true" />
+        <!-- @if (rowData.status.toLowerCase() === 'pending') { -->
+        <p-button
+          icon="pi pi-receipt"
+          rounded="true"
+          outlined="true"
+          raised="true"
+          label="Quote"
+          (onClick)="openCreateQuoteModal(rowData)"
+          [disabled]="
+            rowData.status.toLowerCase() !== 'pending' && rowData.status.toLowerCase() !== 'seen'
+          "
+        />
+        <!-- } -->
       </div>
-    </td>
-  </tr>
+      <!-- @if (rowData.status.toLowerCase() === 'pending') { -->
+      <p-button
+        [icon]="'pi pi-eye'"
+        styleClass=""
+        [rounded]="true"
+        [outlined]="true"
+        [raised]="true"
+        title="mark as seen"
+        (onClick)="markQuoteRequestAsSeen(rowData)"
+        [disabled]="rowData.status.toLowerCase() !== 'pending'"
+      />
+      <p-button
+        [icon]="'pi pi-times'"
+        styleClass=""
+        [severity]="'danger'"
+        [rounded]="true"
+        [outlined]="true"
+        [raised]="true"
+        title="Reject"
+        (onClick)="markQuoteRequestAsRejected(rowData)"
+        [disabled]="rowData.status.toLowerCase() !== 'pending'"
+      />
+      <!-- } -->
+    </div>
+  </td>
 </ng-template>
 
 <p-toast />
