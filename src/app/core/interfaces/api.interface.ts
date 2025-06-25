@@ -24,7 +24,7 @@ export interface PaginatedResponse<T = unknown> {
   data: T[];
   success: boolean;
   message?: string;
-  pagination: {
+  meta: {
     page: number;
     limit: number;
     total: number;
