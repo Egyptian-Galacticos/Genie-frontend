@@ -50,13 +50,16 @@
                 <p class="text-xs text-gray-500">{{ formatFileSize(file.size) }}</p>
               </div>
             </div>
-            <button
-              type="button"
+            <p-button
+              [outlined]="true"
+              [size]="'small'"
+              severity="danger"
               class="text-red-500 hover:text-red-700 text-md"
+              [icon]="'pi pi-times'"
+              [rounded]="true"
               (click)="removeDocument($index)"
             >
-              <i class="pi pi-times"></i>
-            </button>
+            </p-button>
           </div>
         }
       </div>
@@ -105,13 +108,16 @@
                 <p class="text-xs text-gray-500">{{ formatFileSize(file.size) }}</p>
               </div>
             </div>
-            <button
-              type="button"
-              class="text-red-500 hover:text-red-700 text-xl"
+            <p-button
+              [outlined]="true"
+              [size]="'small'"
+              severity="danger"
+              [rounded]="true"
+              class="text-red-500 hover:text-red-700 text-md"
+              [icon]="'pi pi-times'"
               (click)="removeSpecification($index)"
             >
-              ×
-            </button>
+            </p-button>
           </div>
         }
       </div>

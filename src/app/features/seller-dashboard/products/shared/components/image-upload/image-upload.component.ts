@@ -44,7 +44,6 @@ export class ImageUploadComponent {
 
   // File selection handlers
   onMainImageSelect(event: InputEvent): void {
-    console.log(this.images_group());
     const files = Array.from((event.target as HTMLInputElement).files ?? []) as File[];
     if (files.length > 0) {
       this.processMainImage(files[0]);
@@ -111,7 +110,7 @@ export class ImageUploadComponent {
 
   // Validation methods
   private isValidImage(file: File): boolean {
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith('image/jpeg') && !file.type.startsWith('image/png')) {
       this.showError('Please select an image file');
       return false;
     }
