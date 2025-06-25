@@ -1,0 +1,44 @@
+<div class="h-full flex flex-col xl:flex-row gap-4 min-h-[87vh]">
+  <form
+    [formGroup]="productFormGroup"
+    (ngSubmit)="onSubmit()"
+    class="flex flex-col xl:flex-row gap-4 w-full"
+  >
+    <!-- Left Column ng- Main Form -->
+    <div class="flex flex-col gap-4 w-full xl:w-[67%]">
+      <!-- Basic Product Information -->
+      <app-basic-product-info
+        [productFormGroup]="productFormGroup"
+        [countriesList]="countriesList"
+      />
+      <!-- Category -->
+      <app-category
+        [beingEditedProduct]="beingEditedProduct()"
+        (categorySelected)="onCategorySelected($event)"
+      ></app-category>
+      <!-- Pricing Information -->
+      <app-pricing-info [productFormGroup]="productFormGroup" [currencies]="currencies" />
+      <!-- Product Specifications -->
+      <app-product-specs [productFormGroup]="productFormGroup" />
+    </div>
+
+    <!-- Right Column - Image Upload & Sample Info -->
+    <div class="flex flex-col gap-4 w-full xl:w-[33%]">
+      <app-old-images
+        [old_main_image]="beingEditedProduct().main_image"
+        [old_images]="beingEditedProduct().images"
+        [(filesToDelete)]="toBeDeletedImages"
+      />
+      <!-- Image Upload Section -->
+      <app-image-upload [images_group]="images_group" />
+      <!-- File Upload Section -->
+      <app-document-upload [documents_group]="documents_group"></app-document-upload>
+      <!-- Sample & Tags Section -->
+      <app-product-sample-and-tags
+        [productFormGroup]="productFormGroup"
+        [loading]="loading"
+        [update]="true"
+      />
+    </div>
+  </form>
+</div>
