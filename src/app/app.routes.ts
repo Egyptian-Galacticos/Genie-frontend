@@ -89,6 +89,7 @@ export const routes: Routes = [
       import('./features/layouts/dashboard-layout/dashboard-layout.component').then(
         c => c.DashboardLayoutComponent
       ),
+    canActivate: [authGuard, emailVerificationGuard],
     children: [
       {
         path: '',
@@ -103,6 +104,25 @@ export const routes: Routes = [
           import('./features/seller-dashboard/quotes-requests/quotes-requests.component').then(
             c => c.QuotesRequestsComponent
           ),
+      },
+      {
+        path: 'products',
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import(
+                './features/seller-dashboard/products/all-products/all-products.component'
+              ).then(c => c.AllProductsComponent),
+          },
+          {
+            path: 'add',
+            loadComponent: () =>
+              import('./features/seller-dashboard/products/add-product/add-product.component').then(
+                c => c.AddProductComponent
+              ),
+          },
+        ],
       },
     ],
   },
