@@ -122,6 +122,13 @@ export const routes: Routes = [
                 c => c.AddProductComponent
               ),
           },
+          {
+            path: 'bulk-upload',
+            loadComponent: () =>
+              import('./features/seller-dashboard/bulk-upload/bulk-upload.component').then(
+                c => c.BulkUploadComponent
+              ),
+          },
         ],
       },
     ],
