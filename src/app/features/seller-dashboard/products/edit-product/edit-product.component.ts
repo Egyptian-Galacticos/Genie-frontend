@@ -125,7 +125,6 @@ export class EditProductComponent implements OnInit {
       hs_code: this.beingEditedProduct().hs_code,
       name: this.beingEditedProduct().name,
       description: this.beingEditedProduct().description,
-      price: this.beingEditedProduct().price,
       currency: this.beingEditedProduct().currency,
       origin: this.beingEditedProduct().origin,
       weight: this.beingEditedProduct().weight,
