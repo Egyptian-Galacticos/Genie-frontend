@@ -58,7 +58,6 @@ export class EditProductComponent implements OnInit {
   countriesList: string[] = [];
   currencies = ['USD'];
   selectedCategory: CreateCategoryInProduct | null = null;
-  loading = false;
   // Form
   productFormGroup = this.formBuilder.group({
     brand: [''],
@@ -165,8 +164,6 @@ export class EditProductComponent implements OnInit {
 
   // Adding Product
   onSubmit() {
-    this.loading = true;
-
     // For bulk upload editing, we just update the local data
     try {
       const formData = this.productFormGroup.getRawValue();
@@ -196,12 +193,9 @@ export class EditProductComponent implements OnInit {
         errors: [], // Will be revalidated by parent
       };
 
-      this.loading = false;
-      this.showSuccess('Product updated successfully!');
       this.productUpdated.emit(updatedProduct);
     } catch (error) {
       this.showError('Failed to update product. Please try again.');
-      this.loading = false;
     }
   }
 
