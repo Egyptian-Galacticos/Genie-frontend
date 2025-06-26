@@ -137,13 +137,15 @@
                 <p-button
                   [icon]="'pi pi-pencil'"
                   [title]="'Update Product'"
-                  [severity]="'success'"
+                  [severity]="isCorrectable(product) ? 'secondary' : 'success'"
                   [rounded]="true"
                   [raised]="true"
                   [outlined]="true"
                   (onClick)="editProduct(product)"
+                  [disabled]="isCorrectable(product)"
                 >
                 </p-button>
+
                 <p-button
                   icon="pi pi-trash"
                   severity="danger"

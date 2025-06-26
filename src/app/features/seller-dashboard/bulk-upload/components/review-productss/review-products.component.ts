@@ -73,4 +73,11 @@ export class ReviewProductsComponent {
   onProductEdited(product: ProductWithErrors) {
     this.handleProductEdited.emit(product);
   }
+  isCorrectable(product: ProductWithErrors): boolean {
+    return (
+      product.errors != undefined &&
+      (product.errors.findIndex(x => x.includes('main_image')) !== -1 ||
+        product.errors.findIndex(x => x.includes('category')) !== -1)
+    );
+  }
 }
