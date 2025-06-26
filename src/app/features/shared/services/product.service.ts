@@ -1,5 +1,5 @@
+import { CreateProductDto } from './../utils/interfaces';
 import { ApiResponse, PaginatedResponse } from './../../../core/interfaces/api.interface';
-import { AuthService } from './../../../core/auth/services/auth.service';
 import { IProduct } from '../utils/interfaces';
 import { ApiService } from './../../../core/services/api.service';
 import { inject, Injectable } from '@angular/core';
@@ -10,7 +10,6 @@ import { RequestOptions } from '../../../core/interfaces/api.interface';
 })
 export class ProductService {
   private readonly apiService = inject(ApiService);
-  private readonly authService = inject(AuthService);
 
   createProduct(dto: FormData) {
     return this.apiService.post<ApiResponse<IProduct>>('products', dto);
@@ -39,5 +38,8 @@ export class ProductService {
   }
   deleteImage(slug: string, id: number, collection: string, mediaId: number) {
     return this.apiService.delete<ApiResponse>(`products/${slug}/media/${collection}/${mediaId}`);
+  }
+  UploadBulk(dto: CreateProductDto[]) {
+    return this.apiService.post<ApiResponse>('products/bulk-import', { products: dto });
   }
 }
