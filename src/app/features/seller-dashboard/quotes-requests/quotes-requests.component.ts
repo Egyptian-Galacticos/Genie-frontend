@@ -160,18 +160,18 @@ export class QuotesRequestsComponent {
   }
 
   markQuoteRequestAsSeen(quoteRequest: IRequestForQuote) {
-    this.quoteService.updateQuoteRequestStatus({ id: quoteRequest.id, status: 'seen' }).subscribe({
+    this.quoteService.updateQuoteRequestStatus({ id: quoteRequest.id, status: 'Seen' }).subscribe({
       next: () => {
-        quoteRequest.status = 'seen';
+        quoteRequest.status = 'Seen';
       },
       error: () => {
-        this.showError("Couldn't mark quote request as seen");
+        this.showError("Couldn't mark quote request as Seen");
       },
     });
   }
   markQuoteRequestAsRejected(quoteRequest: IRequestForQuote) {
     this.quoteService
-      .updateQuoteRequestStatus({ id: quoteRequest.id, status: 'rejected' })
+      .updateQuoteRequestStatus({ id: quoteRequest.id, status: 'Rejected' })
       .subscribe({
         next: () => {
           quoteRequest.status = 'rejected';
