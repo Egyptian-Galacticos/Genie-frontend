@@ -24,6 +24,7 @@ import { isValidUrl, parseBoolean, parseNumber } from './utils/HelperFunctions';
 import { ReviewProductsComponent } from './components/review-productss/review-products.component';
 import { ProductService } from '../../shared/services/product.service';
 import { CategoryService } from '../../shared/services/category.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bulk-upload',
@@ -47,6 +48,8 @@ import { CategoryService } from '../../shared/services/category.service';
 export class BulkUploadComponent implements OnInit {
   productService = inject(ProductService);
   categoryService = inject(CategoryService);
+  messageService = inject(MessageService);
+  router = inject(Router);
 
   activeStep = model<number>(1);
   products = model<ProductWithErrors[]>([]);
@@ -54,7 +57,6 @@ export class BulkUploadComponent implements OnInit {
   validProducts = model<CreateProductDto[]>([]);
   invalidProducts = model<ProductWithErrors[]>([]);
 
-  // Edit drawer signals
   editingProduct = signal<ProductWithErrors | null>(null);
   editDrawerVisible = signal<boolean>(false);
 
@@ -92,8 +94,6 @@ export class BulkUploadComponent implements OnInit {
     'main_image',
     'category_id',
   ];
-
-  constructor(private messageService: MessageService) {}
 
   downloadTemplate() {
     const level2Cats: Category[] = [];
@@ -251,7 +251,6 @@ export class BulkUploadComponent implements OnInit {
     if (!product.main_image) errors.push('Main image URL is required');
     if (!product.price_tiers || product.price_tiers.length <= 0)
       errors.push('At least one price tier is required');
-    if (!product.category_id) errors.push('Category is required');
     // Dimensions validation
     if (!product.dimensions.length || product.dimensions.length <= 0) {
       errors.push('Valid length dimension is required');
@@ -452,6 +451,8 @@ export class BulkUploadComponent implements OnInit {
             detail: `Successfully submitted ${this.validProducts().length} products.`,
           });
           console.log(response);
+          this.isLoading.set(false);
+          this.router.navigate(['/dashboard/seller/products']);
         },
         error: error => {
           this.messageService.add({
@@ -460,6 +461,7 @@ export class BulkUploadComponent implements OnInit {
             detail: 'Failed to submit products. Please try again.',
           });
           console.error(error);
+          this.isLoading.set(false);
         },
       });
       // Reset form after successful submission
@@ -470,7 +472,6 @@ export class BulkUploadComponent implements OnInit {
         summary: 'Submission Failed',
         detail: 'Failed to submit products. Please try again.',
       });
-    } finally {
       this.isLoading.set(false);
     }
   }
