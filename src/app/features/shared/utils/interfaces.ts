@@ -74,33 +74,6 @@ export interface IRequestForQuote {
 }
 
 //products
-export interface createProductDto {
-  brand?: string;
-  currency: string;
-  description: string;
-  dimensions: {
-    length: number;
-    width: number;
-    height: number;
-  };
-  hs_code?: string;
-  model_number?: string;
-  name: string;
-  origin: string;
-  price: number;
-  price_tiers:
-    | {
-        from_quantity: number | null;
-        to_quantity: number | null;
-        price: number | null;
-      }[]
-    | null;
-  sample_available: boolean;
-  sample_price?: number;
-  sku: string;
-  tags?: string[] | null;
-  weight: number;
-}
 
 export interface Category {
   id: number;
@@ -153,7 +126,6 @@ export interface IProduct {
   name: string;
   slug: string;
   description: string;
-  price: string;
   currency: string;
   is_featured: boolean;
   is_active: boolean;
@@ -186,4 +158,104 @@ export interface CreateCategoryInProduct {
   parent_id: number;
   parent: CreateCategoryInProduct;
   name: string;
+}
+
+export interface excelRowData extends Partial<IProduct> {
+  price_tiers: {
+    [key: string]: IPriceTier;
+  };
+}
+export interface IPriceTier {
+  from_quantity: number | null;
+  to_quantity: number | null;
+  price: number | null;
+}
+
+export interface CreateProductDto {
+  brand?: string;
+  currency: string;
+  description: string;
+  dimensions: {
+    length: number;
+    width: number;
+    height: number;
+  };
+  hs_code?: string;
+  model_number?: string;
+  name: string;
+  origin: string;
+  price_tiers: IPriceTier[] | null;
+  sample_available: boolean;
+  sample_price?: number;
+  sku: string;
+  product_tags?: string[] | null;
+  weight: number;
+  main_image: string;
+  images?: string[];
+  documents?: string[];
+  specifications?: string[];
+  category?: Category;
+  category_id: number;
+}
+
+export interface IPriceTier {
+  from_quantity: number | null;
+  to_quantity: number | null;
+  price: number | null;
+}
+
+export interface ProductWithErrors extends CreateProductDto {
+  errors?: string[];
+  rowIndex?: number;
+}
+
+export interface ExcelRow {
+  name?: string | number;
+  description?: string | number;
+  currency?: string | number;
+  origin?: string | number;
+  sku?: string | number;
+  weight?: string | number;
+  'dimensions.length'?: string | number;
+  'dimensions.width'?: string | number;
+  'dimensions.height'?: string | number;
+  main_image?: string | number;
+  brand?: string | number;
+  model_number?: string | number;
+  hs_code?: string | number;
+  sample_available?: string | number | boolean;
+  sample_price?: string | number;
+  product_tags?: string | number;
+  images?: string | number;
+  documents?: string | number;
+  specifications?: string | number;
+  category_id: string | number;
+  [key: string]: string | number | boolean | undefined; // For dynamic price_tiers properties
+}
+
+export interface TemplateData {
+  name: string;
+  description: string;
+  currency: string;
+  origin: string;
+  sku: string;
+  weight: number;
+  category_id: number;
+  'dimensions.length': number;
+  'dimensions.width': number;
+  'dimensions.height': number;
+  main_image: string;
+  brand: string;
+  model_number: string;
+  hs_code: string;
+  sample_available: boolean;
+  sample_price: number | string;
+  tags: string;
+  images: string;
+  documents: string;
+  specifications: string;
+  // Dynamic price tier properties - supports unlimited tiers
+  [key: `price_tiers.${number}.from_quantity`]: number;
+  [key: `price_tiers.${number}.to_quantity`]: number;
+  [key: `price_tiers.${number}.price`]: number;
 }
