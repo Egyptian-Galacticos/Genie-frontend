@@ -1,0 +1,192 @@
+<div class="bg-card rounded-lg shadow p-6">
+  <p-stepper [(value)]="activeStepValue" [linear]="false">
+    <p-step-list>
+      <p-step [value]="1">
+        <ng-template #content let-activateCallback="activateCallback" let-value="value">
+          <div class="flex flex-col gap-2 justify-content items-center">
+            <button
+              class="bg-transparent border-0 inline-flex flex-col gap-2"
+              (click)="activateCallback(1)"
+            >
+              <span
+                class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center"
+                [ngClass]="{
+                  'bg-primary text-primary-contrast border-primary': value <= activeStepValue,
+                  'border-surface': value > activeStepValue,
+                }"
+              >
+                <i class="pi pi-upload"></i>
+              </span>
+            </button>
+            <p
+              class="text-sm font-semibold"
+              [ngClass]="{
+                'text-primary': value <= activeStepValue,
+                'text-muted-color': value > activeStepValue,
+              }"
+            >
+              Upload Products
+            </p>
+          </div>
+        </ng-template>
+      </p-step>
+      <p-step [value]="2">
+        <ng-template #content let-activateCallback="activateCallback" let-value="value">
+          <div class="flex flex-col gap-2 justify-content items-center">
+            <button
+              class="bg-transparent border-0 inline-flex flex-col gap-2"
+              [disabled]="products().length === 0"
+              (click)="products().length || (0 > 0 && activateCallback(2))"
+            >
+              <span
+                class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center"
+                [ngClass]="{
+                  'bg-primary text-primary-contrast border-primary': value <= activeStepValue,
+                  'border-surface': value > activeStepValue,
+                }"
+              >
+                <i class="pi pi-check-circle"></i>
+              </span>
+            </button>
+            <p
+              class="text-sm font-semibold"
+              [ngClass]="{
+                'text-primary': value <= activeStepValue,
+                'text-muted-color': value > activeStepValue,
+              }"
+            >
+              Review Products
+            </p>
+          </div>
+        </ng-template>
+      </p-step>
+    </p-step-list>
+
+    <!-- Step 1: Upload Products -->
+    <p-step-panels>
+      <p-step-panel [value]="1">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="flex flex-col gap-6">
+            <!-- Template Download Section -->
+            <div class="border border-surface rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <i class="pi pi-download text-primary"></i>
+                Step 1: Download Template
+              </h3>
+              <p class="text-muted-color mb-4">
+                Download the product template to ensure your data is in the correct format. The
+                template includes all required fields and sample data.
+              </p>
+              <p-button
+                label="Download Template"
+                icon="pi pi-download"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="downloadTemplate()"
+              >
+              </p-button>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="border border-surface rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <i class="pi pi-upload text-primary"></i>
+                Step 2: Upload Your File
+              </h3>
+              <p class="text-muted-color mb-4">
+                Upload your Excel file containing product data. Make sure to use the template
+                format.
+              </p>
+
+              <p-fileUpload
+                mode="basic"
+                [auto]="true"
+                accept=".xlsx,.xls"
+                [maxFileSize]="5000000"
+                chooseLabel="Choose File"
+                chooseIcon="pi pi-upload"
+                [showUploadButton]="false"
+                [showCancelButton]="false"
+                (onSelect)="onFileSelect($event)"
+                [disabled]="isLoading()"
+              >
+              </p-fileUpload>
+
+              <div class="mt-4 text-sm text-muted-color">
+                <p><strong>Supported formats:</strong> Excel (.xlsx, .xls)</p>
+                <p><strong>Maximum file size:</strong> 5MB</p>
+                <p>
+                  <strong>Required fields:</strong> name, description, price, currency, origin, sku,
+                  weight, dimensions, main_image
+                </p>
+                <p>
+                  <strong>Optional fields:</strong> brand, model_number, hs_code, sample_available,
+                  sample_price, tags, images, documents, specifications, price_tiers
+                </p>
+              </div>
+            </div>
+
+            <!-- Loading State -->
+            @if (isLoading()) {
+              <div class="flex items-center justify-center gap-3 p-8">
+                <p-progressSpinner strokeWidth="3" animationDuration="1s"></p-progressSpinner>
+                <span class="text-lg">Processing your file...</span>
+              </div>
+            }
+
+            <!-- Upload Success -->
+            @if (products().length || (0 > 0 && !isLoading())) {
+              <div class="border border-green-200 bg-green-50 rounded-lg p-4">
+                <div class="flex items-center gap-2 text-green-800 mb-2">
+                  <i class="pi pi-check-circle"></i>
+                  <span class="font-semibold">File processed successfully!</span>
+                </div>
+                <p class="text-green-700">
+                  Found {{ products().length }} products.
+                  <span class="font-semibold text-green-800"
+                    >{{ validProducts().length }} valid</span
+                  >
+                  and
+                  <span class="font-semibold text-red-600"
+                    >{{ invalidProducts().length }} invalid</span
+                  >
+                  products.
+                </p>
+                <p-button
+                  label="Review Products"
+                  icon="pi pi-arrow-right"
+                  severity="success"
+                  class="mt-3"
+                  (onClick)="activateCallback(2)"
+                >
+                </p-button>
+              </div>
+            }
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <!-- Step 2: Review Products -->
+      <p-step-panel [value]="2">
+        <ng-template #content let-activateCallback="activateCallback">
+          <app-review-products
+            [(products)]="products"
+            [(validProducts)]="validProducts"
+            [(invalidProducts)]="invalidProducts"
+            [(isLoading)]="isLoading"
+            [(activeStep)]="activeStep"
+            [editingProduct]="editingProduct()"
+            [editDrawerVisible]="editDrawerVisible()"
+            (submitValidProducts)="submitProducts()"
+            (closeEditDrawer)="closeEditDrawer()"
+            (handleProductEdited)="handleProductEdited($event)"
+            (openEditDrawer)="openEditDrawer($event)"
+          ></app-review-products>
+        </ng-template>
+      </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
+</div>
+
+<!-- Toast Messages -->
+<p-toast></p-toast>
