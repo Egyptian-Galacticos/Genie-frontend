@@ -85,6 +85,39 @@ export class MenuComponent implements OnInit {
       }
       if (url.find(x => x.path === 'buyer')) {
         console.log('buyer');
+        this.items = [
+          {
+            label: 'Buyer Dashboard',
+            items: [
+              {
+                label: 'Dashboard',
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/dashboard/buyer'],
+              },
+              {
+                label: 'Wishlist',
+                icon: 'pi pi-fw pi-heart',
+                routerLink: ['/dashboard/buyer/wishlist'],
+              },
+              {
+                label: 'Quotes',
+                icon: 'pi pi-fw pi-receipt',
+                items: [
+                  {
+                    label: 'Responses',
+                    icon: 'pi pi-fw pi-inbox',
+                    routerLink: ['/dashboard/buyer/quotes-responses'],
+                  },
+                  {
+                    label: 'Requests',
+                    icon: 'pi pi-fw pi-send',
+                    routerLink: ['/dashboard/buyer/quotes-requests'],
+                  },
+                ],
+              },
+            ],
+          },
+        ];
       }
     });
   }
