@@ -1,0 +1,82 @@
+.quote-details-modal {
+  .p-dialog {
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+    border: none;
+  }
+
+  .p-dialog-content {
+    padding: 0;
+    border: none;
+  }
+
+  .p-dialog-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-600) 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    border: none;
+  }
+
+  .p-dialog-header .p-dialog-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+
+  .p-dialog-header .p-dialog-header-icon {
+    color: white;
+  }
+
+  .p-dialog-footer {
+    border: none;
+    background-color: var(--surface-50);
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--surface-border);
+  }
+}
+
+.quote-details-content {
+  max-height: 70vh;
+  overflow-y: auto;
+
+  .quote-info-section,
+  .seller-info-section,
+  .rfq-info-section,
+  .quote-items-section,
+  .additional-info-section {
+    background: var(--surface-50);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: none;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.quote-items-summary {
+  font-size: 0.875rem;
+}
+
+.space-y-3 > * + * {
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .action-buttons .p-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
