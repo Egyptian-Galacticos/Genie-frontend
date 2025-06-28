@@ -24,8 +24,8 @@ import { NgTemplateOutlet } from '@angular/common';
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.css',
 })
-export class DataTableComponent {
-  data = model.required<IRequestForQuote[]>();
+export class DataTableComponent<T = IRequestForQuote> {
+  data = model.required<T[]>();
   rows = model.required<number>();
   multiSortMeta = model.required<SortMeta[]>();
   totalRecords = model.required<number>();
@@ -35,7 +35,6 @@ export class DataTableComponent {
   bodyTemplate = input.required<TemplateRef<unknown>>();
 
   loadData(event: TableLazyLoadEvent) {
-    console.log(event);
     const requestOptions = this.buildRequestOptions(event);
 
     this.loadDataEvent.emit(requestOptions);
