@@ -54,7 +54,7 @@ export class EditProductComponent implements OnInit {
   // Angular 19 signals
   beingEditedProduct = input.required<ProductWithErrors | null>();
   productUpdated = output<ProductWithErrors>();
-
+  loading = input<boolean>(false);
   countriesList: string[] = [];
   currencies = ['USD'];
   selectedCategory: CreateCategoryInProduct | null = null;
