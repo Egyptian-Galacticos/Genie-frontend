@@ -141,11 +141,3 @@ body {
   border-color: var(--color-danger-500) !important;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-500) 10%, transparent) !important;
 }
-
-/* Focus styles for accessibility */
-.p-inputtext:focus-visible,
-.p-select:focus-visible,
-.p-button:focus-visible {
-  outline: 2px solid var(--color-primary-500) !important;
-  outline-offset: 2px !important;
-}

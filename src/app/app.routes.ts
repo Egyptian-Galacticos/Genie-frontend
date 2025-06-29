@@ -32,6 +32,12 @@ export const routes: Routes = [
             m => m.TermsAndConditionsComponent
           ),
       },
+      {
+        path: 'profile',
+        loadChildren: () => import('./features/profile/profile.routes').then(m => m.profileRoutes),
+        title: 'Profile - Genie',
+        canActivate: [authGuard],
+      },
     ],
   },
   {
@@ -83,6 +89,7 @@ export const routes: Routes = [
     title: 'Dashboard - Genie',
     canActivate: [authGuard, emailVerificationGuard],
   },
+
   {
     path: 'dashboard/seller',
     loadComponent: () =>
@@ -130,6 +137,49 @@ export const routes: Routes = [
               ),
           },
         ],
+      },
+    ],
+  },
+  {
+    path: 'dashboard/buyer',
+    loadComponent: () =>
+      import('./features/layouts/dashboard-layout/dashboard-layout.component').then(
+        c => c.DashboardLayoutComponent
+      ),
+    canActivate: [authGuard, emailVerificationGuard],
+    title: 'Buyer Dashboard - Genie',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/buyer-dashboard/buyer-dashboard.component').then(
+            c => c.BuyerDashboardComponent
+          ),
+        title: 'Dashboard - Genie',
+      },
+      {
+        path: 'wishlist',
+        loadComponent: () =>
+          import('./features/buyer-dashboard/wishlist/wishlist.component').then(
+            c => c.WishlistComponent
+          ),
+        title: 'Wishlist - Genie',
+      },
+      {
+        path: 'quotes-requests',
+        loadComponent: () =>
+          import(
+            './features/buyer-dashboard/components/quotes-requests/quotes-requests.component'
+          ).then(c => c.BuyerQuotesRequestsComponent),
+        title: 'Quote Requests - Genie',
+      },
+      {
+        path: 'quotes-responses',
+        loadComponent: () =>
+          import(
+            './features/buyer-dashboard/components/quotes-responses/quotes-responses.component'
+          ).then(c => c.BuyerQuotesResponsesComponent),
+        title: 'Quote Responses - Genie',
       },
     ],
   },

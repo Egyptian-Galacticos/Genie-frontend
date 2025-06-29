@@ -1,0 +1,184 @@
+<div class="p-6">
+  <div class="mb-8">
+    <div class="flex items-center gap-3 mb-4">
+      <div
+        class="w-12 h-12 rounded-full flex items-center justify-center"
+        style="background: linear-gradient(135deg, var(--p-primary-500), var(--p-primary-400))"
+      >
+        <i class="pi pi-shop text-white text-xl"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold m-0" style="color: var(--p-text-color)">Upgrade to Seller</h2>
+        <p class="text-sm m-0" style="color: var(--p-text-muted-color)">
+          Start selling your products on our platform
+        </p>
+      </div>
+    </div>
+
+    @if (!canUpgrade()) {
+      <p-message
+        severity="warn"
+        text="You are not eligible for seller upgrade at this time. You may already be a seller or have a pending request."
+        styleClass="mb-6"
+      ></p-message>
+    } @else {
+      <p-message
+        severity="info"
+        text="Please provide the following information to upgrade your account to a seller account."
+        styleClass="mb-6"
+      ></p-message>
+    }
+  </div>
+
+  @if (canUpgrade()) {
+    <div class="max-w-2xl mx-auto">
+      <form [formGroup]="sellerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="field">
+          <p-floatlabel>
+            <input
+              pInputText
+              id="tax_id"
+              formControlName="tax_id"
+              [class.ng-invalid]="isFieldInvalid('tax_id')"
+              class="w-full"
+              style="border-radius: 12px"
+            />
+            <label for="tax_id">Tax ID *</label>
+          </p-floatlabel>
+          @if (isFieldInvalid('tax_id')) {
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('tax_id')"
+              styleClass="mt-2 w-full"
+            >
+            </p-message>
+          }
+        </div>
+        <div class="field">
+          <p-floatlabel>
+            <input
+              pInputText
+              id="commercial_registration"
+              formControlName="commercial_registration"
+              [class.ng-invalid]="isFieldInvalid('commercial_registration')"
+              class="w-full"
+              style="border-radius: 12px"
+            />
+            <label for="commercial_registration">Commercial Registration *</label>
+          </p-floatlabel>
+          @if (isFieldInvalid('commercial_registration')) {
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('commercial_registration')"
+              styleClass="mt-2 w-full"
+            >
+            </p-message>
+          }
+        </div>
+        <div class="field">
+          <p-floatlabel>
+            <input
+              pInputText
+              id="website"
+              formControlName="website"
+              [class.ng-invalid]="isFieldInvalid('website')"
+              class="w-full"
+              style="border-radius: 12px"
+            />
+            <label for="website">Website (Optional)</label>
+          </p-floatlabel>
+          @if (isFieldInvalid('website')) {
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('website')"
+              styleClass="mt-2 w-full"
+            >
+            </p-message>
+          }
+        </div>
+        <div class="field">
+          <p-floatlabel>
+            <textarea
+              pTextarea
+              id="description"
+              formControlName="description"
+              [class.ng-invalid]="isFieldInvalid('description')"
+              class="w-full"
+              style="border-radius: 12px; min-height: 120px"
+            ></textarea>
+            <label for="description">Business Description (Optional)</label>
+          </p-floatlabel>
+          @if (isFieldInvalid('description')) {
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('description')"
+              styleClass="mt-2 w-full"
+            >
+            </p-message>
+          }
+        </div>
+        <div
+          class="p-4 rounded-xl border border-dashed"
+          style="background: var(--p-surface-100); border-color: var(--p-surface-300)"
+        >
+          <div class="flex items-start gap-3">
+            <i class="pi pi-info-circle mt-1" style="color: var(--p-primary-500)"></i>
+            <div>
+              <p class="text-sm font-medium m-0 mb-2" style="color: var(--p-text-color)">
+                Important Information
+              </p>
+              <ul
+                class="text-xs space-y-1 list-disc ml-4 m-0"
+                style="color: var(--p-text-muted-color)"
+              >
+                <li>Your seller upgrade request will be reviewed by our team</li>
+                <li>You will be notified via email once the review is complete</li>
+                <li>All required fields must be filled with accurate information</li>
+                <li>Ensure your commercial registration and tax ID are valid</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-center gap-4 pt-6">
+          <p-button
+            type="button"
+            label="Reset Form"
+            severity="secondary"
+            [outlined]="true"
+            icon="pi pi-refresh"
+            (onClick)="sellerForm.reset()"
+            [disabled]="saving()"
+            styleClass="transition-all duration-300 hover:scale-105"
+            [style]="{ 'border-radius': '12px' }"
+          ></p-button>
+
+          <p-button
+            type="submit"
+            label="Submit Upgrade Request"
+            icon="pi pi-shop"
+            [loading]="saving()"
+            [disabled]="sellerForm.invalid || saving()"
+            styleClass="transition-all duration-300 hover:scale-105"
+            [style]="{ 'border-radius': '12px' }"
+          ></p-button>
+        </div>
+      </form>
+    </div>
+  } @else {
+    <div class="text-center">
+      <p-button
+        label="Back to Profile"
+        icon="pi pi-arrow-left"
+        severity="secondary"
+        [outlined]="true"
+        routerLink="/profile"
+        styleClass="transition-all duration-300 hover:scale-105"
+        [style]="{ 'border-radius': '12px' }"
+      ></p-button>
+    </div>
+  }
+</div>

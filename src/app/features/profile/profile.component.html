@@ -1,0 +1,259 @@
+<section
+  class="min-h-screen pt-30! flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden"
+  style="background: linear-gradient(135deg, var(--p-surface-50) 0%, var(--p-surface-100) 100%)"
+>
+  <div
+    class="absolute top-10 left-10 w-40 h-40 rounded-full opacity-10 dark:opacity-5"
+    style="background: linear-gradient(45deg, var(--p-primary-500), var(--p-primary-300))"
+  ></div>
+  <div
+    class="absolute bottom-10 right-10 w-32 h-32 rounded-full opacity-10 dark:opacity-5"
+    style="background: linear-gradient(45deg, var(--p-blue-500), var(--p-blue-300))"
+  ></div>
+  <div
+    class="absolute top-1/3 right-10 w-24 h-24 rounded-full opacity-5 dark:opacity-3"
+    style="background: linear-gradient(45deg, var(--p-green-500), var(--p-green-300))"
+  ></div>
+  <div
+    class="absolute bottom-1/3 left-10 w-20 h-20 rounded-full opacity-8 dark:opacity-4"
+    style="background: linear-gradient(45deg, var(--p-purple-500), var(--p-purple-300))"
+  ></div>
+
+  <div class="w-full max-w-7xl relative z-10">
+    <div class="mb-8 sm:mb-12 text-center transform transition-all duration-500 hover:scale-[1.02]">
+      <div class="mb-6 sm:mb-8">
+        <div
+          class="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full flex items-center justify-center mb-4 sm:mb-6 relative group"
+          style="
+            background: linear-gradient(
+              135deg,
+              color-mix(in srgb, var(--p-primary-500) 15%, transparent),
+              color-mix(in srgb, var(--p-primary-400) 10%, transparent)
+            );
+          "
+        >
+          <div
+            class="w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center relative transition-transform duration-300 group-hover:scale-110"
+            style="background: linear-gradient(135deg, var(--p-primary-500), var(--p-primary-400))"
+          >
+            <i
+              class="pi pi-cog text-lg sm:text-xl text-white transition-transform duration-300 group-hover:rotate-180"
+            ></i>
+            <div
+              class="absolute inset-0 rounded-full animate-ping"
+              style="background: var(--p-primary-500); opacity: 0.3"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <h1
+        class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight bg-clip-text text-transparent"
+        style="
+          background-image: linear-gradient(135deg, var(--p-primary-600), var(--p-primary-400));
+        "
+      >
+        Profile Settings
+      </h1>
+      <p
+        class="text-base sm:text-lg mb-8 max-w-2xl mx-auto px-4 leading-relaxed"
+        style="color: var(--p-text-muted-color)"
+      >
+        Manage your account, company information, and security settings in one centralized location
+      </p>
+      <div class="relative mb-6 sm:mb-8">
+        <div
+          class="p-4 sm:p-6 rounded-xl sm:rounded-2xl backdrop-blur-lg transition-all duration-300 hover:shadow-xl"
+          style="
+            background: color-mix(in srgb, var(--p-surface-0) 95%, transparent);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--p-surface-border);
+          "
+        >
+          <div class="flex justify-center items-center flex-wrap gap-3 sm:gap-4">
+            <p-button
+              icon="pi pi-refresh"
+              label="Refresh Data"
+              [outlined]="true"
+              [loading]="loading()"
+              (onClick)="refreshProfileData()"
+              styleClass="transition-all duration-300 hover:scale-105 hover:shadow-lg text-sm sm:text-base"
+              [style]="{ 'border-radius': '8px' }"
+            ></p-button>
+
+            @if (profile()) {
+              <div
+                class="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 min-w-0"
+                style="background: var(--p-surface-100); color: var(--p-text-color)"
+              >
+                <div
+                  class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                  style="
+                    background: linear-gradient(135deg, var(--p-green-500), var(--p-green-400));
+                  "
+                >
+                  <i class="pi pi-user text-white text-xs"></i>
+                </div>
+                <span class="font-semibold text-sm sm:text-base truncate">{{
+                  profile()?.user?.full_name
+                }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative">
+      <div
+        class="relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-2xl"
+        style="
+          background: var(--p-surface-0);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          border: 1px solid var(--p-surface-border);
+          backdrop-filter: blur(10px);
+        "
+      >
+        <div
+          class="flex flex-col lg:grid lg:grid-cols-4 min-h-[400px] sm:min-h-[500px] lg:min-h-[600px]"
+        >
+          <div
+            class="lg:col-span-1 p-4 sm:p-6 border-b lg:border-b-0 lg:border-r border-opacity-10"
+            style="border-color: var(--p-surface-border)"
+          >
+            <div class="mb-4 sm:mb-6">
+              <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div
+                  class="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-transform duration-300 hover:scale-110"
+                  style="
+                    background: linear-gradient(135deg, var(--p-primary-500), var(--p-primary-400));
+                  "
+                >
+                  <i class="pi pi-list text-white text-sm sm:text-lg lg:text-xl"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <h3
+                    class="text-base sm:text-lg font-semibold m-0 truncate"
+                    style="color: var(--p-text-color)"
+                  >
+                    Settings Menu
+                  </h3>
+                  <p
+                    class="text-xs sm:text-sm m-0 truncate"
+                    style="color: var(--p-text-muted-color)"
+                  >
+                    Quick navigation
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <nav class="flex flex-col">
+              @for (item of menuItems; track item.route) {
+                <a
+                  [routerLink]="item.route"
+                  routerLinkActive="!bg-primary-50 !border-primary-200 !text-primary-700 dark:!bg-primary-950 dark:!border-primary-800 dark:!text-primary-200 shadow-lg shadow-primary-500/10"
+                  class="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group border border-transparent hover:bg-surface-50 hover:border-surface-200 dark:hover:bg-surface-900 dark:hover:border-surface-800 mb-2"
+                  style="color: var(--p-text-color); text-decoration: none"
+                >
+                  <i
+                    [class]="item.icon"
+                    class="text-sm sm:text-lg transition-transform duration-300 group-hover:scale-110 group-[.router-link-active]:text-primary-600 dark:group-[.router-link-active]:text-primary-300 flex-shrink-0"
+                  ></i>
+                  <span class="font-medium text-sm sm:text-base truncate">{{ item.label }}</span>
+                </a>
+              }
+            </nav>
+          </div>
+
+          <div class="lg:col-span-3 p-4 sm:p-6">
+            @if (loading()) {
+              <div class="flex h-full items-center justify-center">
+                <div class="w-full flex flex-col justify-center h-full max-w-2xl">
+                  <div class="flex flex-col items-center mb-8">
+                    <p-skeleton shape="circle" size="80px" styleClass="mb-4"></p-skeleton>
+                    <p-skeleton width="220px" height="32px" styleClass="mb-2"></p-skeleton>
+                    <p-skeleton width="320px" height="20px" styleClass="mb-6"></p-skeleton>
+                  </div>
+                  <div class="flex flex-col mb-8">
+                    <p-skeleton
+                      width="100%"
+                      height="44px"
+                      borderRadius="12px"
+                      styleClass="mb-4"
+                    ></p-skeleton>
+                    <p-skeleton
+                      width="100%"
+                      height="44px"
+                      borderRadius="12px"
+                      styleClass="mb-4"
+                    ></p-skeleton>
+                    <p-skeleton
+                      width="100%"
+                      height="44px"
+                      borderRadius="12px"
+                      styleClass="mb-4"
+                    ></p-skeleton>
+                  </div>
+                  <div class="flex justify-end">
+                    <p-skeleton width="160px" height="44px" borderRadius="12px"></p-skeleton>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <router-outlet></router-outlet>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-6 sm:mt-8 lg:mt-12 space-y-4 sm:space-y-6">
+      <div
+        class="p-4 sm:p-6 rounded-xl sm:rounded-2xl transition-all duration-300 hover:shadow-xl"
+        style="
+          background: color-mix(in srgb, var(--p-surface-0) 95%, transparent);
+          box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+          border: 1px solid var(--p-surface-border);
+          backdrop-filter: blur(10px);
+        "
+      >
+        <div
+          class="flex justify-center items-center flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm font-medium"
+        >
+          <div class="flex items-center gap-1 sm:gap-2 transition-all duration-300 hover:scale-105">
+            <div
+              class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center"
+              style="background: linear-gradient(135deg, var(--p-green-500), var(--p-green-400))"
+            >
+              <i class="pi pi-shield text-white text-xs"></i>
+            </div>
+            <span style="color: var(--p-text-color)" class="whitespace-nowrap">Secure Profile</span>
+          </div>
+          <div class="flex items-center gap-1 sm:gap-2 transition-all duration-300 hover:scale-105">
+            <div
+              class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center"
+              style="background: linear-gradient(135deg, var(--p-blue-500), var(--p-blue-400))"
+            >
+              <i class="pi pi-sync text-white text-xs"></i>
+            </div>
+            <span style="color: var(--p-text-color)" class="whitespace-nowrap">Auto Sync</span>
+          </div>
+          <div class="flex items-center gap-1 sm:gap-2 transition-all duration-300 hover:scale-105">
+            <div
+              class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center"
+              style="
+                background: linear-gradient(135deg, var(--p-primary-500), var(--p-primary-400));
+              "
+            >
+              <i class="pi pi-clock text-white text-xs"></i>
+            </div>
+            <span style="color: var(--p-text-color)" class="whitespace-nowrap">24/7 Available</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p-toast position="top-right"></p-toast>
+</section>

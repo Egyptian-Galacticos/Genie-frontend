@@ -1,0 +1,74 @@
+:host ::ng-deep .p-columnfilter-overlay {
+  transform: translateY(-100%) !important;
+  top: 0 !important;
+  bottom: auto !important;
+}
+
+:host ::ng-deep .p-multiselect-panel {
+  transform: translateY(-100%) !important;
+  top: 0 !important;
+  bottom: auto !important;
+}
+
+:host ::ng-deep .p-dropdown-panel {
+  transform: translateY(-100%) !important;
+  top: 0 !important;
+  bottom: auto !important;
+}
+
+:host ::ng-deep .p-calendar-panel {
+  transform: translateY(-100%) !important;
+  top: 0 !important;
+  bottom: auto !important;
+}
+
+:host ::ng-deep .p-columnfilter-overlay {
+  margin-top: -8px !important;
+}
+
+:host ::ng-deep .p-multiselect-panel {
+  margin-top: -8px !important;
+}
+
+:host ::ng-deep .p-dropdown-panel {
+  margin-top: -8px !important;
+}
+
+:host ::ng-deep .p-calendar-panel {
+  margin-top: -8px !important;
+}
+
+::ng-deep .rfq-details-modal {
+  .p-dialog {
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+    border: none;
+  }
+
+  .p-dialog-content {
+    padding: 0;
+    border: none;
+  }
+
+  .p-dialog-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-600) 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    border: none;
+  }
+
+  .p-dialog-header .p-dialog-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+
+  .p-dialog-header .p-dialog-header-icon {
+    color: white;
+  }
+
+  .p-dialog-footer {
+    border: none;
+    background-color: var(--surface-50);
+  }
+}

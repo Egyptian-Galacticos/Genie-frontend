@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { MessageModule } from 'primeng/message';
@@ -33,6 +33,7 @@ export class VerifyCompanyEmailComponent implements OnInit {
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
 
   isLoading = signal<boolean>(false);
   verificationSuccess = signal<boolean>(false);
@@ -44,8 +45,16 @@ export class VerifyCompanyEmailComponent implements OnInit {
     () => !this.isLoading() && !this.verificationSuccess() && !this.alreadyVerified()
   );
 
+  private get isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
+
   ngOnInit() {
-    this.verifyCompanyEmail();
+    if (this.isBrowser) {
+      this.verifyCompanyEmail();
+    } else {
+      this.isLoading.set(true);
+    }
   }
 
   /**
