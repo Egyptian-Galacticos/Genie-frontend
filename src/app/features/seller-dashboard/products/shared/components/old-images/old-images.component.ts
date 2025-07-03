@@ -7,7 +7,7 @@ import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
-import { ImageFile } from '../../../../../shared/utils/interfaces';
+import { MediaResource } from '../../../../../shared/utils/interfaces';
 
 @Component({
   selector: 'app-old-images',
@@ -26,8 +26,8 @@ export class OldImagesComponent {
   messageService = inject(MessageService);
   confirmationService = inject(ConfirmationService);
 
-  old_main_image = input.required<ImageFile>();
-  old_images = input.required<ImageFile[]>();
+  old_main_image = input.required<MediaResource>();
+  old_images = input.required<MediaResource[]>();
   filesToDelete = model.required<number[]>();
 
   getTotalImagesCount(): number {
@@ -36,7 +36,7 @@ export class OldImagesComponent {
     return mainImageCount + otherImagesCount;
   }
 
-  trackByImageId(index: number, image: ImageFile): number {
+  trackByImageId(index: number, image: MediaResource): number {
     return image.id;
   }
 
