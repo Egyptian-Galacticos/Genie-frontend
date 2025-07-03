@@ -53,13 +53,13 @@ export class MenuComponent implements OnInit {
                 items: [
                   {
                     label: 'Requests',
-                    icon: 'pi pi-fw pi-receipt',
+                    icon: 'pi pi-fw pi-inbox',
                     routerLink: ['/dashboard/seller/quotes-requests'],
                   },
                   {
-                    label: 'Quotes',
-                    icon: 'pi pi-fw pi-receipt',
-                    routerLink: ['/dashboard/seller/quotes'],
+                    label: 'Responses',
+                    icon: 'pi pi-fw pi-send',
+                    routerLink: ['/dashboard/seller/quotes-responses'],
                   },
                 ],
               },

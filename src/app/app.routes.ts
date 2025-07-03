@@ -113,6 +113,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'quotes-responses',
+        loadComponent: () =>
+          import('./features/seller-dashboard/quotes/quotes.component').then(
+            c => c.QuotesComponent
+          ),
+      },
+      {
         path: 'products',
         children: [
           {
