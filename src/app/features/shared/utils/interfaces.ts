@@ -1,32 +1,36 @@
 import { TableLazyLoadEvent } from 'primeng/table';
 
-export interface IBuyer {
-  id: string;
+/* user interfaces */
+export interface IUser {
+  id: number;
+  first_name: string;
+  last_name: string;
   full_name: string;
   email: string;
-  phone: string;
+  phone_number: string | null;
+  is_email_verified: boolean;
+  status: string;
+  last_login_at: string | null;
+  roles: string[];
+  company?: ICompany | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ICompany {
-  id: string;
-  user_id: string;
+  id: number;
   name: string;
-  logo: string;
-  description: string;
-  website?: string;
   email: string;
-  tax_id?: string;
-  company_phone?: string;
-  commercial_registration?: string;
-  address: Address;
-}
-
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  country: string;
-  zip_code: string;
+  tax_id: string | null;
+  company_phone: string | null;
+  commercial_registration: string | null;
+  website: string | null;
+  description: string | null;
+  logo: MediaResource | null;
+  address: string | null;
+  is_email_verified: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CustomTableLazyLoadEvent extends TableLazyLoadEvent {
@@ -45,10 +49,51 @@ export interface dataTableColumn {
 }
 
 /**quotation interfaces */
+export interface IQuote {
+  id: number;
+  rfq_id: number;
+  total_price: number;
+  seller_message: string;
+  conversation_id: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  total_amount?: number;
 
+  seller?: IUser;
+  buyer?: IUser;
+  rfq?: RfqDetails;
+  items?: IQuoteItem[];
+  contract?: ContractDetails;
+}
+export interface IQuoteItem {
+  id: number;
+  product_id: number;
+  product_name: string | null;
+  product_brand: string | null;
+  quantity: number;
+  unit_price: number;
+  total_price: number;
+  notes: string;
+  subtotal?: number;
+}
+export interface IRequestForQuote {
+  id: number;
+  buyer?: IUser;
+  seller?: IUser;
+  initial_product: IProduct;
+  initial_quantity: number;
+  shipping_country: string;
+  shipping_address: string;
+  buyer_message: string;
+  status: string;
+  date: string; // created_at
+  updated_at: string;
+  quotes?: IQuote[];
+}
 export interface CreateQuoteDto {
   quote_request_id: number;
-  buyer_id: string;
+  buyer_id: number;
   seller_message: string;
   items?: CreateQuoteItemDto[];
   rfq_id?: number;
@@ -60,17 +105,6 @@ export interface CreateQuoteItemDto {
   quantity: number;
   unit_price: number;
   notes: string;
-}
-
-export interface IRequestForQuote {
-  id: number;
-  quote: string;
-  status: string;
-  date: string;
-  buyer: ICompany;
-  initial_product: Partial<IProduct>;
-  quantity?: number;
-  unit_price?: number;
 }
 
 //products
@@ -109,16 +143,6 @@ export interface Category {
   };
 }
 
-export interface ImageFile {
-  id: number;
-  name: string;
-  file_name: string;
-  url: string;
-  thumbnail_url: string;
-  size: string;
-  mime_type: string;
-}
-
 export interface IProduct {
   id: number;
   brand: string;
@@ -133,8 +157,8 @@ export interface IProduct {
   sample_available: boolean;
   sample_price: number;
   seller: string;
-  main_image: ImageFile;
-  images: ImageFile[];
+  main_image: MediaResource;
+  images: MediaResource[];
   hs_code: string;
   sku: string;
   origin: string;
@@ -143,6 +167,7 @@ export interface IProduct {
     length: number;
     width: number;
     height: number;
+    unit: string;
   };
   tiers: {
     from_quantity: number;
@@ -258,4 +283,37 @@ export interface TemplateData {
   [key: `price_tiers.${number}.from_quantity`]: number;
   [key: `price_tiers.${number}.to_quantity`]: number;
   [key: `price_tiers.${number}.price`]: number;
+}
+
+// helper interfaces
+export interface Address {
+  street: string;
+  city: string;
+  state: string;
+  country: string;
+  zip_code: string;
+}
+export interface MediaResource {
+  id: number;
+  name: string;
+  file_name: string;
+  url: string;
+  size: number;
+  mime_type: string;
+  thumbnail_url?: string;
+}
+export interface RfqDetails {
+  initial_quantity: number;
+  shipping_country: string;
+  buyer_message: string;
+  status: string;
+}
+
+export interface ContractDetails {
+  id: number;
+  contract_number: string;
+  status: string;
+  total_amount: number;
+  contract_date: string;
+  estimated_delivery: string;
 }
