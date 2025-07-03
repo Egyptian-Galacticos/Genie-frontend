@@ -99,12 +99,10 @@
       <p-button
         [icon]="'pi pi-eye'"
         [rounded]="true"
-        [outlined]="true"
         [raised]="true"
         [size]="'small'"
-        title="mark as seen"
-        (onClick)="markQuoteRequestAsSeen(rowData)"
-        [disabled]="rowData.status.toLowerCase() !== 'pending'"
+        title="View Details"
+        (onClick)="viewDetails(rowData)"
       />
       <p-button
         [icon]="'pi pi-times'"
@@ -115,10 +113,28 @@
         [size]="'small'"
         title="Reject"
         (onClick)="markQuoteRequestAsRejected(rowData)"
-        [disabled]="rowData.status.toLowerCase() !== 'pending'"
+        [disabled]="
+          rowData.status.toLowerCase() !== 'pending' && rowData.status.toLowerCase() !== 'seen'
+        "
       />
     </div>
   </td>
 </ng-template>
+
+@if (rfqDetailsDialogVisible()) {
+  <app-rfq-details-dialog
+    [(visible)]="rfqDetailsDialogVisible"
+    [rfq]="selectedRfq"
+    [userType]="'seller'"
+    [showActions]="true"
+    [allowChat]="true"
+    [allowQuote]="true"
+    (chat)="onRfqChat($event)"
+    (quote)="onRfqQuote($event)"
+    (markAsSeen)="onRfqMarkAsSeen($event)"
+    (reject)="onRfqReject($event)"
+    (dialogClose)="closeRfqDetailsDialog()"
+  />
+}
 
 <p-toast />

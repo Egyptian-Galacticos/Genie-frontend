@@ -15,6 +15,7 @@ import { QuotesService } from '../../shared/services/quotes.service';
 import { ToastModule } from 'primeng/toast';
 import { DatePipe } from '@angular/common';
 import { StatusUtils } from '../../shared/utils/status-utils';
+import { RfqDetailsDialogComponent } from '../../shared/rfq-details-dialog/rfq-details-dialog.component';
 
 @Component({
   selector: 'app-quotes',
@@ -28,9 +29,9 @@ import { StatusUtils } from '../../shared/utils/status-utils';
     FormsModule,
     DataTableComponent,
     CreateQuoteModalComponent,
-    CreateQuoteModalComponent,
     ToastModule,
     DatePipe,
+    RfqDetailsDialogComponent,
   ],
   templateUrl: './quotes-requests.component.html',
   styleUrl: './quotes-requests.component.css',
@@ -45,6 +46,9 @@ export class QuotesRequestsComponent {
   first = 0;
   multiSortMeta: SortMeta[] = [{ field: 'date', order: -1 }];
   currentRequestOptions!: RequestOptions;
+  RfqDetailsVisible = signal<boolean>(false);
+  selectedRfq: IRequestForQuote | null = null;
+  rfqDetailsDialogVisible = signal<boolean>(false);
 
   //create quote modal variables
   createQuoteModalVisible = signal<boolean>(false);
@@ -165,6 +169,36 @@ export class QuotesRequestsComponent {
           });
         },
       });
+  }
+  viewDetails(quoteRequest: IRequestForQuote) {
+    this.selectedRfq = quoteRequest;
+    this.rfqDetailsDialogVisible.set(true);
+  }
+
+  // Handle RFQ dialog actions
+  onRfqChat(rfq: IRequestForQuote) {
+    console.log('Opening chat for RFQ:', rfq.id);
+    // Implement chat functionality
+  }
+
+  onRfqQuote(rfq: IRequestForQuote) {
+    this.openCreateQuoteModal(rfq);
+    this.rfqDetailsDialogVisible.set(false);
+  }
+
+  onRfqMarkAsSeen(rfq: IRequestForQuote) {
+    this.markQuoteRequestAsSeen(rfq);
+    this.rfqDetailsDialogVisible.set(false);
+  }
+
+  onRfqReject(rfq: IRequestForQuote) {
+    this.markQuoteRequestAsRejected(rfq);
+    this.rfqDetailsDialogVisible.set(false);
+  }
+
+  closeRfqDetailsDialog() {
+    this.rfqDetailsDialogVisible.set(false);
+    this.selectedRfq = null;
   }
   private showError(message: string): void {
     this.messageService.add({
