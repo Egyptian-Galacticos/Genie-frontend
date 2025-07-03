@@ -1,0 +1,270 @@
+<p-dialog
+  header="Quote Details"
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '80vw', maxWidth: '800px' }"
+  styleClass="quote-details-modal"
+  (onHide)="onVisibilityChange(false)"
+>
+  @if (quote(); as currentQuote) {
+    <div class="p-4">
+      <!-- Quote Information and Other Party Information -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- Quote Information Panel -->
+        <div class="shadow-xl p-4 rounded-xl">
+          <h3 class="text-lg font-semibold mb-4 text-primary flex items-center">
+            <i class="pi pi-file-text mr-2"></i>
+            Quote Information
+          </h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-secondary min-w-[120px]">Quote ID:</span>
+              <span class="text-sm font-bold">#{{ currentQuote.id }}</span>
+            </div>
+            @if (currentQuote.rfq_id || getRfqId()) {
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-medium text-secondary min-w-[120px]">RFQ ID:</span>
+                <span class="text-sm font-bold">#{{ currentQuote.rfq_id || getRfqId() }}</span>
+              </div>
+            }
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-secondary min-w-[120px]">Status:</span>
+              <p-badge
+                [value]="currentQuote.status | titlecase"
+                [severity]="getStatusSeverity(currentQuote.status)"
+                [style]="{
+                  'background-color': getStatusColor(currentQuote.status),
+                  color: getStatusTextColor(currentQuote.status),
+                }"
+              ></p-badge>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-secondary min-w-[120px]">Date Created:</span>
+              <span class="text-sm">{{ currentQuote.created_at | date: 'medium' }}</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-secondary min-w-[120px]">Total Amount:</span>
+              <span class="text-sm font-bold text-primary">
+                {{ getTotalAmount() | currency: 'USD' : 'symbol' : '1.2-2' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other Party Information Panel -->
+        <div class="shadow-xl p-4 rounded-xl">
+          <h3 class="text-lg font-semibold mb-4 text-primary flex items-center">
+            <i class="pi pi-user mr-2"></i>
+            {{ getOtherPartyLabel() }} Information
+          </h3>
+          @if (getOtherParty(); as otherParty) {
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-medium text-secondary min-w-[100px]">Name:</span>
+                <span class="text-sm font-bold">
+                  @if (otherParty.full_name) {
+                    {{ otherParty.full_name }}
+                  } @else if (otherParty.first_name && otherParty.last_name) {
+                    {{ otherParty.first_name }} {{ otherParty.last_name }}
+                  } @else {
+                    <span class="text-surface-400 italic">Unknown {{ getOtherPartyLabel() }}</span>
+                  }
+                </span>
+              </div>
+              @if (otherParty.email) {
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-secondary min-w-[100px]">Email:</span>
+                  <span class="text-sm text-primary">{{ otherParty.email }}</span>
+                </div>
+              }
+              @if (otherParty.phone_number) {
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-secondary min-w-[100px]">Phone:</span>
+                  <span class="text-sm">{{ otherParty.phone_number }}</span>
+                </div>
+              }
+              @if (otherParty.company?.name) {
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-secondary min-w-[100px]">Company:</span>
+                  <span class="text-sm font-bold">{{ otherParty.company?.name }}</span>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="text-surface-400 italic">
+              No {{ getOtherPartyLabel().toLowerCase() }} information available
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- RFQ Information Section (for buyer perspective or when RFQ data is available) -->
+      @if (userType() === 'buyer' && getRfqDetails() && hasRFQInformation(getRfqDetails()!)) {
+        <div class="shadow-xl p-4 rounded-xl mb-6">
+          <h3 class="text-lg font-semibold mb-4 text-primary flex items-center">
+            <i class="pi pi-info-circle mr-2"></i>
+            Request for Quote Information
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-3">
+              @if (getRfqDetails()?.initial_quantity) {
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-secondary min-w-[120px]"
+                    >Initial Quantity:</span
+                  >
+                  <span class="text-sm font-bold">{{
+                    getRfqDetails()!.initial_quantity | number
+                  }}</span>
+                </div>
+              }
+              @if (getRfqDetails()?.shipping_country) {
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-secondary min-w-[120px]"
+                    >Shipping Country:</span
+                  >
+                  <span class="text-sm font-bold">{{ getRfqDetails()!.shipping_country }}</span>
+                </div>
+              }
+            </div>
+            <div class="space-y-3">
+              @if (getRfqDetails()?.status) {
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-secondary min-w-[100px]">RFQ Status:</span>
+                  <p-badge
+                    [value]="getRfqDetails()!.status! | titlecase"
+                    [severity]="getStatusSeverity(getRfqDetails()!.status!)"
+                    [style]="{
+                      'background-color': getStatusColor(getRfqDetails()!.status!),
+                      color: getStatusTextColor(getRfqDetails()!.status!),
+                    }"
+                  ></p-badge>
+                </div>
+              }
+            </div>
+          </div>
+          <!-- Display original buyer message if available -->
+          @if (getRfqDetails()?.buyer_message) {
+            <div class="mt-4">
+              <h4 class="text-sm font-medium text-secondary mb-2">My Original Message:</h4>
+              <div class="bg-surface-50 p-3 rounded-lg text-left border-l-4 border-primary">
+                <p class="text-sm leading-relaxed whitespace-pre-wrap">
+                  {{ getRfqDetails()!.buyer_message }}
+                </p>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Quote Items Section -->
+      <div class="shadow-xl p-4 rounded-xl mb-6">
+        <h3 class="text-lg font-semibold mb-4 text-primary flex items-center">
+          <i class="pi pi-list mr-2"></i>
+          Quote Items
+        </h3>
+        <div class="overflow-x-auto">
+          <p-table
+            [value]="getQuoteItems()"
+            [tableStyle]="{ 'min-width': '100%' }"
+            styleClass="p-datatable-sm"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th class="text-left">Item Name</th>
+                <th class="text-left">Brand</th>
+                <th class="text-left">Description</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-right">Unit Price</th>
+                <th class="text-right">Total</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+              <tr>
+                <td class="font-medium">
+                  {{ item.product_name || item.product?.name || 'N/A' }}
+                </td>
+                <td>{{ item.product_brand || item.product?.brand || '-' }}</td>
+                <td class="max-w-[200px] truncate">
+                  {{ item.notes || item.product?.description || 'No description' }}
+                </td>
+                <td class="text-center">{{ item.quantity || 0 | number }}</td>
+                <td class="text-right">
+                  {{ item.unit_price || 0 | currency: 'USD' : 'symbol' : '1.2-2' }}
+                </td>
+                <td class="text-right font-medium">
+                  {{
+                    item.total_price || item.subtotal || item.unit_price * item.quantity || 0
+                      | currency: 'USD' : 'symbol' : '1.2-2'
+                  }}
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+              <tr class="bg-surface-50">
+                <td colspan="5" class="text-left font-bold text-lg">Total Amount:</td>
+                <td class="text-right font-bold text-lg text-primary">
+                  {{ getTotalAmount() | currency: 'USD' : 'symbol' : '1.2-2' }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+      <!-- Message Section -->
+      <div class="shadow-xl p-4 rounded-xl">
+        <h3 class="text-lg font-semibold mb-4 text-primary flex items-center">
+          <i class="pi pi-comment mr-2"></i>
+          {{ getOtherPartyLabel() }} Message
+        </h3>
+        <div class="bg-surface-50 p-3 rounded-lg border-l-4 border-primary">
+          <p class="text-sm leading-relaxed whitespace-pre-wrap">
+            {{ getOtherPartyMessage() }}
+          </p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3">
+      <p-button label="Close" severity="secondary" outlined="true" (onClick)="closeDialog()" />
+      @if (quote() && showActions()) {
+        <div class="flex gap-2">
+          @if (allowAcceptReject() && userType() === 'buyer') {
+            <p-button
+              icon="pi pi-check"
+              severity="success"
+              [rounded]="true"
+              [title]="'Accept Quote'"
+              [disabled]="areActionsDisabled()"
+              (onClick)="acceptQuote(); closeDialog()"
+            />
+            <p-button
+              icon="pi pi-times"
+              severity="danger"
+              outlined="true"
+              [rounded]="true"
+              [title]="'Reject Quote'"
+              [disabled]="areActionsDisabled()"
+              (onClick)="rejectQuote(); closeDialog()"
+            />
+          }
+          @if (allowChat()) {
+            <p-button
+              icon="pi pi-comments"
+              [rounded]="true"
+              [raised]="true"
+              [title]="'Chat with ' + getOtherPartyLabel()"
+              (onClick)="openChat(); closeDialog()"
+            />
+          }
+        </div>
+      }
+    </div>
+  </ng-template>
+</p-dialog>
