@@ -13,6 +13,7 @@ import { TagModule } from 'primeng/tag';
 import { DividerModule } from 'primeng/divider';
 import { StatusUtils } from '../../../shared/utils/status-utils';
 import { QuotesService } from '../../../shared/services/quotes.service';
+import { RfqDetailsDialogComponent } from '../../../shared/rfq-details-dialog/rfq-details-dialog.component';
 
 @Component({
   selector: 'app-buyer-quotes-requests',
@@ -26,6 +27,7 @@ import { QuotesService } from '../../../shared/services/quotes.service';
     DialogModule,
     TagModule,
     DividerModule,
+    RfqDetailsDialogComponent,
   ],
   providers: [MessageService],
   templateUrl: './quotes-requests.component.html',
@@ -45,6 +47,7 @@ export class BuyerQuotesRequestsComponent implements OnInit {
 
   showRFQDetailsModal = false;
   selectedRFQ: IRequestForQuote | null = null;
+  rfqDetailsDialogVisible = false;
   cols: dataTableColumn[] = [
     {
       field: 'id',
@@ -130,7 +133,18 @@ export class BuyerQuotesRequestsComponent implements OnInit {
   createNewRFQ() {}
   viewRFQ(rfq: IRequestForQuote) {
     this.selectedRFQ = rfq;
-    this.showRFQDetailsModal = true;
+    this.rfqDetailsDialogVisible = true;
+  }
+
+  closeRFQDetailsDialog() {
+    this.rfqDetailsDialogVisible = false;
+    this.selectedRFQ = null;
+  }
+
+  // Handle RFQ dialog actions
+  onRfqChat(rfq: IRequestForQuote) {
+    console.log('Opening chat for RFQ:', rfq.id);
+    // Implement chat functionality
   }
 
   viewQuotes(): void {}

@@ -218,29 +218,6 @@
                     <span class="text-sm">{{ selectedRFQ.initial_product.hs_code }}</span>
                   </div>
                 </div>
-                <!--
-                <div class="space-y-2">
-                  <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[100px]">Material:</span>
-                    <span class="text-sm">{{
-                      selectedRFQ.initial_product.specifications?.material || 'N/A'
-                    }}</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[100px]">Warranty:</span>
-                    <span class="text-sm">{{
-                      selectedRFQ.initial_product.specifications?.warranty || 'N/A'
-                    }}</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[100px]"
-                      >Certification:</span
-                    >
-                    <span class="text-sm">{{
-                      selectedRFQ.initial_product.specifications?.certification || 'N/A'
-                    }}</span>
-                  </div>
-                </div> -->
               </div>
 
               <!-- Dimensions -->
@@ -492,6 +469,20 @@
       </div>
     </ng-template>
   </p-dialog>
+
+  <!-- RFQ Details Dialog -->
+  @if (rfqDetailsDialogVisible) {
+    <app-rfq-details-dialog
+      [(visible)]="rfqDetailsDialogVisible"
+      [rfq]="selectedRFQ"
+      [userType]="'buyer'"
+      [showActions]="true"
+      [allowChat]="true"
+      [allowQuote]="false"
+      (dialogClose)="closeRFQDetailsDialog()"
+      (chat)="onRfqChat($event)"
+    />
+  }
 
   <p-toast></p-toast>
 </div>
