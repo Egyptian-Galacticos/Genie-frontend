@@ -76,46 +76,47 @@
     />
   </td>
   <td class="flex justify-center shrink-1">
-    <div class="flex justify-around w-80">
-      <div class="flex gap-5">
-        <p-button [icon]="'pi pi-comment'" label="chat" [rounded]="true" [raised]="true" />
-        <!-- @if (rowData.status.toLowerCase() === 'pending') { -->
-        <p-button
-          icon="pi pi-receipt"
-          rounded="true"
-          outlined="true"
-          raised="true"
-          label="Quote"
-          (onClick)="openCreateQuoteModal(rowData)"
-          [disabled]="
-            rowData.status.toLowerCase() !== 'pending' && rowData.status.toLowerCase() !== 'seen'
-          "
-        />
-        <!-- } -->
-      </div>
-      <!-- @if (rowData.status.toLowerCase() === 'pending') { -->
+    <div class="flex justify-center gap-2 w-80">
+      <p-button
+        [icon]="'pi pi-comment'"
+        label="chat"
+        [rounded]="true"
+        [raised]="true"
+        [size]="'small'"
+      />
+      <p-button
+        icon="pi pi-receipt"
+        rounded="true"
+        outlined="true"
+        raised="true"
+        label="Quote"
+        size="small"
+        (onClick)="openCreateQuoteModal(rowData)"
+        [disabled]="
+          rowData.status.toLowerCase() !== 'pending' && rowData.status.toLowerCase() !== 'seen'
+        "
+      />
       <p-button
         [icon]="'pi pi-eye'"
-        styleClass=""
         [rounded]="true"
         [outlined]="true"
         [raised]="true"
+        [size]="'small'"
         title="mark as seen"
         (onClick)="markQuoteRequestAsSeen(rowData)"
         [disabled]="rowData.status.toLowerCase() !== 'pending'"
       />
       <p-button
         [icon]="'pi pi-times'"
-        styleClass=""
         [severity]="'danger'"
         [rounded]="true"
         [outlined]="true"
         [raised]="true"
+        [size]="'small'"
         title="Reject"
         (onClick)="markQuoteRequestAsRejected(rowData)"
         [disabled]="rowData.status.toLowerCase() !== 'pending'"
       />
-      <!-- } -->
     </div>
   </td>
 </ng-template>
