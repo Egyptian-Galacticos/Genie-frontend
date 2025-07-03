@@ -206,8 +206,8 @@ export class BulkUploadComponent implements OnInit {
       hs_code: row.hs_code?.toString().trim() || undefined,
       sample_available: parseBoolean(row.sample_available),
       sample_price: parseNumber(row.sample_price) || undefined,
-      product_tags: row.product_tags
-        ? row.product_tags
+      product_tags: row['tags']
+        ? row['tags']
             .toString()
             .split(',')
             .map((t: string) => t.trim())
