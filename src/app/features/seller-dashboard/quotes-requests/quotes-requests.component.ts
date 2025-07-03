@@ -14,6 +14,7 @@ import { CreateQuoteModalComponent } from '../../shared/create-quote-modal/creat
 import { QuotesService } from '../../shared/services/quotes.service';
 import { ToastModule } from 'primeng/toast';
 import { DatePipe } from '@angular/common';
+import { StatusUtils } from '../../shared/utils/status-utils';
 
 @Component({
   selector: 'app-quotes',
@@ -107,17 +108,7 @@ export class QuotesRequestsComponent {
   ];
 
   getStatusSeverity(status: string): 'warn' | 'success' | 'danger' | 'secondary' | 'info' {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return 'warn';
-      case 'quoted':
-      case 'seen':
-        return 'success';
-      case 'rejected':
-        return 'danger';
-      default:
-        return 'secondary';
-    }
+    return StatusUtils.getStatusSeverity(status);
   }
 
   // open create quote modal
@@ -136,24 +127,13 @@ export class QuotesRequestsComponent {
           detail: 'Quote sent successfully',
           life: 5000,
         });
-        this.quoteService
-          .updateQuoteRequestStatus({
-            id: this.beingQuotedQuoteRequest.id,
-            status: 'Quoted',
-          })
-          .subscribe({
-            next: () => {
-              this.beingQuotedQuoteRequest.status = 'Quoted';
-            },
-            error: () => {
-              this.showError("Couldn't mark quote request as quoted");
-            },
-          });
         this.creatingQuote = false;
         this.createQuoteModalVisible.set(false);
+        this.beingQuotedQuoteRequest.status = 'Quoted';
       },
       error: () => {
         this.showError("Couldn't send quote");
+        // this.showError("Couldn't mark quote request as quoted");
         this.creatingQuote = false;
       },
     });
