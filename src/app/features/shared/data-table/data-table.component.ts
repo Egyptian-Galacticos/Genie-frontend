@@ -38,7 +38,7 @@ export class DataTableComponent<T> {
   loadDataEvent = output<RequestOptions>();
   bodyTemplate = input.required<TemplateRef<unknown>>();
   selectedItems = model<T[]>();
-  selectionMode = input.required<'single' | 'multiple' | null>();
+  selectionMode = input<'single' | 'multiple' | null>(null);
 
   loadData(event: TableLazyLoadEvent) {
     const requestOptions = this.buildRequestOptions(event);
