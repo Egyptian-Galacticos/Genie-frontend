@@ -79,11 +79,8 @@ export class CreateQuoteModalComponent implements OnInit {
           },
           [Validators.required, this.invalidProduct()],
         ],
-        unit_price: [
-          this.quoteRequest()?.unit_price || 1,
-          [Validators.required, Validators.min(1)],
-        ],
-        quantity: [this.quoteRequest()?.quantity || 1, [Validators.required, Validators.min(1)]],
+        unit_price: [0, [Validators.required, Validators.min(1)]],
+        quantity: [0, [Validators.required, Validators.min(1)]],
         notes: [''],
       })
     );
@@ -114,7 +111,7 @@ export class CreateQuoteModalComponent implements OnInit {
       .filter(x => x) as CreateQuoteItemDto[];
     const quote: Partial<CreateQuoteDto> = {
       quote_request_id: this.quoteRequest()?.id,
-      buyer_id: this.quoteRequest()?.buyer.id || '',
+      buyer_id: this.quoteRequest()?.buyer?.id || 0,
       seller_message: quoteItems.seller_message || '',
       items: quote_items,
       rfq_id: this.quoteRequest()?.id,
