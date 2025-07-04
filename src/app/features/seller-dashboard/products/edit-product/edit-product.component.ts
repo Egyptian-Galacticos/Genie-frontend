@@ -28,7 +28,7 @@ import { DocumentUploadComponent } from '../shared/components/document-upload/do
 import { CategoryComponent } from '../shared/components/category/category.component';
 import { ToastModule } from 'primeng/toast';
 import { BasicProductInfoComponent } from '../shared/components/basic-product-info/basic-product-info.component';
-import { PricingInfoComponent } from '../shared/components/princing-info/pricing-info.component';
+import { PricingInfoComponent } from '../shared/components/pricing-info/pricing-info.component';
 import { ProductSpecsComponent } from '../shared/components/product-specs/product-specs.component';
 import { ProductSampleAndTagsComponent } from '../shared/components/product-sample-and-tags/product-sample-and-tags.component';
 import { OldImagesComponent } from '../shared/components/old-images/old-images.component';

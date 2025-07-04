@@ -21,7 +21,7 @@ import { ChipModule } from 'primeng/chip';
 import { SelectModule } from 'primeng/select';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { BasicProductInfoComponent } from '../../../products/shared/components/basic-product-info/basic-product-info.component';
-import { PricingInfoComponent } from '../../../products/shared/components/princing-info/pricing-info.component';
+import { PricingInfoComponent } from '../../../products/shared/components/pricing-info/pricing-info.component';
 import { ProductSpecsComponent } from '../../../products/shared/components/product-specs/product-specs.component';
 import { ProductSampleAndTagsComponent } from '../../../products/shared/components/product-sample-and-tags/product-sample-and-tags.component';
 import { ToastModule } from 'primeng/toast';
