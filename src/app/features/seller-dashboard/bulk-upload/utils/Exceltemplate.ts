@@ -63,7 +63,6 @@ export const downloadTemplate = (categories: Category[]) => {
     name: category.name,
     id: category.id,
   }));
-  console.log(categories, sheetTwoData);
   // Create workbook and worksheet
   const ws = XLSX.utils.json_to_sheet(templateData);
   const ws2 = XLSX.utils.json_to_sheet(sheetTwoData);

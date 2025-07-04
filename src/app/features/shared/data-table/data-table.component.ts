@@ -23,7 +23,6 @@ import { SelectModule } from 'primeng/select';
     BadgeModule,
     SkeletonModule,
     NgTemplateOutlet,
-    FormsModule,
   ],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.css',

@@ -223,12 +223,6 @@ export interface CreateProductDto {
   category_id: number;
 }
 
-export interface IPriceTier {
-  from_quantity: number | null;
-  to_quantity: number | null;
-  price: number | null;
-}
-
 export interface ProductWithErrors extends CreateProductDto {
   errors?: string[];
   rowIndex?: number;
