@@ -114,7 +114,7 @@ export class AllProductsComponent {
     { field: 'actions', header: 'Actions', filterableColumn: false, filterType: 'clear' },
   ];
 
-  loadMyyProducts(requestOptions: RequestOptions) {
+  loadMyProducts(requestOptions: RequestOptions) {
     this.currentRequestOptions = requestOptions;
     if (requestOptions.params) {
       requestOptions.params['sortFields'] += ',created_at';
@@ -172,7 +172,7 @@ export class AllProductsComponent {
   }
   productUpdated() {
     this.updateVisible = false;
-    this.loadMyyProducts(this.currentRequestOptions);
+    this.loadMyProducts(this.currentRequestOptions);
   }
   viewProductDetails(product: IProduct) {
     this.router.navigate([`/products/${product.slug}`]);
@@ -182,7 +182,7 @@ export class AllProductsComponent {
     this.productService.DeleteProduct(product.id).subscribe({
       next: response => {
         this.showSuccess(response?.message || 'Product deleted successfully!');
-        this.loadMyyProducts(this.currentRequestOptions);
+        this.loadMyProducts(this.currentRequestOptions);
       },
       error: error => {
         this.showError(error.message);
