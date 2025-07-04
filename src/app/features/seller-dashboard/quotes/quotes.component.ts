@@ -79,10 +79,10 @@ export class QuotesComponent {
       filterableColumn: false,
     },
     {
-      field: 'buyer.full_name',
-      header: 'Buyer',
-      sortableColumn: true,
-      filterableColumn: true,
+      field: 'buyer.company.name',
+      header: 'Company Name',
+      sortableColumn: false,
+      filterableColumn: false,
       filterType: 'input',
       matchMode: 'contains',
     },
@@ -95,7 +95,7 @@ export class QuotesComponent {
     {
       field: 'total_amount',
       header: 'Total Amount',
-      sortableColumn: true,
+      sortableColumn: false,
       filterableColumn: false,
     },
     {

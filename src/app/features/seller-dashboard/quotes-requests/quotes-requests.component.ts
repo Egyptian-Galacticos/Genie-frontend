@@ -94,7 +94,7 @@ export class QuotesRequestsComponent {
       matchMode: 'contains',
     },
     {
-      field: 'date',
+      field: 'created_at',
       header: 'Date',
       sortableColumn: true,
       filterableColumn: true,

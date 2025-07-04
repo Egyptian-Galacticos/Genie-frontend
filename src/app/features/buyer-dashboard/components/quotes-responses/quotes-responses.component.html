@@ -62,10 +62,8 @@
   <ng-template #customBodyTemplate let-rowData let-rowIndex="rowIndex">
     <td class="text-center w-[5%] shrink-1">{{ rowData.id }}</td>
     <td class="text-center w-[20%] text-nowrap">
-      @if (rowData.seller?.full_name) {
-        {{ rowData.seller?.full_name }}
-      } @else if (rowData.seller?.first_name && rowData.seller?.last_name) {
-        {{ rowData.seller?.first_name }} {{ rowData.seller?.last_name }}
+      @if (rowData.seller?.company?.name) {
+        {{ rowData.seller?.company?.name }}
       } @else {
         <span class="text-surface-400 italic">Unknown Seller</span>
       }

@@ -57,12 +57,10 @@
 <ng-template #customBodyTemplate let-rowData let-rowIndex="rowIndex">
   <td class="text-center w-[5%] shrink-1">{{ rowData.id }}</td>
   <td class="text-center w-[20%] text-nowrap">
-    @if (rowData.seller?.full_name) {
-      {{ rowData.seller?.full_name }}
-    } @else if (rowData.seller?.first_name && rowData.seller?.last_name) {
-      {{ rowData.seller?.first_name }} {{ rowData.seller?.last_name }}
+    @if (rowData.buyer?.company?.name) {
+      {{ rowData.buyer?.company?.name }}
     } @else {
-      <span class="text-surface-400 italic">Unknown Seller</span>
+      <span class="text-surface-400 italic">Unknown Company</span>
     }
   </td>
   <td class="text-center w-[15%] text-nowrap">
@@ -90,7 +88,7 @@
       [severity]="getStatusSeverity(rowData.status)"
     ></p-badge>
   </td>
-  <td class="text-center w-[15%] text-nowrap">{{ rowData.created_at | date: 'short' }}</td>
+  <td class="text-center w-[15%] text-nowrap">{{ rowData.created_at | date }}</td>
   <td class="flex justify-center shrink-1">
     <div class="action-buttons">
       <p-button

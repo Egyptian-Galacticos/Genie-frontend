@@ -56,8 +56,8 @@ export class BuyerQuotesResponsesComponent implements OnInit {
     {
       field: 'seller.full_name',
       header: 'Seller',
-      sortableColumn: true,
-      filterableColumn: true,
+      sortableColumn: false,
+      filterableColumn: false,
       filterType: 'input',
       matchMode: 'contains',
     },
@@ -70,7 +70,7 @@ export class BuyerQuotesResponsesComponent implements OnInit {
     {
       field: 'total_amount',
       header: 'Total Amount',
-      sortableColumn: true,
+      sortableColumn: false,
       filterableColumn: false,
     },
     {
