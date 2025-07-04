@@ -1,8 +1,6 @@
-import { Component, OnInit, inject, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, inject, TemplateRef, ViewChild, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BuyerQuotesService } from '../../../shared/services/buyer-quotes.service';
-import { IBuyerQuote, IBuyerQuoteItem } from '../../../shared/utils/buyer-interfaces';
-import { dataTableColumn } from '../../../shared/utils/interfaces';
+import { dataTableColumn, IQuote, IQuoteItem } from '../../../shared/utils/interfaces';
 import { DataTableComponent } from '../../../shared/data-table/data-table.component';
 import { DashboardInfoCardComponent } from '../../../shared/dashboard-info-card/dashboard-info-card.component';
 import { RequestOptions, PaginatedResponse } from '../../../../core/interfaces/api.interface';
@@ -13,6 +11,8 @@ import { BadgeModule } from 'primeng/badge';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { StatusUtils } from '../../../shared/utils/status-utils';
+import { QuotesService } from '../../../shared/services/quotes.service';
+import { QuoteDetailsDialogComponent } from '../../../shared/quote-details-dialog/quote-details-dialog.component';
 
 @Component({
   selector: 'app-buyer-quotes-responses',
@@ -25,6 +25,7 @@ import { StatusUtils } from '../../../shared/utils/status-utils';
     BadgeModule,
     DialogModule,
     TableModule,
+    QuoteDetailsDialogComponent,
   ],
   providers: [MessageService],
   templateUrl: './quotes-responses.component.html',
@@ -33,17 +34,17 @@ import { StatusUtils } from '../../../shared/utils/status-utils';
 export class BuyerQuotesResponsesComponent implements OnInit {
   @ViewChild('customBodyTemplate', { static: true }) customBodyTemplate!: TemplateRef<unknown>;
 
-  private readonly quotesService = inject(BuyerQuotesService);
+  private readonly quotesService = inject(QuotesService);
   private readonly messageService = inject(MessageService);
 
-  quotesData: IBuyerQuote[] = [];
+  quotesData: IQuote[] = [];
   loading = false;
   selectedStatus = 'all';
   multiSortMeta: SortMeta[] = [];
   totalRecords = 0;
 
-  quoteDetailsVisible = false;
-  selectedQuote: IBuyerQuote | null = null;
+  quoteDetailsVisible = model<boolean>(false);
+  selectedQuote: IQuote | null = null;
 
   cols: dataTableColumn[] = [
     {
@@ -114,9 +115,9 @@ export class BuyerQuotesResponsesComponent implements OnInit {
     this.loading = true;
 
     this.quotesService.getBuyerQuotes(requestOptions).subscribe({
-      next: (response: PaginatedResponse<IBuyerQuote>) => {
+      next: (response: PaginatedResponse<IQuote>) => {
         this.quotesData = response.data || [];
-        this.totalRecords = response.pagination?.total || 0;
+        this.totalRecords = response.meta?.total || 0;
         this.loading = false;
       },
       error: () => {
@@ -151,7 +152,7 @@ export class BuyerQuotesResponsesComponent implements OnInit {
     this.selectedStatus = status;
   }
 
-  calculateTotal(items: IBuyerQuoteItem[]): number {
+  calculateTotal(items: IQuoteItem[]): number {
     if (!items?.length) return 0;
     return items.reduce((total, item) => {
       const unitPrice = parseFloat(item.unit_price?.toString() || '0');
@@ -173,18 +174,19 @@ export class BuyerQuotesResponsesComponent implements OnInit {
     return StatusUtils.getStatusTextColor(status);
   }
 
-  viewQuoteDetails(quote: IBuyerQuote) {
+  viewQuoteDetails(quote: IQuote) {
     this.selectedQuote = {
       ...quote,
       total_amount:
         quote.total_amount ||
         (quote.total_price ? parseFloat(quote.total_price.toString()) : 0) ||
-        this.calculateQuoteTotal(quote.quote_items || quote.items || []),
+        this.calculateQuoteTotal(quote.items || []),
     };
-    this.quoteDetailsVisible = true;
+    console.log('Viewing quote details:', this.selectedQuote);
+    this.quoteDetailsVisible.set(true);
   }
 
-  calculateQuoteTotal(items: IBuyerQuoteItem[]): number {
+  calculateQuoteTotal(items: IQuoteItem[]): number {
     if (!items?.length) return 0;
     return items.reduce((total, item) => {
       const unitPrice = parseFloat(item.unit_price?.toString() || '0');
@@ -197,8 +199,8 @@ export class BuyerQuotesResponsesComponent implements OnInit {
     }, 0);
   }
 
-  acceptQuote(quote: IBuyerQuote) {
-    this.quotesService.acceptQuote(quote.id).subscribe({
+  acceptQuote(quote: IQuote) {
+    this.quotesService.acceptQuote(quote.id, quote).subscribe({
       next: () => {
         const index = this.quotesData.findIndex(q => q.id === quote.id);
         if (index !== -1) {
@@ -223,8 +225,8 @@ export class BuyerQuotesResponsesComponent implements OnInit {
     });
   }
 
-  rejectQuote(quote: IBuyerQuote) {
-    this.quotesService.rejectQuote(quote.id).subscribe({
+  rejectQuote(quote: IQuote) {
+    this.quotesService.rejectQuote(quote.id, quote).subscribe({
       next: () => {
         const index = this.quotesData.findIndex(q => q.id === quote.id);
         if (index !== -1) {
@@ -260,7 +262,7 @@ export class BuyerQuotesResponsesComponent implements OnInit {
     );
   }
 
-  openChat(quote: IBuyerQuote) {
+  openChat(quote: IQuote) {
     this.messageService.add({
       severity: 'info',
       summary: 'Chat Feature',

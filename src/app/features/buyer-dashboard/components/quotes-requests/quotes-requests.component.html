@@ -56,41 +56,41 @@
   </div>
 
   <ng-template #customBodyTemplate let-rowData let-rowIndex="rowIndex">
-    <tr [class]="rowData.status === 'pending' ? 'surface-50' : ''">
-      <td class="text-center w-[5%] shrink-1">{{ rowData.id }}</td>
-      <td class="text-center w-[20%] text-nowrap">
-        @if (rowData.seller?.company?.name) {
-          {{ rowData.seller.company.name }}
-        } @else {
-          <span class="text-slate-400 italic">Unknown Company</span>
-        }
-      </td>
-      <td class="text-center w-[20%] text-nowrap">{{ rowData.initial_product?.name || 'N/A' }}</td>
-      <td class="text-center w-[15%] text-nowrap">{{ rowData.initial_quantity || 'N/A' }}</td>
-      <td class="text-center w-[10%]">
-        <p-badge
-          [value]="rowData.status | titlecase"
-          [severity]="getStatusSeverity(rowData.status)"
-          [style]="{
-            'background-color': getStatusColor(rowData.status),
-            color: getStatusTextColor(rowData.status),
-          }"
+    <!-- <tr [class]="rowData.status === 'pending' ? 'surface-50' : ''"> -->
+    <td class="text-center w-[5%] shrink-1">{{ rowData.id }}</td>
+    <td class="text-center w-[20%] text-nowrap">
+      @if (rowData.seller?.company?.name) {
+        {{ rowData.seller.company.name }}
+      } @else {
+        <span class="text-slate-400 italic">Unknown Company</span>
+      }
+    </td>
+    <td class="text-center w-[20%] text-nowrap">{{ rowData.initial_product?.name || 'N/A' }}</td>
+    <td class="text-center w-[15%] text-nowrap">{{ rowData.initial_quantity || 'N/A' }}</td>
+    <td class="text-center w-[10%]">
+      <p-badge
+        [value]="rowData.status | titlecase"
+        [severity]="getStatusSeverity(rowData.status)"
+        [style]="{
+          'background-color': getStatusColor(rowData.status),
+          color: getStatusTextColor(rowData.status),
+        }"
+      />
+    </td>
+    <td class="text-center w-[20%] text-nowrap">{{ rowData.date | date: 'medium' }}</td>
+    <td class="flex justify-center shrink-1">
+      <div class="flex justify-center gap-2">
+        <p-button
+          [icon]="'pi pi-eye'"
+          [rounded]="true"
+          [raised]="true"
+          size="small"
+          [title]="'View Details'"
+          (onClick)="viewRFQ(rowData)"
         />
-      </td>
-      <td class="text-center w-[20%] text-nowrap">{{ rowData.date | date: 'medium' }}</td>
-      <td class="flex justify-center shrink-1">
-        <div class="flex justify-center gap-2">
-          <p-button
-            [icon]="'pi pi-eye'"
-            [rounded]="true"
-            [raised]="true"
-            size="small"
-            [title]="'View Details'"
-            (onClick)="viewRFQ(rowData)"
-          />
-        </div>
-      </td>
-    </tr>
+      </div>
+    </td>
+    <!-- </tr> -->
   </ng-template>
 
   <!-- rfq details modal -->
@@ -180,10 +180,11 @@
             <div class="lg:col-span-1">
               <div class="w-48 h-48 rounded-lg overflow-hidden mx-auto border border-surface-300">
                 <img
-                  [src]="getMainImage(selectedRFQ.initial_product.media)"
+                  [src]="selectedRFQ.initial_product.main_image.url"
                   [alt]="selectedRFQ.initial_product.name"
                   class="w-full h-full object-cover cursor-pointer"
                   (error)="onImageError($event)"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -215,29 +216,6 @@
                   <div class="flex items-center gap-3">
                     <span class="text-sm font-medium text-secondary min-w-[80px]">HS Code:</span>
                     <span class="text-sm">{{ selectedRFQ.initial_product.hs_code }}</span>
-                  </div>
-                </div>
-
-                <div class="space-y-2">
-                  <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[100px]">Material:</span>
-                    <span class="text-sm">{{
-                      selectedRFQ.initial_product.specifications?.material || 'N/A'
-                    }}</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[100px]">Warranty:</span>
-                    <span class="text-sm">{{
-                      selectedRFQ.initial_product.specifications?.warranty || 'N/A'
-                    }}</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[100px]"
-                      >Certification:</span
-                    >
-                    <span class="text-sm">{{
-                      selectedRFQ.initial_product.specifications?.certification || 'N/A'
-                    }}</span>
                   </div>
                 </div>
               </div>
@@ -277,25 +255,25 @@
               <div class="flex items-center gap-3">
                 <span class="text-sm font-medium text-secondary min-w-[120px]">Company:</span>
                 <span class="text-sm font-bold">{{
-                  selectedRFQ.seller.company?.name || 'Unknown Company'
+                  selectedRFQ.seller?.company?.name || 'Unknown Company'
                 }}</span>
               </div>
               <div class="flex items-center gap-3">
                 <span class="text-sm font-medium text-secondary min-w-[120px]">Contact Name:</span>
                 <span class="text-sm font-bold">{{
-                  selectedRFQ.seller.full_name || 'Unknown Contact'
+                  selectedRFQ.seller?.full_name || 'Unknown Contact'
                 }}</span>
               </div>
               <div class="flex items-center gap-3">
                 <span class="text-sm font-medium text-secondary min-w-[120px]">Email:</span>
                 <span class="text-sm text-primary">{{
-                  selectedRFQ.seller.email || 'seller@example.com'
+                  selectedRFQ.seller?.email || 'seller@example.com'
                 }}</span>
               </div>
-              @if (selectedRFQ.seller.phone_number) {
+              @if (selectedRFQ.seller?.phone_number) {
                 <div class="flex items-center gap-3">
                   <span class="text-sm font-medium text-secondary min-w-[120px]">Phone:</span>
-                  <span class="text-sm">{{ selectedRFQ.seller.phone_number }}</span>
+                  <span class="text-sm">{{ selectedRFQ.seller?.phone_number }}</span>
                 </div>
               }
             </div>
@@ -303,28 +281,28 @@
               <div class="flex items-center gap-3">
                 <span class="text-sm font-medium text-secondary min-w-[100px]">Status:</span>
                 <p-badge
-                  [value]="getSellerStatus(selectedRFQ.seller.status)"
-                  [severity]="getStatusSeverity(selectedRFQ.seller.status || 'active')"
+                  [value]="getSellerStatus(selectedRFQ.seller?.status)"
+                  [severity]="getStatusSeverity(selectedRFQ.seller?.status || 'active')"
                 >
                 </p-badge>
               </div>
-              @if (selectedRFQ.seller.company?.address) {
+              @if (selectedRFQ.seller?.company?.address) {
                 <div class="space-y-1">
                   <span class="text-sm font-medium text-secondary">Address:</span>
                   <p class="text-sm bg-surface-50 p-2 rounded">
-                    {{ formatAddress(selectedRFQ.seller.company?.address) }}
+                    {{ formatAddress(selectedRFQ.seller?.company?.address) }}
                   </p>
                 </div>
               }
-              @if (selectedRFQ.seller.company?.website) {
+              @if (selectedRFQ.seller?.company?.website) {
                 <div class="flex items-center gap-3">
                   <span class="text-sm font-medium text-secondary min-w-[100px]">Website:</span>
                   <a
-                    [href]="selectedRFQ.seller.company?.website"
+                    [href]="selectedRFQ.seller?.company?.website"
                     target="_blank"
                     class="text-sm text-primary hover:underline"
                   >
-                    {{ selectedRFQ.seller.company?.website }}
+                    {{ selectedRFQ.seller?.company?.website }}
                   </a>
                 </div>
               }
@@ -377,8 +355,8 @@
                           >Seller:</span
                         >
                         <span class="text-sm">{{
-                          selectedRFQ.seller.full_name ||
-                            selectedRFQ.seller.company?.name ||
+                          selectedRFQ.seller?.full_name ||
+                            selectedRFQ.seller?.company?.name ||
                             'Unknown Seller'
                         }}</span>
                       </div>
@@ -390,7 +368,7 @@
                           <span class="text-sm font-bold text-primary">
                             {{
                               formatCurrency(
-                                quote.total_amount ?? quote.total_price ?? 0,
+                                quote.total_amount || 0,
                                 selectedRFQ.initial_product.currency
                               )
                             }}
@@ -399,13 +377,13 @@
                       }
                     </div>
                     <div class="space-y-2">
-                      @if (quote.quote_items?.length || quote.items?.length) {
+                      @if (quote.items?.length || quote.items?.length) {
                         <div class="flex items-center gap-3">
                           <span class="text-sm font-medium text-secondary min-w-[80px]"
                             >Items:</span
                           >
                           <span class="text-sm"
-                            >{{ (quote.quote_items || quote.items)?.length }} item(s)</span
+                            >{{ (quote.items || quote.items)?.length }} item(s)</span
                           >
                         </div>
                       }
@@ -439,7 +417,7 @@
                   }
 
                   <!-- Quote Items -->
-                  @if (quote.quote_items?.length || quote.items?.length) {
+                  @if (quote.items?.length || quote.items?.length) {
                     <div class="mb-3">
                       <span class="text-sm font-medium text-primary block mb-2">Quote Items:</span>
                       <div class="bg-surface-0 rounded border-surface-200 border overflow-hidden">
@@ -451,18 +429,18 @@
                           <span class="text-center">Unit Price</span>
                           <span class="text-center">Total</span>
                         </div>
-                        @for (item of quote.quote_items || quote.items; track item.id || $index) {
+                        @for (item of quote.items || quote.items; track item.id || $index) {
                           <div
                             class="grid grid-cols-4 gap-2 p-2 border-t border-surface-200 text-xs"
                           >
-                            <span>{{ item.product_name || item.product?.name || 'N/A' }}</span>
+                            <span>{{ item.product_name || 'N/A' }}</span>
                             <span class="text-center">{{ item.quantity | number }}</span>
                             <span class="text-center">{{
                               formatCurrency(item.unit_price, selectedRFQ.initial_product.currency)
                             }}</span>
                             <span class="text-center font-medium">{{
                               formatCurrency(
-                                item.total_price ?? item.quantity * +item.unit_price,
+                                item.total_price || item.quantity * +item.unit_price,
                                 selectedRFQ.initial_product.currency
                               )
                             }}</span>
@@ -471,32 +449,6 @@
                       </div>
                     </div>
                   }
-
-                  <!-- Action Buttons -->
-                  <div class="flex justify-end gap-2 pt-2">
-                    @if (canAcceptQuote(quote)) {
-                      <p-button
-                        icon="pi pi-check"
-                        label="Accept Quote"
-                        [severity]="'success'"
-                        [size]="'small'"
-                        [raised]="true"
-                        (onClick)="acceptQuote(quote)"
-                      >
-                      </p-button>
-                    }
-                    @if (canRejectQuote(quote)) {
-                      <p-button
-                        icon="pi pi-times"
-                        label="Reject Quote"
-                        [severity]="'danger'"
-                        [size]="'small'"
-                        [outlined]="true"
-                        (onClick)="rejectQuote(quote)"
-                      >
-                      </p-button>
-                    }
-                  </div>
                 </div>
               }
             </div>
@@ -517,6 +469,20 @@
       </div>
     </ng-template>
   </p-dialog>
+
+  <!-- RFQ Details Dialog -->
+  @if (rfqDetailsDialogVisible) {
+    <app-rfq-details-dialog
+      [(visible)]="rfqDetailsDialogVisible"
+      [rfq]="selectedRFQ"
+      [userType]="'buyer'"
+      [showActions]="true"
+      [allowChat]="true"
+      [allowQuote]="false"
+      (dialogClose)="closeRFQDetailsDialog()"
+      (chat)="onRfqChat($event)"
+    />
+  }
 
   <p-toast></p-toast>
 </div>

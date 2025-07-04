@@ -1,0 +1,144 @@
+<div [formGroup]="productFormGroup()">
+  <div class="flex flex-col gap-2 w-full bg-card rounded-lg shadow p-6">
+    <div class="flex gap-4 items-center">
+      <i class="pi pi-box text-primary"></i>
+      <p class="text-lg font-semibold text-primary">Basic Product Information</p>
+    </div>
+    <p-divider></p-divider>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- Product Name -->
+      <div class="space-y-2">
+        <label for="name" class="block text-sm font-semibold" style="color: var(--p-text-color)">
+          Product Name *
+        </label>
+        <input
+          pInputText
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="Enter product name"
+          class="w-full transition-all duration-300 focus:scale-102"
+        />
+        @if (
+          productFormGroup().get('name')?.errors?.['required'] &&
+          productFormGroup().get('name')?.touched
+        ) {
+          <small class="text-red-500">Product name is required</small>
+        }
+      </div>
+
+      <!-- Brand -->
+      <div class="space-y-2">
+        <label for="brand" class="block text-sm font-semibold" style="color: var(--p-text-color)">
+          Brand
+        </label>
+        <input
+          pInputText
+          id="brand"
+          type="text"
+          formControlName="brand"
+          placeholder="Enter brand name"
+          class="w-full transition-all duration-300 focus:scale-102"
+        />
+      </div>
+
+      <!-- Model Number -->
+      <div class="space-y-2">
+        <label
+          for="model_number"
+          class="block text-sm font-semibold"
+          style="color: var(--p-text-color)"
+        >
+          Model Number
+        </label>
+        <input
+          pInputText
+          id="model_number"
+          type="text"
+          formControlName="model_number"
+          placeholder="Enter model number"
+          class="w-full transition-all duration-300 focus:scale-102"
+        />
+      </div>
+
+      <!-- SKU -->
+      <div class="space-y-2">
+        <label for="sku" class="block text-sm font-semibold" style="color: var(--p-text-color)">
+          SKU
+        </label>
+        <input
+          pInputText
+          id="sku"
+          type="text"
+          formControlName="sku"
+          placeholder="Enter SKU"
+          class="w-full transition-all duration-300 focus:scale-102"
+        />
+      </div>
+
+      <!-- HS Code -->
+      <div class="space-y-2">
+        <label for="hs_code" class="block text-sm font-semibold" style="color: var(--p-text-color)">
+          HS Code
+        </label>
+        <input
+          pInputText
+          id="hs_code"
+          type="text"
+          formControlName="hs_code"
+          placeholder="Enter HS code"
+          class="w-full transition-all duration-300 focus:scale-102"
+        />
+      </div>
+
+      <!-- Origin -->
+      <div class="space-y-2">
+        <label for="origin" class="block text-sm font-semibold" style="color: var(--p-text-color)">
+          Origin *
+        </label>
+        <p-select
+          id="origin"
+          formControlName="origin"
+          [options]="countriesList()"
+          placeholder="Select origin country"
+          class="w-full transition-all duration-300 focus:scale-102"
+        ></p-select>
+        @if (
+          productFormGroup().get('origin')?.errors?.['required'] &&
+          productFormGroup().get('origin')?.touched
+        ) {
+          <small class="text-red-500">Origin is required</small>
+        }
+        @if (productFormGroup().get('origin')?.errors?.['invalid_origin']) {
+          <small class="text-red-500">Invalid origin selected</small>
+        }
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="space-y-2">
+      <label
+        for="description"
+        class="block text-sm font-semibold"
+        style="color: var(--p-text-color)"
+      >
+        Description *
+      </label>
+      <textarea
+        pInputTextarea
+        id="description"
+        formControlName="description"
+        placeholder="Enter product description"
+        rows="4"
+        class="w-full transition-all duration-300 focus:scale-102"
+      ></textarea>
+      @if (
+        productFormGroup().get('description')?.errors?.['required'] &&
+        productFormGroup().get('description')?.touched
+      ) {
+        <small class="text-red-500">Description is required</small>
+      }
+    </div>
+  </div>
+</div>

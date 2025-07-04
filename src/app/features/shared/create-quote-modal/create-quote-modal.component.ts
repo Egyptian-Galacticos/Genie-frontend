@@ -1,3 +1,5 @@
+import { ProductService } from './../services/product.service';
+import { IProduct } from './../utils/interfaces';
 import { Component, inject, input, model, OnInit, output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import {
@@ -16,10 +18,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CreateQuoteDto, CreateQuoteItemDto, IRequestForQuote } from '../utils/interfaces';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { AutoComplete, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
-interface IProduct {
-  id: string;
-  name: string;
-}
+import { TextareaModule } from 'primeng/textarea';
+
 interface IQuoteItem {
   product: IProduct;
   quantity: number;
@@ -37,23 +37,20 @@ interface IQuoteItem {
     InputTextModule,
     InputNumberModule,
     AutoComplete,
+    TextareaModule,
   ],
   templateUrl: './create-quote-modal.component.html',
 })
 export class CreateQuoteModalComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
-
+  private productService = inject(ProductService);
   quoteSent = output<Partial<CreateQuoteDto>>();
 
   visible = model.required<boolean>();
   quoteRequest = input<IRequestForQuote>();
   singleItem = input<boolean>(true);
   loading = input.required<boolean>();
-  products = [
-    { id: '1', name: 'Product 1' },
-    { id: '2', name: 'Product 2' },
-    { id: '3', name: 'Product 3' },
-  ];
+  products: IProduct[] = [];
   filteredProducts = [...this.products];
 
   quoteFormGroup = this.formBuilder.group({
@@ -66,6 +63,9 @@ export class CreateQuoteModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.addQuoteItem();
+    if (!this.singleItem) {
+      this.getProductsToSearch();
+    }
   }
   /**  Adds a quote item to the form array (if quoteRequest is not null then the product field is disabled and product is set to quoteRequest.product) */
   addQuoteItem() {
@@ -74,16 +74,13 @@ export class CreateQuoteModalComponent implements OnInit {
         id: [Date.now() + Math.random()],
         product: [
           {
-            value: this.quoteRequest()?.product || '',
+            value: this.quoteRequest()?.initial_product || '',
             disabled: this.quoteRequest() ? true : false,
           },
           [Validators.required, this.invalidProduct()],
         ],
-        unit_price: [
-          this.quoteRequest()?.unit_price || 1,
-          [Validators.required, Validators.min(1)],
-        ],
-        quantity: [this.quoteRequest()?.quantity || 1, [Validators.required, Validators.min(1)]],
+        unit_price: [0, [Validators.required, Validators.min(1)]],
+        quantity: [0, [Validators.required, Validators.min(1)]],
         notes: [''],
       })
     );
@@ -96,11 +93,9 @@ export class CreateQuoteModalComponent implements OnInit {
   /**Close the modal and change the visible state in the parent */
   close() {
     this.visible.update(() => false);
-    console.log(this.quoteRequest());
   }
 
   onSubmit() {
-    console.log(this.quoteFormGroup.getRawValue());
     const quoteItems = this.quoteFormGroup.getRawValue();
     const quote_items = quoteItems.quoteItemFormArray
       .map(x => {
@@ -116,9 +111,10 @@ export class CreateQuoteModalComponent implements OnInit {
       .filter(x => x) as CreateQuoteItemDto[];
     const quote: Partial<CreateQuoteDto> = {
       quote_request_id: this.quoteRequest()?.id,
-      buyer_id: this.quoteRequest()?.buyer.id || '',
+      buyer_id: this.quoteRequest()?.buyer?.id || 0,
       seller_message: quoteItems.seller_message || '',
-      quote_items,
+      items: quote_items,
+      rfq_id: this.quoteRequest()?.id,
     };
     this.quoteSent.emit(quote);
   }
@@ -134,8 +130,16 @@ export class CreateQuoteModalComponent implements OnInit {
     return (control: AbstractControl): ValidationErrors | null => {
       const valid =
         this.products.some(x => x === control.value) ||
-        control.value === this.quoteRequest()?.product;
+        control.value === this.quoteRequest()?.initial_product;
       return valid ? null : { invalidProduct: { value: control.value } };
     };
+  }
+
+  getProductsToSearch() {
+    this.productService.getMyProducts({}).subscribe({
+      next: res => {
+        this.products = res.data;
+      },
+    });
   }
 }

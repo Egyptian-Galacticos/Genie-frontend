@@ -1,0 +1,81 @@
+<div [formGroup]="productFormGroup()">
+  <div class="flex flex-col gap-2 w-full bg-card rounded-lg shadow p-6">
+    <div class="flex gap-4 items-center">
+      <i class="pi pi-cog text-primary"></i>
+      <p class="text-lg font-semibold text-primary">Product Specifications</p>
+    </div>
+    <p-divider></p-divider>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- Weight -->
+      <div class="space-y-2">
+        <label for="weight" class="block text-sm font-semibold" style="color: var(--p-text-color)">
+          Weight (kg) *
+        </label>
+        <input
+          pInputText
+          id="weight"
+          type="number"
+          step="0.01"
+          formControlName="weight"
+          placeholder="0.00"
+          class="w-full transition-all duration-300 focus:scale-102"
+        />
+        @if (
+          productFormGroup().get('weight')?.errors?.['required'] &&
+          productFormGroup().get('weight')?.touched
+        ) {
+          <small class="text-red-500">Weight is required</small>
+        }
+        @if (productFormGroup().get('weight')?.errors?.['min']) {
+          <small class="text-red-500">Weight must be greater than 0</small>
+        }
+      </div>
+    </div>
+
+    <!-- Dimensions -->
+    <div formGroupName="dimensions" class="space-y-4">
+      <p class="block text-sm font-semibold" style="color: var(--p-text-color)">
+        Dimensions (cm) *
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <label for="length" class="block text-xs font-medium">Length</label>
+          <input
+            pInputText
+            id="length"
+            type="number"
+            step="0.01"
+            formControlName="length"
+            placeholder="0.00"
+            class="w-full transition-all duration-300 focus:scale-102"
+          />
+        </div>
+        <div class="space-y-2">
+          <label for="width" class="block text-xs font-medium">Width</label>
+          <input
+            pInputText
+            id="width"
+            type="number"
+            step="0.01"
+            formControlName="width"
+            placeholder="0.00"
+            class="w-full transition-all duration-300 focus:scale-102"
+          />
+        </div>
+        <div class="space-y-2">
+          <label for="height" class="block text-xs font-medium">Height</label>
+          <input
+            pInputText
+            id="height"
+            type="number"
+            step="0.01"
+            formControlName="height"
+            placeholder="0.00"
+            class="w-full transition-all duration-300 focus:scale-102"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

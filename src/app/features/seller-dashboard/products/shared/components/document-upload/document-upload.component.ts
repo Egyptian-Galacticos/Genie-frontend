@@ -2,10 +2,11 @@ import { MessageService } from 'primeng/api';
 import { Component, ElementRef, inject, input, ViewChild } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DividerModule } from 'primeng/divider';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-document-upload',
-  imports: [DividerModule, ReactiveFormsModule],
+  imports: [DividerModule, ReactiveFormsModule, ButtonModule],
   templateUrl: './document-upload.component.html',
 })
 export class DocumentUploadComponent {

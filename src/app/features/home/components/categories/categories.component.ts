@@ -13,7 +13,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { Subject, takeUntil } from 'rxjs';
 import { CategoryService } from '../../../shared/services/category.service';
-import { Category } from '../../../../core/interfaces/category.interface';
+import { Category } from '../../../shared/utils/interfaces';
 
 @Component({
   selector: 'app-categories',

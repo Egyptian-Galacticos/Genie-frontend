@@ -1,7 +1,7 @@
 <p-table
   #dt
   [value]="data()"
-  styleClass="mt-8 bg-card"
+  styleClass=" mt-8 "
   [paginator]="true"
   [rows]="rows()"
   [rowsPerPageOptions]="[5, 10, 20, 30]"
@@ -12,6 +12,9 @@
   [totalRecords]="totalRecords()"
   (onLazyLoad)="loadData($event)"
   dataKey="id"
+  [(selection)]="selectedItems"
+  [selectionMode]="selectionMode()"
+  (selectionChange)="onSelectionChange($event)"
 >
   <!-- Header template (keeping your existing logic) -->
   <ng-template #header>
@@ -19,13 +22,15 @@
       @for (col of cols(); track $index) {
         @if (col.sortableColumn) {
           <th
-            class="text-center text-surface-500/75 font-semibold"
+            class="text-center text-surface-500/75 font-semibold text-nowrap"
             [pSortableColumn]="col.field"
             pSortableColumnDisabled="false"
           >
             {{ col.header }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
           </th>
+        } @else if (col.field === 'select') {
+          <th class="text-center text-surface-500/75 font-semibold"><p-tableHeaderCheckbox /></th>
         } @else {
           <th class="text-center text-surface-500/75 font-semibold">{{ col.header }}</th>
         }
@@ -72,6 +77,36 @@
               </ng-template>
             </p-columnFilter>
           </th>
+        } @else if (col.filterableColumn && col.filterType === 'selectTrueFalse') {
+          <th class="text-center">
+            <p-columnFilter
+              [field]="col.field"
+              matchMode="equals"
+              display="menu"
+              [showAddButton]="false"
+              [showOperator]="false"
+              [showMatchModes]="false"
+            >
+              <ng-template #filter let-value let-filter="filterCallback">
+                <p-select
+                  [ngModel]="value"
+                  (ngModelChange)="filter($event)"
+                  [placeholder]="'Filter by ' + col.header"
+                  [options]="col.options"
+                  [panelStyle]="{ mx: 'auto' }"
+                >
+                  <ng-template let-option #item>
+                    <div class="flex items-center gap-2">
+                      <p-badge
+                        [severity]="option.includes('not') ? 'danger' : 'success'"
+                        [badgeSize]="'small'"
+                      ></p-badge>
+                    </div>
+                  </ng-template>
+                </p-select>
+              </ng-template>
+            </p-columnFilter>
+          </th>
         } @else if (col.filterableColumn && col.filterType === 'date') {
           <th class="text-center">
             <p-columnFilter
@@ -110,18 +145,27 @@
 
   <!-- Body template - Project content from parent -->
   <ng-template #body let-rowData let-rowIndex="rowIndex">
-    <ng-container
-      *ngTemplateOutlet="
-        bodyTemplate();
-        context: {
-          $implicit: rowData,
-          rowIndex: rowIndex,
-          columns: cols(),
-          data: rowData,
-        }
-      "
-    >
-    </ng-container>
+    <tr>
+      @if (selectionMode() !== null && selectionMode() !== undefined) {
+        <td>
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td>
+      }
+
+      <ng-container
+        *ngTemplateOutlet="
+          bodyTemplate();
+          context: {
+            $implicit: rowData,
+            rowIndex: rowIndex,
+            columns: cols(),
+            data: rowData,
+            table: dt,
+          }
+        "
+      >
+      </ng-container>
+    </tr>
   </ng-template>
 
   <!-- Keep your existing empty message and loading templates -->
@@ -137,7 +181,7 @@
         }
       } @else {
         <tr>
-          <td colspan="6" class="text-center">No quotes found</td>
+          <td [attr.colspan]="cols().length" class="text-center">No data found</td>
         </tr>
       }
     </ng-content>

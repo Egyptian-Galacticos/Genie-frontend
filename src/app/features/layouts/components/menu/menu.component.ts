@@ -27,38 +27,6 @@ export class MenuComponent implements OnInit {
                 routerLink: ['/dashboard/seller'],
               },
               {
-                label: 'Customers',
-                icon: 'pi pi-fw pi-users',
-                routerLink: ['/dashboard/seller/customers'],
-              },
-              {
-                label: 'Quotes',
-                icon: 'pi pi-fw pi-receipt',
-                items: [
-                  {
-                    label: 'Requests',
-                    icon: 'pi pi-fw pi-receipt',
-                    routerLink: ['/dashboard/seller/quotes-requests'],
-                  },
-                  {
-                    label: 'Quotes',
-                    icon: 'pi pi-fw pi-receipt',
-                    routerLink: ['/dashboard/seller/quotes'],
-                  },
-                ],
-              },
-              {
-                label: 'Contracts',
-                icon: 'pi pi-fw pi-paperclip',
-                items: [
-                  {
-                    label: 'All Contracts',
-                    icon: 'pi pi-fw pi-paperclip',
-                    routerLink: ['/dashboard/seller/contracts'],
-                  },
-                ],
-              },
-              {
                 label: 'Products',
                 icon: 'pi pi-fw pi-box',
                 items: [
@@ -76,6 +44,38 @@ export class MenuComponent implements OnInit {
                     label: 'Bulk Upload',
                     icon: 'pi pi-fw pi-upload',
                     routerLink: ['/dashboard/seller/products/bulk-upload'],
+                  },
+                ],
+              },
+              {
+                label: 'Quotes',
+                icon: 'pi pi-fw pi-receipt',
+                items: [
+                  {
+                    label: 'Requests',
+                    icon: 'pi pi-fw pi-inbox',
+                    routerLink: ['/dashboard/seller/quotes-requests'],
+                  },
+                  {
+                    label: 'Responses',
+                    icon: 'pi pi-fw pi-send',
+                    routerLink: ['/dashboard/seller/quotes-responses'],
+                  },
+                ],
+              },
+              {
+                label: 'Customers',
+                icon: 'pi pi-fw pi-users',
+                routerLink: ['/dashboard/seller/customers'],
+              },
+              {
+                label: 'Contracts',
+                icon: 'pi pi-fw pi-paperclip',
+                items: [
+                  {
+                    label: 'All Contracts',
+                    icon: 'pi pi-fw pi-paperclip',
+                    routerLink: ['/dashboard/seller/contracts'],
                   },
                 ],
               },

@@ -1,0 +1,143 @@
+<div class="flex flex-col gap-2 w-full bg-card rounded-lg shadow p-6">
+  <div class="flex gap-4 items-center">
+    <i class="pi pi-objects-column text-primary"></i>
+    <p class="text-lg font-semibold text-primary">Category Selection</p>
+  </div>
+  <p-divider></p-divider>
+
+  <div class="space-y-4">
+    <!-- Level 0 - Main Category -->
+    <div class="flex flex-col space-y-2">
+      <p class="text-sm font-medium text-muted">Main Category *</p>
+      <div class="flex gap-2">
+        <p-select
+          [options]="level0Categories"
+          [(ngModel)]="selectedLevel0"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Select main category"
+          class="flex-1"
+          (onChange)="onLevel0Change($event)"
+          [showClear]="true"
+        >
+        </p-select>
+      </div>
+    </div>
+
+    <!-- Level 1 - Sub Category -->
+    @if (selectedLevel0) {
+      <div class="flex flex-col space-y-2">
+        <p class="text-sm font-medium text-muted">Sub Category *</p>
+        <div class="flex gap-2">
+          <p-select
+            [options]="level1Categories"
+            [(ngModel)]="selectedLevel1"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Select sub category"
+            class="flex-1"
+            (onChange)="onLevel1Change($event)"
+            [showClear]="true"
+          >
+          </p-select>
+          <p-button
+            icon="pi pi-plus"
+            severity="secondary"
+            [outlined]="true"
+            (onClick)="showAddDialog(1)"
+            pTooltip="Add new sub category"
+          >
+          </p-button>
+        </div>
+      </div>
+    }
+
+    <!-- Level 2 - Sub Sub Category -->
+    @if (selectedLevel1) {
+      <div class="flex flex-col space-y-2">
+        <p class="text-sm font-medium text-muted">Sub Sub Category *</p>
+        <div class="flex gap-2">
+          <p-select
+            [options]="level2Categories"
+            [(ngModel)]="selectedLevel2"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Select sub sub category"
+            class="flex-1"
+            (onChange)="onLevel2Change($event)"
+            [showClear]="true"
+          >
+          </p-select>
+          <p-button
+            icon="pi pi-plus"
+            severity="secondary"
+            [outlined]="true"
+            (onClick)="showAddDialog(2)"
+            pTooltip="Add new sub sub category"
+          >
+          </p-button>
+        </div>
+      </div>
+    }
+
+    <!-- Selected Category Display -->
+    @if (getSelectedCategoryPath()) {
+      <div class="mt-6 p-4 bg-surface-100 dark:bg-surface-dark-100 border-0 shadow rounded-lg">
+        <p class="text-ms font-bold text-secondary mb-2">Selected Category Path:</p>
+        <p class="text-sm font-semibold text-primary-600">{{ getSelectedCategoryPath() }}</p>
+      </div>
+    }
+
+    <!-- Action Buttons -->
+    @if (selectedLevel2) {
+      <div class="flex justify-end gap-3 mt-6">
+        <p-button
+          label="Clear Selection"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="clearSelection()"
+        >
+        </p-button>
+        <p-button label="Confirm Category" (onClick)="confirmSelection()"> </p-button>
+      </div>
+    }
+  </div>
+
+  <!-- Add Category Dialog -->
+  <p-dialog
+    header="Add New Category"
+    [modal]="true"
+    [(visible)]="showDialog"
+    [style]="{ width: '400px' }"
+    [closable]="true"
+  >
+    <div class="flex flex-col space-y-4">
+      @if (dialogLevel > 0) {
+        <div class="p-3 bg-blue-50 rounded-lg">
+          <p class="text-sm text-blue-800">
+            <strong>Parent Category:</strong> {{ getParentCategoryName() }}
+          </p>
+        </div>
+      }
+
+      <div class="flex flex-col space-y-2">
+        <p class="text-sm font-medium text-gray-700">{{ getLevelName(dialogLevel) }} Name *</p>
+        <input
+          pInputText
+          [(ngModel)]="newCategoryName"
+          placeholder="Enter category name"
+          class="w-full"
+          (keyup.enter)="addNewCategory()"
+        />
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end gap-2">
+        <p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="hideAddDialog()">
+        </p-button>
+        <p-button label="Add Category" (onClick)="addNewCategory()"> </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>
