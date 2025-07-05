@@ -135,7 +135,7 @@ export interface ProductFilters {
 }
 
 export interface ProductSort {
-  field: 'price' | 'name' | 'created_at' | 'is_featured';
+  field: 'name' | 'created_at' | 'is_featured';
   direction: 'asc' | 'desc';
 }
 
