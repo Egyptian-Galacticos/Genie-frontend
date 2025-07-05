@@ -1,0 +1,7 @@
+<div
+  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-6"
+>
+  @for (product of products(); track product.id) {
+    <app-product-card [product]="product" (brandFilterRequested)="onBrandFilterRequested($event)" />
+  }
+</div>
