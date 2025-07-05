@@ -1,0 +1,20 @@
+<div class="flex items-center gap-3">
+  <label
+    for="sort-select"
+    class="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
+  >
+    Sort by:
+  </label>
+  <p-select
+    inputId="sort-select"
+    [options]="sortOptions"
+    [ngModel]="currentSortValue()"
+    (ngModelChange)="onSortChange($event)"
+    optionLabel="label"
+    optionValue="value"
+    appendTo="body"
+    scrollHeight="250px"
+    class="min-w-48"
+    styleClass="text-sm"
+  />
+</div>
