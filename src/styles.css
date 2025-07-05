@@ -141,3 +141,11 @@ body {
   border-color: var(--color-danger-500) !important;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-500) 10%, transparent) !important;
 }
+
+.card-style {
+  background: color-mix(in srgb, var(--p-surface-0) 80%, transparent) !important;
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--p-surface-border) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
