@@ -89,6 +89,7 @@ export interface Product {
   is_approved: boolean;
   sample_available: boolean;
   sample_price: string;
+  in_wishlist?: boolean;
   main_image?: MediaFile;
   images: MediaFile[];
   documents?: MediaFile[];
@@ -158,4 +159,20 @@ export interface ProductQuery {
   sort: ProductSort;
   page: number;
   size: number;
+}
+
+export interface WishlistRequest {
+  product_id: number;
+}
+
+export interface AddToWishlistResponse {
+  success: boolean;
+  message: string;
+  data: Product;
+}
+
+export interface RemoveFromWishlistResponse {
+  success: boolean;
+  message: string;
+  data: null;
 }
