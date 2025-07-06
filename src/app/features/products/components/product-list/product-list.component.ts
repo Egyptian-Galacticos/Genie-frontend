@@ -10,9 +10,19 @@ import { Product } from '../../interfaces/product.interface';
 })
 export class ProductListComponent {
   products = input.required<Product[]>();
+  wishlistLoadingStates = input<Map<number, boolean>>(new Map());
   brandFilterRequested = output<string>();
+  wishlistToggleRequested = output<{ productId: number; isCurrentlyInWishlist: boolean }>();
 
   onBrandFilterRequested(brand: string) {
     this.brandFilterRequested.emit(brand);
+  }
+
+  onWishlistToggleRequested(event: { productId: number; isCurrentlyInWishlist: boolean }) {
+    this.wishlistToggleRequested.emit(event);
+  }
+
+  isWishlistLoading(productId: number): boolean {
+    return this.wishlistLoadingStates().get(productId) || false;
   }
 }
