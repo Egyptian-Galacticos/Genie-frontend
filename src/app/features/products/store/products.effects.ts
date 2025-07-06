@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
-import { catchError, map, switchMap, filter } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ProductsService } from '../services/products.service';
 import { ProductQuery } from '../interfaces/product.interface';
@@ -88,15 +88,16 @@ export class ProductsEffects {
         this.store.select(ProductsSelectors.selectCategories),
         this.store.select(ProductsSelectors.selectAreCategoriesExpired),
       ]),
-      filter(([, categories, areCategoriesExpired]) => {
-        return !categories || categories.length === 0 || areCategoriesExpired;
-      }),
-      switchMap(() =>
-        this.productsService.getCategories().pipe(
+      switchMap(([, categories, areCategoriesExpired]) => {
+        if (categories && categories.length > 0 && !areCategoriesExpired) {
+          return of(ProductsActions.loadCategoriesSuccess({ categories }));
+        }
+
+        return this.productsService.getCategories().pipe(
           map(response => ProductsActions.loadCategoriesSuccess({ categories: response.data })),
           catchError(error => of(ProductsActions.loadCategoriesFailure({ error: error.message })))
-        )
-      )
+        );
+      })
     );
   });
 }
