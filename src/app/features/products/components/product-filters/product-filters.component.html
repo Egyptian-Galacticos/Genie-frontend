@@ -1,0 +1,182 @@
+<div class="space-y-6">
+  <div class="filter-section">
+    <h4 class="font-semibold text-primary mb-3 flex items-center gap-2">
+      <i class="pi pi-tags text-lg"></i>
+      Categories
+    </h4>
+    <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
+      @for (category of categories() || []; track category.id) {
+        @if (category.level === 0 || !category.parent_id) {
+          <label
+            class="flex items-center space-x-3 p-2 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors cursor-pointer w-full"
+            for="category-{{ category.id }}"
+          >
+            <p-checkbox
+              [binary]="true"
+              [ngModel]="isCategorySelected(category.id)"
+              (ngModelChange)="onCategoryChange(category.id, $event)"
+              inputId="category-{{ category.id }}"
+            />
+            <span class="text-sm text-primary font-bold flex-1 text-left">{{ category.name }}</span>
+            @if (category.children && category.children.length > 0) {
+              <span class="text-xs text-muted">({{ category.children.length }})</span>
+            }
+          </label>
+          @if (
+            category.children && category.children.length > 0 && isCategoryExpanded(category.id)
+          ) {
+            <div class="ml-4 space-y-1 border-l-2 border-primary-200 dark:border-primary-800 pl-4">
+              @for (subCategory of category.children || []; track subCategory.id) {
+                <label
+                  class="flex items-center space-x-3 p-1 rounded hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors cursor-pointer w-full"
+                  for="subcategory-{{ subCategory.id }}"
+                >
+                  <p-checkbox
+                    [binary]="true"
+                    [ngModel]="isCategorySelected(subCategory.id)"
+                    (ngModelChange)="onCategoryChange(subCategory.id, $event)"
+                    inputId="subcategory-{{ subCategory.id }}"
+                  />
+                  <span class="text-sm text-secondary font-medium flex-1 text-left">{{
+                    subCategory.name
+                  }}</span>
+                  @if (subCategory.children && subCategory.children.length > 0) {
+                    <span class="text-xs text-muted">({{ subCategory.children.length }})</span>
+                  }
+                </label>
+                @if (
+                  subCategory.children &&
+                  subCategory.children.length > 0 &&
+                  isCategoryExpanded(subCategory.id)
+                ) {
+                  <div
+                    class="ml-4 space-y-1 border-l border-surface-300 dark:border-surface-600 pl-3"
+                  >
+                    @for (subSubCategory of subCategory.children || []; track subSubCategory.id) {
+                      <label
+                        class="flex items-center space-x-2 p-1 rounded hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors cursor-pointer w-full"
+                        for="subsubcategory-{{ subSubCategory.id }}"
+                      >
+                        <p-checkbox
+                          [binary]="true"
+                          [ngModel]="isCategorySelected(subSubCategory.id)"
+                          (ngModelChange)="onCategoryChange(subSubCategory.id, $event)"
+                          inputId="subsubcategory-{{ subSubCategory.id }}"
+                        />
+                        <span class="text-xs text-muted flex-1 text-left">{{
+                          subSubCategory.name
+                        }}</span>
+                      </label>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          }
+        }
+      }
+    </div>
+  </div>
+
+  <p-divider />
+  <div class="filter-section">
+    <h4 class="font-semibold text-primary mb-3 flex items-center gap-2">
+      <i class="pi pi-dollar text-lg"></i>
+      Price Range
+    </h4>
+    <div class="grid grid-cols-2 gap-2">
+      <div class="flex flex-col">
+        <label for="price-min" class="text-xs text-muted mb-1">Minimum</label>
+        <p-inputNumber
+          inputId="price-min"
+          [ngModel]="filters().price_min"
+          (ngModelChange)="onPriceMinChange($event)"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+          [showButtons]="false"
+          [allowEmpty]="true"
+          placeholder="Min"
+          [min]="0"
+          [max]="999999"
+          size="small"
+          inputStyleClass="w-full text-sm"
+        />
+      </div>
+      <div class="flex flex-col">
+        <label for="price-max" class="text-xs text-muted mb-1">Maximum</label>
+        <p-inputNumber
+          inputId="price-max"
+          [ngModel]="filters().price_max"
+          (ngModelChange)="onPriceMaxChange($event)"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+          [showButtons]="false"
+          [allowEmpty]="true"
+          placeholder="Max"
+          [min]="0"
+          [max]="999999"
+          size="small"
+          inputStyleClass="w-full text-sm"
+        />
+      </div>
+    </div>
+  </div>
+
+  <p-divider />
+
+  <div class="filter-section">
+    <h4 class="font-semibold text-primary mb-3 flex items-center gap-2">
+      <i class="pi pi-star text-lg"></i>
+      Features
+    </h4>
+    <div class="space-y-3">
+      <label
+        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors cursor-pointer w-full"
+        for="featured-products"
+      >
+        <p-checkbox
+          [binary]="true"
+          [ngModel]="filters().is_featured || false"
+          (ngModelChange)="onFeaturedChange($event)"
+          inputId="featured-products"
+        />
+        <span class="text-sm text-primary flex items-center gap-2 flex-1 text-left">
+          <i class="pi pi-star-fill text-yellow-500"></i>
+          Featured Products
+        </span>
+      </label>
+
+      <label
+        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors cursor-pointer w-full"
+        for="sample-available"
+      >
+        <p-checkbox
+          [binary]="true"
+          [ngModel]="filters().sample_available || false"
+          (ngModelChange)="onSampleAvailableChange($event)"
+          inputId="sample-available"
+        />
+        <span class="text-sm text-primary flex items-center gap-2 flex-1 text-left">
+          <i class="pi pi-box text-blue-500"></i>
+          Sample Available
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <p-divider />
+
+  <div class="pt-4">
+    <p-button
+      label="Clear All Filters"
+      icon="pi pi-times-circle"
+      [outlined]="false"
+      severity="danger"
+      size="small"
+      (click)="clearAllFilters()"
+      styleClass="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/30"
+    />
+  </div>
+</div>
