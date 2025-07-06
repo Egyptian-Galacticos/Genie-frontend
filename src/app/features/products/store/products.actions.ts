@@ -56,3 +56,8 @@ export const loadCategoriesFailure = createAction(
   '[Products] Load Categories Failure',
   props<{ error: string }>()
 );
+
+export const updateProductWishlistStatus = createAction(
+  '[Products] Update Product Wishlist Status',
+  props<{ productId: number; isInWishlist: boolean }>()
+);
