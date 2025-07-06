@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import * as ProductsActions from './products.actions';
+import { Product } from '../interfaces/product.interface';
 import { ProductsState } from './products.state';
 import { createCacheKey } from './products.utils';
 
@@ -145,5 +146,41 @@ export const productsReducer = createReducer(
       categoriesLoading: false,
       categoriesError: error,
     })
+  ),
+
+  on(
+    ProductsActions.updateProductWishlistStatus,
+    (state, { productId, isInWishlist }): ProductsState => {
+      const updatedPages = { ...state.currentFilterPages };
+      Object.keys(updatedPages).forEach(pageKey => {
+        const pageNumber = parseInt(pageKey, 10);
+        const page = updatedPages[pageNumber];
+        if (page && page.products) {
+          const productIndex = page.products.findIndex((p: Product) => p.id === productId);
+          if (productIndex !== -1) {
+            const updatedProducts = [...page.products];
+            updatedProducts[productIndex] = {
+              ...updatedProducts[productIndex],
+              in_wishlist: isInWishlist,
+            };
+            updatedPages[pageNumber] = {
+              ...page,
+              products: updatedProducts,
+            };
+          }
+        }
+      });
+
+      const updatedCurrentProduct =
+        state.currentProduct && state.currentProduct.id === productId
+          ? { ...state.currentProduct, in_wishlist: isInWishlist }
+          : state.currentProduct;
+
+      return {
+        ...state,
+        currentFilterPages: updatedPages,
+        currentProduct: updatedCurrentProduct,
+      };
+    }
   )
 );
