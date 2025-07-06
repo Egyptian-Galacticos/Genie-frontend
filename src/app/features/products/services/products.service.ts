@@ -9,6 +9,9 @@ import {
   ProductQuery,
   ProductsApiRequest,
   ApiFilter,
+  WishlistRequest,
+  AddToWishlistResponse,
+  RemoveFromWishlistResponse,
 } from '../interfaces/product.interface';
 
 @Injectable({
@@ -37,6 +40,23 @@ export class ProductsService {
    */
   getCategories(): Observable<CategoriesResponse> {
     return this.apiService.get<CategoriesResponse>('categories');
+  }
+
+  /**
+   * Add product to wishlist
+   * Requires authentication - token will be automatically included by auth interceptor
+   */
+  addToWishlist(productId: number): Observable<AddToWishlistResponse> {
+    const body: WishlistRequest = { product_id: productId };
+    return this.apiService.post<AddToWishlistResponse>('user/wishlist', body);
+  }
+
+  /**
+   * Remove product from wishlist
+   * Requires authentication - token will be automatically included by auth interceptor
+   */
+  removeFromWishlist(productId: number): Observable<RemoveFromWishlistResponse> {
+    return this.apiService.delete<RemoveFromWishlistResponse>(`user/wishlist/${productId}`);
   }
 
   /**
