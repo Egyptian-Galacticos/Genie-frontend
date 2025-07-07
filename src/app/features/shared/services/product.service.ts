@@ -42,4 +42,13 @@ export class ProductService {
   UploadBulk(dto: CreateProductDto[]) {
     return this.apiService.post<ApiResponse>('products/bulk-import', { products: dto });
   }
+  getProductsForAdmin(RequestOptions: RequestOptions) {
+    return this.apiService.get<PaginatedResponse<IProduct>>('admin/products', RequestOptions);
+  }
+  deleteProductForAdmin(id: number) {
+    return this.apiService.delete<ApiResponse>(`products/${id}`);
+  }
+  approveProduct(id: number) {
+    return this.apiService.put<ApiResponse>(`admin/products/${id}/status`, { is_approved: true });
+  }
 }
