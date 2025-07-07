@@ -715,11 +715,11 @@ export const CustomAura = definePreset(Aura, {
             shadow: '0 4px 12px rgba(20, 83, 45, 0.4)',
           },
           warn: {
-            background: '#92400e',
+            background: '#1f2937',
             borderColor: '#f59e0b',
-            color: '#fef3c7',
-            detailColor: '#fde68a',
-            shadow: '0 4px 12px rgba(146, 64, 14, 0.4)',
+            color: '#f59e0b',
+            detailColor: '#d97706',
+            shadow: '0 4px 12px rgba(31, 41, 55, 0.4)',
           },
           error: {
             background: '#991b1b',
