@@ -176,3 +176,17 @@ export interface RemoveFromWishlistResponse {
   message: string;
   data: null;
 }
+
+export interface RfqRequest {
+  seller_id: number;
+  initial_product_id: number;
+  initial_quantity: number;
+  shipping_country: string;
+  shipping_address: string;
+  buyer_message: string;
+}
+
+export interface RfqResponse {
+  success: boolean;
+  message: string;
+}
