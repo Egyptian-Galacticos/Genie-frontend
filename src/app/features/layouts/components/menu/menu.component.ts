@@ -119,6 +119,58 @@ export class MenuComponent implements OnInit {
           },
         ];
       }
+      if (url.find(x => x.path === 'admin')) {
+        this.items = [
+          {
+            label: 'Admin Dashboard',
+            items: [
+              {
+                label: 'Dashboard',
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/dashboard/admin'],
+              },
+              {
+                label: 'Users',
+                icon: 'pi pi-fw pi-users',
+                items: [
+                  {
+                    label: 'Pending Users',
+                    icon: 'pi pi-fw pi-user-plus',
+                    routerLink: ['/dashboard/admin/pending-users'],
+                  },
+                ],
+              },
+              {
+                label: 'Products',
+                icon: 'pi pi-fw pi-box',
+                items: [
+                  {
+                    label: 'Pending Products',
+                    icon: '',
+                    routerLink: ['/dashboard/admin/pending-products'],
+                  },
+                ],
+              },
+              {
+                label: 'Categories',
+                icon: 'pi pi-fw pi-tags',
+                items: [
+                  {
+                    label: 'Pending Categories',
+                    icon: 'pi pi-fw pi-tag',
+                    routerLink: ['/dashboard/admin/pending-categories'],
+                  },
+                ],
+              },
+              {
+                label: 'Orders',
+                icon: 'pi pi-fw pi-shopping-cart',
+                routerLink: ['/dashboard/admin/orders'],
+              },
+            ],
+          },
+        ];
+      }
     });
   }
 }
