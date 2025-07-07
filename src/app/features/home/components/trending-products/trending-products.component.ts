@@ -33,7 +33,6 @@ interface Deal {
   selector: 'app-trending-products',
   imports: [CommonModule, CarouselModule],
   templateUrl: './trending-products.component.html',
-  styleUrls: ['./trending-products.component.css'],
 })
 export class TrendingProductsComponent implements OnInit {
   carouselImages: CarouselImage[] = [];
