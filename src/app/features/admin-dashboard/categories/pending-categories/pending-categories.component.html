@@ -1,0 +1,79 @@
+<div class="flex flex-col gap-6 min-h-full w-full">
+  <p-toast></p-toast>
+  <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
+    <div class="px-6 flex flex-col gap-1">
+      <span class="font-bold text-2xl"> Pending Categories </span>
+      <span class="text-sm text-secondary">
+        Overview of categories submitted but not yet approved for the marketplace.
+      </span>
+    </div>
+    <div>
+      <app-data-table
+        [(data)]="pendingCategories"
+        [cols]="cols"
+        [(multiSortMeta)]="SortMeta"
+        [dataLoading]="loading()"
+        [(totalRecords)]="total_records"
+        [rows]="limit() || 10"
+        [bodyTemplate]="pendingCategoriesBody"
+        (loadDataEvent)="getPendingCategories($event)"
+      >
+      </app-data-table>
+    </div>
+  </div>
+  <p-confirmDialog
+    header="Confirm Deletion"
+    icon="pi pi-exclamation-triangle"
+    acceptButtonStyleClass="p-button-danger"
+    rejectButtonStyleClass="p-button-secondary"
+  ></p-confirmDialog>
+</div>
+<ng-template #pendingCategoriesBody let-rowData let-rowIndex="rowIndex">
+  <td class="text-center w-[5%] shrink-1">
+    {{ rowData.id }}
+  </td>
+  <td class="text-center w-[20%] text-nowrap">
+    {{ rowData.name }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.slug }}
+  </td>
+  <td class="text-center w-[8%] text-nowrap">
+    {{ rowData.level }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.parent?.name || 'Root Category' }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.creator?.name || 'N/A' }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.created_at | date }}
+  </td>
+  <td class="text-center text-nowrap">
+    <div class="flex gap-2 justify-center">
+      <p-button
+        [label]="'Approve'"
+        [icon]="'pi pi-check'"
+        [outlined]="true"
+        (onClick)="approveCategory(rowData.id)"
+        rounded="true"
+        severity="success"
+        size="small"
+        [disabled]="loading()"
+        [raised]="true"
+      />
+      <p-button
+        [label]="'Reject'"
+        [raised]="true"
+        [icon]="'pi pi-times'"
+        [outlined]="true"
+        (onClick)="rejectCategory(rowData)"
+        rounded="true"
+        severity="danger"
+        size="small"
+        [disabled]="loading()"
+      />
+    </div>
+  </td>
+</ng-template>
