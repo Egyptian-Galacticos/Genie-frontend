@@ -11,6 +11,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../../../core/auth/services/auth.service';
 import { ProductSearchComponent } from '../../components/product-search/product-search.component';
 import { ProductFiltersComponent } from '../../components/product-filters/product-filters.component';
 import { ProductFiltersModalComponent } from '../../components/product-filters-modal/product-filters-modal.component';
@@ -62,6 +63,7 @@ export class ProductsPageComponent {
   private route = inject(ActivatedRoute);
   private productsService = inject(ProductsService);
   private messageService = inject(MessageService);
+  private authService = inject(AuthService);
 
   private queryParams = toSignal(this.route.queryParams, { initialValue: {} });
 
@@ -222,6 +224,18 @@ export class ProductsPageComponent {
 
   onWishlistToggle(event: { productId: number; isCurrentlyInWishlist: boolean }) {
     const { productId, isCurrentlyInWishlist } = event;
+
+    // Check if user is authenticated
+    if (!this.authService.isAuthenticated()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Login Required',
+        detail: 'Please log in to add items to your wishlist',
+        life: 4000,
+        icon: 'pi pi-exclamation-triangle',
+      });
+      return;
+    }
 
     const currentStates = new Map(this.wishlistLoadingStates());
     currentStates.set(productId, true);
