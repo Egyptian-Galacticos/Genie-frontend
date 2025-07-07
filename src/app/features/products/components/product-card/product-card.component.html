@@ -1,0 +1,202 @@
+<p-card
+  styleClass="h-full card-style rounded-3xl transition-all duration-300 group overflow-hidden hover:shadow-xl"
+>
+  <ng-template pTemplate="content">
+    <div class="flex flex-col h-full">
+      <div class="mb-4 flex-shrink-0">
+        @if (productImage().url) {
+          <div
+            class="relative overflow-hidden rounded-lg bg-surface-50 dark:bg-surface-800"
+            style="height: 280px"
+          >
+            <img
+              [src]="productImage().url"
+              [alt]="productImage().alt"
+              class="w-full h-full object-cover transition-transform duration-500 ease-out hover:scale-110"
+              loading="lazy"
+            />
+            <div class="absolute top-3 right-3 flex flex-col gap-2 z-10">
+              @if (product().is_featured) {
+                <span
+                  class="bg-amber-500 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-lg"
+                >
+                  Featured
+                </span>
+              }
+              @if (product().sample_available) {
+                <span
+                  class="bg-green-500 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-lg"
+                >
+                  Sample
+                </span>
+              }
+            </div>
+          </div>
+        } @else {
+          <div
+            class="relative overflow-hidden rounded-lg bg-surface-100 dark:bg-surface-700 flex items-center justify-center"
+            style="height: 280px"
+          >
+            <i class="pi pi-image text-6xl text-surface-400 dark:text-surface-500"></i>
+            <div class="absolute top-3 right-3 flex flex-col gap-2 z-10">
+              @if (product().is_featured) {
+                <span
+                  class="bg-amber-500 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-lg"
+                >
+                  Featured
+                </span>
+              }
+              @if (product().sample_available) {
+                <span
+                  class="bg-green-500 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-lg"
+                >
+                  Sample
+                </span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="flex-1 flex flex-col">
+        @if (product().brand) {
+          <p-button
+            (click)="onBrandClick($event, product().brand)"
+            [label]="product().brand"
+            icon="pi pi-bookmark"
+            [outlined]="true"
+            size="small"
+            severity="secondary"
+            [attr.title]="'Filter by brand: ' + product().brand"
+            styleClass="mb-3 self-start border-[0.5px]! !rounded-full !text-sm !font-medium !border-primary-200 !text-primary hover:!bg-primary-50 dark:hover:!bg-primary-900/30"
+          />
+        }
+
+        <h3 class="mb-3 line-clamp-2 flex-shrink-0">
+          <a
+            [routerLink]="productRoute()"
+            class="text-lg font-bold text-black dark:text-white hover:text-[var(--p-primary-700)] transition-all duration-200 focus:outline-none rounded-md px-1 py-0.5 -mx-1 -my-0.5"
+            [attr.title]="'View ' + product().name + ' details'"
+          >
+            {{ product().name }}
+          </a>
+        </h3>
+
+        @if (product().seller.company.name) {
+          <p class="text-sm text-secondary mb-3 flex items-center gap-2 min-h-[1.5rem]">
+            <i class="pi pi-building text-primary flex-shrink-0"></i>
+            <span class="font-medium line-clamp-1">{{ product().seller.company.name }}</span>
+          </p>
+        }
+
+        @if (product().description) {
+          <p class="text-sm text-muted mb-4 line-clamp-3 leading-relaxed min-h-[4.5rem]">
+            {{ product().description }}
+          </p>
+        } @else {
+          <div class="mb-4 min-h-[4.5rem]"></div>
+        }
+
+        @if (product().tags && product().tags.length > 0) {
+          <div #tagsContainer class="flex items-center gap-2 mb-4 min-h-[2rem] overflow-hidden">
+            @for (tag of tagDisplay().visibleTags; track tag) {
+              <span
+                class="px-2 py-1 rounded-full bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 text-xs font-medium border border-surface-200 dark:border-surface-700 hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors whitespace-nowrap flex-shrink-0"
+              >
+                {{ tag }}
+              </span>
+            }
+            @if (tagDisplay().hasMore) {
+              <span
+                class="px-2 py-1 rounded-full bg-surface-50 dark:bg-surface-800 text-surface-500 dark:text-surface-400 text-xs font-medium border border-dashed border-surface-300 dark:border-surface-600 whitespace-nowrap flex-shrink-0 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors"
+                [pTooltip]="tagDisplay().tooltipText"
+                tooltipPosition="top"
+                [tooltipOptions]="{ showDelay: 300, hideDelay: 150 }"
+              >
+                +{{ tagDisplay().remainingCount }}
+              </span>
+            }
+          </div>
+        } @else {
+          <div class="mb-4 min-h-[2rem]"></div>
+        }
+
+        <div
+          class="mt-auto h-35 pt-4 border-t flex justify-between flex-col items-left border-surface-200 dark:border-surface-700"
+        >
+          <div class="flex items-start justify-between mb-4 min-h-[3rem]">
+            <div class="flex flex-col">
+              @if (!isPriceValid()) {
+                <div class="text-lg font-bold text-primary">Price on request</div>
+              } @else if (priceRange().hasRange) {
+                <div class="text-xl font-bold text-primary line-clamp-1">
+                  {{ priceRange().min }} - {{ priceRange().max }}
+                  <span class="text-sm font-normal text-muted">{{ priceRange().currency }}</span>
+                </div>
+                <div class="text-xs text-muted mt-1">Price varies by quantity</div>
+              } @else {
+                <div class="text-xl font-bold text-primary line-clamp-1">
+                  {{ priceRange().min }}
+                  <span class="text-sm font-normal text-muted">{{ priceRange().currency }}</span>
+                </div>
+              }
+
+              @if (
+                product().sample_available && product().sample_price && +product().sample_price > 0
+              ) {
+                <div class="text-sm text-green-600 dark:text-green-400 mt-1 font-medium">
+                  Sample: {{ product().sample_price }} {{ product().currency }}
+                </div>
+              }
+            </div>
+
+            @if (product().tiers && product().tiers!.length > 0) {
+              <div class="text-right">
+                <div
+                  class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium"
+                >
+                  <i class="pi pi-layers"></i>
+                  {{ product().tiers!.length }} tiers
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="flex items-center gap-3">
+            <p-button
+              label="View details"
+              icon="pi pi-eye"
+              [outlined]="true"
+              size="small"
+              severity="secondary"
+              [routerLink]="productRoute()"
+              [attr.title]="'View details for ' + product().name"
+              class="flex-1"
+              styleClass="border-[0.5px]! h-10 w-full rounded-full!"
+            />
+            <button
+              (click)="onToggleWishlist()"
+              [disabled]="isWishlistLoading()"
+              [attr.title]="isInWishlist() ? 'Remove from wishlist' : 'Add to wishlist'"
+              [class]="
+                'w-10 h-10 flex-shrink-0 rounded-full border border-gray-200 dark:border-gray-600 transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md cursor-pointer' +
+                (isInWishlist()
+                  ? ' bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40'
+                  : ' bg-white dark:bg-gray-800 text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20') +
+                (isWishlistLoading() ? ' opacity-50 cursor-not-allowed' : '')
+              "
+            >
+              @if (isWishlistLoading()) {
+                <i class="pi pi-spin pi-spinner text-base"></i>
+              } @else if (isInWishlist()) {
+                <i class="pi pi-heart-fill text-base"></i>
+              } @else {
+                <i class="pi pi-heart text-base"></i>
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-card>
