@@ -1,0 +1,108 @@
+@if (loading()) {
+  <p-skeleton height="32rem" styleClass="rounded-3xl mb-4" />
+  <div class="flex gap-2">
+    @for (item of [1, 2, 3, 4]; track item) {
+      <p-skeleton height="4rem" width="4rem" styleClass="rounded-xl" />
+    }
+  </div>
+} @else {
+  @if (galleryImages().length > 0) {
+    <div class="relative">
+      <p-galleria
+        [value]="galleryImages()"
+        [responsiveOptions]="responsiveOptions"
+        [numVisible]="4"
+        [circular]="true"
+        [showItemNavigators]="true"
+        [showThumbnails]="galleryImages().length > 1"
+        [thumbnailsPosition]="'bottom'"
+        [showIndicatorsOnItem]="galleryImages().length > 1"
+        [autoPlay]="galleryImages().length > 1"
+        [transitionInterval]="3000"
+        [(activeIndex)]="activeIndex"
+        [changeItemOnIndicatorHover]="true"
+        (activeIndexChange)="onActiveIndexChange($event)"
+        [containerStyle]="{ 'max-width': '100%' }"
+        class="mb-6"
+      >
+        <ng-template pTemplate="item" let-item>
+          <div
+            class="flex items-center justify-center bg-white dark:bg-surface-900 rounded-t-2xl overflow-hidden cursor-pointer"
+            style="height: 400px"
+            tabindex="0"
+            role="button"
+            aria-label="Open image in fullscreen"
+            (click)="openFullScreen()"
+            (keydown.enter)="openFullScreen()"
+            (keydown.space)="openFullScreen()"
+          >
+            <img
+              [src]="item.url"
+              [alt]="product()?.name"
+              class="w-full h-full object-contain"
+              loading="lazy"
+            />
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="thumbnail" let-item>
+          <img
+            [src]="item.thumbnail_url || item.url"
+            [alt]="product()?.name"
+            class="w-16 h-16 object-cover rounded-lg border-2 border-transparent hover:border-primary-500 transition-all duration-200 cursor-pointer"
+          />
+        </ng-template>
+      </p-galleria>
+
+      <p-galleria
+        [value]="galleryImages()"
+        [(visible)]="fullScreenVisible"
+        [(activeIndex)]="activeIndex"
+        (visibleChange)="onFullScreenVisibilityChange($event)"
+        [responsiveOptions]="responsiveOptions"
+        [numVisible]="5"
+        [circular]="true"
+        [fullScreen]="true"
+        [showItemNavigators]="true"
+        [showThumbnails]="true"
+        [showItemNavigatorsOnHover]="true"
+        [containerStyle]="{ 'max-width': '60vw', 'max-height': '70vh' }"
+        [verticalThumbnailViewPortHeight]="'120px'"
+        class="fullscreen-gallery"
+      >
+        <ng-template pTemplate="item" let-item>
+          <img
+            [src]="item.url"
+            [alt]="product()?.name"
+            style="width: 100%; height: auto; max-height: 45vh; object-fit: contain; display: block"
+          />
+        </ng-template>
+        <ng-template pTemplate="thumbnail" let-item>
+          <img
+            [src]="item.thumbnail_url || item.url"
+            [alt]="product()?.name"
+            style="width: 60px; height: 60px; object-fit: cover; display: block"
+          />
+        </ng-template>
+      </p-galleria>
+
+      <div class="absolute top-4 left-4 flex flex-col gap-2">
+        @if (product()?.is_featured) {
+          <p-badge value="Featured" severity="success" />
+        }
+        @if (product()?.sample_available) {
+          <p-badge value="Sample Available" severity="info" />
+        }
+      </div>
+    </div>
+  } @else {
+    <div
+      class="flex items-center justify-center h-96 bg-surface-50 dark:bg-surface-900 rounded-2xl"
+    >
+      <div class="text-center">
+        <i class="pi pi-image text-6xl text-surface-400 mb-4"></i>
+        <p class="text-surface-500 dark:text-surface-400">No images available</p>
+      </div>
+    </div>
+  }
+}

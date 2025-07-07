@@ -35,6 +35,12 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'products',
+        loadChildren: () =>
+          import('./features/products/products.routes').then(m => m.PRODUCTS_ROUTES),
+        title: 'Products - Genie',
+      },
+      {
         path: 'profile',
         loadChildren: () => import('./features/profile/profile.routes').then(m => m.profileRoutes),
         title: 'Profile - Genie',
