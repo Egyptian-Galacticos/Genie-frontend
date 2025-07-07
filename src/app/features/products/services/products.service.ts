@@ -12,6 +12,8 @@ import {
   WishlistRequest,
   AddToWishlistResponse,
   RemoveFromWishlistResponse,
+  RfqRequest,
+  RfqResponse,
 } from '../interfaces/product.interface';
 
 @Injectable({
@@ -57,6 +59,14 @@ export class ProductsService {
    */
   removeFromWishlist(productId: number): Observable<RemoveFromWishlistResponse> {
     return this.apiService.delete<RemoveFromWishlistResponse>(`user/wishlist/${productId}`);
+  }
+
+  /**
+   * Create RFQ request
+   * Requires authentication - token will be automatically included by auth interceptor
+   */
+  createRfq(rfqData: RfqRequest): Observable<RfqResponse> {
+    return this.apiService.post<RfqResponse>('rfqs', rfqData);
   }
 
   /**
