@@ -1,0 +1,110 @@
+/* Shared animation styles for animate-on-scroll directive */
+
+.animate-on-scroll-container .animate-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-on-scroll-container .animate-item.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animation delays for common patterns */
+.animate-on-scroll-container .stat-card:nth-child(1) {
+  transition-delay: 0.1s;
+}
+.animate-on-scroll-container .stat-card:nth-child(2) {
+  transition-delay: 0.2s;
+}
+.animate-on-scroll-container .stat-card:nth-child(3) {
+  transition-delay: 0.3s;
+}
+.animate-on-scroll-container .stat-card:nth-child(4) {
+  transition-delay: 0.4s;
+}
+
+.animate-on-scroll-container .team-card:nth-child(1) {
+  transition-delay: 0.1s;
+}
+.animate-on-scroll-container .team-card:nth-child(2) {
+  transition-delay: 0.3s;
+}
+.animate-on-scroll-container .team-card:nth-child(3) {
+  transition-delay: 0.5s;
+}
+.animate-on-scroll-container .team-card:nth-child(4) {
+  transition-delay: 0.2s;
+}
+.animate-on-scroll-container .team-card:nth-child(5) {
+  transition-delay: 0.4s;
+}
+.animate-on-scroll-container .team-card:nth-child(6) {
+  transition-delay: 0.6s;
+}
+
+.animate-on-scroll-container .feature-card:nth-child(1) {
+  transition-delay: 0.1s;
+}
+.animate-on-scroll-container .feature-card:nth-child(2) {
+  transition-delay: 0.2s;
+}
+.animate-on-scroll-container .feature-card:nth-child(3) {
+  transition-delay: 0.3s;
+}
+.animate-on-scroll-container .feature-card:nth-child(4) {
+  transition-delay: 0.4s;
+}
+.animate-on-scroll-container .feature-card:nth-child(5) {
+  transition-delay: 0.5s;
+}
+.animate-on-scroll-container .feature-card:nth-child(6) {
+  transition-delay: 0.6s;
+}
+
+/* Enhanced hover effects */
+.animate-on-scroll-container .animate-item:hover {
+  transform: translateY(-2px);
+}
+
+.animate-on-scroll-container .stat-card:hover,
+.animate-on-scroll-container .team-card:hover,
+.animate-on-scroll-container .feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive animations */
+@media (max-width: 768px) {
+  .animate-on-scroll-container .animate-item {
+    transform: translateY(20px);
+  }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll-container .animate-item {
+    transition: opacity 0.3s ease;
+    transform: none;
+  }
+
+  .animate-on-scroll-container .animate-item.animate-in {
+    transform: none;
+  }
+
+  .animate-on-scroll-container .stat-card,
+  .animate-on-scroll-container .team-card,
+  .animate-on-scroll-container .feature-card {
+    transition-delay: 0s;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .animate-on-scroll-container .stat-card:hover,
+  .animate-on-scroll-container .team-card:hover,
+  .animate-on-scroll-container .feature-card:hover {
+    box-shadow: 0 20px 40px rgba(255, 255, 255, 0.05);
+  }
+}

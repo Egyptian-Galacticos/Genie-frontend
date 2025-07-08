@@ -2,6 +2,7 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 @plugin "tailwindcss-primeui";
 @import 'primeicons/primeicons.css';
+@import './app/shared/styles/animations.css';
 
 @theme {
   /* Light Theme Colors */
