@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -32,7 +32,6 @@ export class NavbarComponent {
   readonly themeService = inject(ThemeService);
 
   drawerVisible = signal(false);
-  scrolled = signal(false);
 
   isAuthenticated = this.authService.isAuthenticated;
   user = this.authService.user;
@@ -74,11 +73,6 @@ export class NavbarComponent {
       command: () => this.logout(),
     },
   ]);
-
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    this.scrolled.set(window.scrollY > 50);
-  }
 
   handleMobileMenuItemClick(item: MenuItem): void {
     if (item.command) {

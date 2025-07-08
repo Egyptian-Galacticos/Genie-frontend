@@ -1,15 +1,19 @@
 <nav
   class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
   [ngClass]="{
-    'bg-transparent': !scrolled(),
-    'bg-slate-900/80 backdrop-blur-md shadow-md': scrolled(),
+    'bg-slate-900/80 backdrop-blur-md shadow-sm': themeService.isDark(),
+    'bg-white/90 backdrop-blur-md shadow-sm': !themeService.isDark(),
   }"
 >
   <div class="container mx-auto px-4 py-4 flex items-center justify-between">
     <div class="flex items-center">
       <a
         routerLink="/"
-        class="text-2xl font-bold text-white hover:text-primary-300 transition-colors"
+        class="text-2xl font-bold transition-colors"
+        [ngClass]="{
+          'text-white hover:text-primary-300': themeService.isDark(),
+          'text-slate-900 hover:text-primary-600': !themeService.isDark(),
+        }"
       >
         Genie
       </a>
@@ -21,13 +25,23 @@
           <li>
             <a
               [routerLink]="item.routerLink"
-              routerLinkActive="text-primary-300 after:w-full"
+              routerLinkActive="after:w-full"
               [routerLinkActiveOptions]="{ exact: item.routerLink === '/' }"
-              class="relative px-4 py-2 text-white hover:text-primary-300 transition-colors duration-300 overflow-hidden group"
+              class="relative px-4 py-2 transition-colors duration-300 overflow-hidden group"
+              [ngClass]="{
+                'text-white hover:text-primary-300': themeService.isDark(),
+                'text-slate-900 hover:text-primary-600': !themeService.isDark(),
+              }"
+              [class.text-primary-300]="item.routerLink !== '/' && themeService.isDark()"
+              [class.text-primary-600]="item.routerLink !== '/' && !themeService.isDark()"
             >
               {{ item.label }}
               <span
-                class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-300 transition-all duration-300 group-hover:w-full"
+                class="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full"
+                [ngClass]="{
+                  'bg-primary-300': themeService.isDark(),
+                  'bg-primary-600': !themeService.isDark(),
+                }"
               ></span>
             </a>
           </li>
@@ -51,10 +65,32 @@
               shape="circle"
             ></p-avatar>
             <div class="text-left hidden xl:block">
-              <p class="text-sm font-semibold text-white">{{ user()?.first_name }}</p>
-              <p class="text-xs text-white/70">{{ user()?.email }}</p>
+              <p
+                class="text-sm font-semibold"
+                [ngClass]="{
+                  'text-white': themeService.isDark(),
+                  'text-slate-900': !themeService.isDark(),
+                }"
+              >
+                {{ user()?.first_name }}
+              </p>
+              <p
+                class="text-xs"
+                [ngClass]="{
+                  'text-white/70': themeService.isDark(),
+                  'text-slate-600': !themeService.isDark(),
+                }"
+              >
+                {{ user()?.email }}
+              </p>
             </div>
-            <i class="pi pi-chevron-down text-xs text-white/70"></i>
+            <i
+              class="pi pi-chevron-down text-xs"
+              [ngClass]="{
+                'text-white/70': themeService.isDark(),
+                'text-slate-600': !themeService.isDark(),
+              }"
+            ></i>
           </div>
         </p-button>
 
@@ -109,7 +145,11 @@
               label="Sign In"
               [outlined]="true"
               severity="secondary"
-              styleClass="!text-white !border-white/30 hover:!bg-white hover:!text-surface-900 !transition-all !duration-300 !font-medium lg:px-6! !py-2 hover:!scale-105"
+              [styleClass]="
+                themeService.isDark()
+                  ? '!text-white !border-white/30 hover:!bg-white hover:!text-surface-900 !transition-all !duration-300 !font-medium lg:px-6! !py-2 hover:!scale-105'
+                  : '!text-slate-900 !border-slate-300 hover:!bg-slate-100 hover:!text-slate-900 !transition-all !duration-300 !font-medium lg:px-6! !py-2 hover:!scale-105'
+              "
             ></p-button>
           </a>
           <a routerLink="/auth/register">
@@ -132,7 +172,11 @@
       >
         <i
           [class]="themeService.isDark() ? 'pi pi-sun' : 'pi pi-moon'"
-          class="text-xl text-white"
+          class="text-xl"
+          [ngClass]="{
+            'text-white': themeService.isDark(),
+            'text-slate-900': !themeService.isDark(),
+          }"
         ></i>
       </p-button>
     </div>
@@ -155,7 +199,13 @@
         styleClass="!p-2 !border-0 !bg-transparent hover:!bg-white/10 !transition-all !duration-300 hover:!scale-110"
         aria-label="Open menu"
       >
-        <i class="pi pi-bars text-xl text-white"></i>
+        <i
+          class="pi pi-bars text-xl"
+          [ngClass]="{
+            'text-white': themeService.isDark(),
+            'text-slate-900': !themeService.isDark(),
+          }"
+        ></i>
       </p-button>
     </div>
   </div>
