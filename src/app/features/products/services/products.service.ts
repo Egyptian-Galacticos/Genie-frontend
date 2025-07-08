@@ -15,13 +15,14 @@ import {
   RfqRequest,
   RfqResponse,
 } from '../interfaces/product.interface';
+import { AuthService } from '../../../core/auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
   private apiService = inject(ApiService);
-
+  private authService = inject(AuthService);
   /**
    * Main method to get products with filters
    */
@@ -34,6 +35,9 @@ export class ProductsService {
    * Get a single product by slug
    */
   getProduct(slug: string): Observable<ProductResponse> {
+    if (this.authService.userRoles().includes('admin')) {
+      return this.apiService.get<ProductResponse>(`admin/products/${slug}`);
+    }
     return this.apiService.get<ProductResponse>(`products/${slug}`);
   }
 

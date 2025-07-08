@@ -4,6 +4,8 @@ import { guestGuard } from './core/auth/guards/guest.guard';
 import { MainLayoutComponent } from './core/layout/main-layout/main-layout.component';
 import { HomePageComponent } from './features/home/home-page/home-page.component';
 import { emailVerificationGuard } from './core/auth/guards/email-verification.guard';
+import { roleGuard } from './core/auth/guards/role.guard';
+import { DashboardLayoutComponent } from './features/layouts/dashboard-layout/dashboard-layout.component';
 
 export const routes: Routes = [
   {
@@ -98,14 +100,12 @@ export const routes: Routes = [
 
   {
     path: 'dashboard/seller',
-    loadComponent: () =>
-      import('./features/layouts/dashboard-layout/dashboard-layout.component').then(
-        c => c.DashboardLayoutComponent
-      ),
-    canActivate: [authGuard, emailVerificationGuard],
+    canActivate: [authGuard, roleGuard(['seller']), emailVerificationGuard],
+    component: DashboardLayoutComponent,
     children: [
       {
         path: '',
+        title: 'Seller Dashboard - Genie',
         loadComponent: () =>
           import('./features/seller-dashboard/seller-dashboard.component').then(
             c => c.SellerDashboardComponent
@@ -113,6 +113,7 @@ export const routes: Routes = [
       },
       {
         path: 'quotes-requests',
+        title: 'Quotes Requests - Genie',
         loadComponent: () =>
           import('./features/seller-dashboard/quotes-requests/quotes-requests.component').then(
             c => c.QuotesRequestsComponent
@@ -120,6 +121,7 @@ export const routes: Routes = [
       },
       {
         path: 'quotes-responses',
+        title: 'Quotes Responses - Genie',
         loadComponent: () =>
           import('./features/seller-dashboard/quotes/quotes.component').then(
             c => c.QuotesComponent
@@ -130,6 +132,7 @@ export const routes: Routes = [
         children: [
           {
             path: '',
+            title: 'My Products - Genie',
             loadComponent: () =>
               import(
                 './features/seller-dashboard/products/all-products/all-products.component'
@@ -137,6 +140,7 @@ export const routes: Routes = [
           },
           {
             path: 'add',
+            title: 'Add Product - Genie',
             loadComponent: () =>
               import('./features/seller-dashboard/products/add-product/add-product.component').then(
                 c => c.AddProductComponent
@@ -144,6 +148,7 @@ export const routes: Routes = [
           },
           {
             path: 'bulk-upload',
+            title: 'Bulk Upload Products - Genie',
             loadComponent: () =>
               import('./features/seller-dashboard/bulk-upload/bulk-upload.component').then(
                 c => c.BulkUploadComponent
@@ -155,12 +160,9 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/buyer',
-    loadComponent: () =>
-      import('./features/layouts/dashboard-layout/dashboard-layout.component').then(
-        c => c.DashboardLayoutComponent
-      ),
-    canActivate: [authGuard, emailVerificationGuard],
+    canActivate: [authGuard, roleGuard(['buyer']), emailVerificationGuard],
     title: 'Buyer Dashboard - Genie',
+    component: DashboardLayoutComponent,
     children: [
       {
         path: '',
@@ -193,6 +195,45 @@ export const routes: Routes = [
             './features/buyer-dashboard/components/quotes-responses/quotes-responses.component'
           ).then(c => c.BuyerQuotesResponsesComponent),
         title: 'Quote Responses - Genie',
+      },
+    ],
+  },
+  {
+    path: 'dashboard/admin',
+    canActivate: [roleGuard(['admin']), authGuard, emailVerificationGuard],
+    component: DashboardLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/admin-dashboard/admin-dashboard.component').then(
+            c => c.AdminDashboardComponent
+          ),
+        title: 'Dashboard - Genie',
+      },
+      {
+        path: 'pending-users',
+        loadComponent: () =>
+          import('./features/admin-dashboard/users/pending-users/pending-users.component').then(
+            c => c.PendingUsersComponent
+          ),
+        title: 'Pending Users - Genie',
+      },
+      {
+        path: 'pending-products',
+        loadComponent: () =>
+          import(
+            './features/admin-dashboard/products/pending-products/pending-products.component'
+          ).then(c => c.PendingProductsComponent),
+        title: 'Pending Products - Genie',
+      },
+      {
+        path: 'pending-categories',
+        loadComponent: () =>
+          import(
+            './features/admin-dashboard/categories/pending-categories/pending-categories.component'
+          ).then(c => c.PendingCategoriesComponent),
+        title: 'Pending Categories - Genie',
       },
     ],
   },

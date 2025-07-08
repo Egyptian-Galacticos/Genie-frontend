@@ -1,0 +1,101 @@
+<div class="flex flex-col gap-6 min-h-full w-full">
+  <p-toast></p-toast>
+  <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
+    <div class="px-6 flex flex-col gap-1">
+      <span class="font-bold text-2xl"> Pending Products </span>
+      <span class="text-sm text-secondary">
+        Overview of products submitted by sellers but not yet approved for the marketplace.
+      </span>
+    </div>
+    <div>
+      <app-data-table
+        [(data)]="pendingProducts"
+        [cols]="cols"
+        [(multiSortMeta)]="SortMeta"
+        [dataLoading]="loading()"
+        [(totalRecords)]="total_records"
+        [rows]="limit() || 10"
+        [bodyTemplate]="pendingProductsBody"
+        (loadDataEvent)="getPendingProducts($event)"
+      >
+      </app-data-table>
+    </div>
+  </div>
+  <p-confirmDialog
+    header="Confirm Deletion"
+    icon="pi pi-exclamation-triangle"
+    acceptButtonStyleClass="p-button-danger"
+    rejectButtonStyleClass="p-button-secondary"
+  ></p-confirmDialog>
+</div>
+@if (viewVisible()) {
+  <p-drawer
+    header="Review Product"
+    [(visible)]="viewVisible"
+    styleClass="bg-surface-200 w-full lg:w-[80%]"
+  >
+    <app-product-detail [slug]="beingViewedProduct()?.slug || ''"></app-product-detail>
+  </p-drawer>
+}
+
+<ng-template #pendingProductsBody let-rowData let-rowIndex="rowIndex">
+  <td class="text-center w-[5%] shrink-1">
+    {{ rowData.id }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.name }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.brand || 'N/A' }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.category?.name || 'N/A' }}
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    {{ rowData.sku }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.seller?.company?.name || 'N/A' }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.created_at | date }}
+  </td>
+  <td class="text-center text-nowrap">
+    <div class="flex gap-2 justify-center">
+      <p-button
+        [label]="'Approve'"
+        [icon]="'pi pi-check'"
+        [outlined]="true"
+        (onClick)="approveProduct(rowData.id)"
+        rounded="true"
+        severity="success"
+        size="small"
+        [disabled]="loading()"
+        [raised]="true"
+      />
+      <p-button
+        [label]="'Reject'"
+        [raised]="true"
+        [icon]="'pi pi-times'"
+        [outlined]="true"
+        (onClick)="rejectProduct(rowData)"
+        rounded="true"
+        severity="danger"
+        size="small"
+        [disabled]="loading()"
+      />
+      <p-button
+        [label]="'view'"
+        [title]="'View Product as a customer'"
+        [raised]="true"
+        [icon]="'pi pi-eye'"
+        [outlined]="true"
+        (onClick)="viewProductDetails(rowData)"
+        rounded="true"
+        severity="info"
+        size="small"
+        [disabled]="loading()"
+      />
+    </div>
+  </td>
+</ng-template>

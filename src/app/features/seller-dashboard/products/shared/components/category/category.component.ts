@@ -54,7 +54,7 @@ export class CategoryComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: response => {
         this.categories = response;
-        this.level0Categories = this.categories.filter(c => c.level === 0);
+        this.level0Categories = this.categories;
         if (this.beingEditedProduct()) {
           const category = this.categories.find(c =>
             c.children.find(x =>
