@@ -224,6 +224,7 @@ export class ProductDetailComponent {
             life: 4000,
             icon: 'pi pi-exclamation-triangle',
           });
+          this.wishlistLoading.set(false);
         },
         complete: () => {
           this.wishlistLoading.set(false);
@@ -257,6 +258,7 @@ export class ProductDetailComponent {
             life: 4000,
             icon: 'pi pi-exclamation-triangle',
           });
+          this.wishlistLoading.set(false);
         },
         complete: () => {
           this.wishlistLoading.set(false);
