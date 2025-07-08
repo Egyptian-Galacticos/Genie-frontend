@@ -44,7 +44,6 @@ export class ImageUploadComponent {
 
   // File selection handlers
   onMainImageSelect(event: InputEvent): void {
-    console.log(this.images_group());
     const files = Array.from((event.target as HTMLInputElement).files ?? []) as File[];
     if (files.length > 0) {
       this.processMainImage(files[0]);

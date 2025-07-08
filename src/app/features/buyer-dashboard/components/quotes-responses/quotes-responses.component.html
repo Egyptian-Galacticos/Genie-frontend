@@ -227,31 +227,31 @@
               <div class="flex items-center gap-3">
                 <span class="text-sm font-medium text-secondary min-w-[100px]">Name:</span>
                 <span class="text-sm font-bold">
-                  @if (selectedQuote.seller?.full_name) {
-                    {{ selectedQuote.seller?.full_name }}
-                  } @else if (selectedQuote.seller?.first_name && selectedQuote.seller?.last_name) {
-                    {{ selectedQuote.seller?.first_name }} {{ selectedQuote.seller?.last_name }}
+                  @if (selectedQuote.seller.full_name) {
+                    {{ selectedQuote.seller.full_name }}
+                  } @else if (selectedQuote.seller.first_name && selectedQuote.seller.last_name) {
+                    {{ selectedQuote.seller.first_name }} {{ selectedQuote.seller.last_name }}
                   } @else {
                     <span class="text-surface-400 italic">Unknown Seller</span>
                   }
                 </span>
               </div>
-              @if (selectedQuote.seller?.email) {
+              @if (selectedQuote.seller.email) {
                 <div class="flex items-center gap-3">
                   <span class="text-sm font-medium text-secondary min-w-[100px]">Email:</span>
-                  <span class="text-sm text-primary">{{ selectedQuote.seller?.email }}</span>
+                  <span class="text-sm text-primary">{{ selectedQuote.seller.email }}</span>
                 </div>
               }
-              @if (selectedQuote.seller?.phone_number) {
+              @if (selectedQuote.seller.phone_number) {
                 <div class="flex items-center gap-3">
                   <span class="text-sm font-medium text-secondary min-w-[100px]">Phone:</span>
-                  <span class="text-sm">{{ selectedQuote.seller?.phone_number }}</span>
+                  <span class="text-sm">{{ selectedQuote.seller.phone_number }}</span>
                 </div>
               }
-              @if (selectedQuote.seller?.company?.name) {
+              @if (selectedQuote.seller.company.name) {
                 <div class="flex items-center gap-3">
                   <span class="text-sm font-medium text-secondary min-w-[100px]">Company:</span>
-                  <span class="text-sm font-bold">{{ selectedQuote.seller?.company?.name }}</span>
+                  <span class="text-sm font-bold">{{ selectedQuote.seller.company.name }}</span>
                 </div>
               }
             </div>

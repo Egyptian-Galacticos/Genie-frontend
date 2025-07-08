@@ -22,6 +22,12 @@ export interface ProductImage {
   mime_type: string;
 }
 
+export interface PriceTier {
+  from_quantity: string;
+  to_quantity: string;
+  price: string;
+}
+
 export interface Product {
   id: number;
   brand: string;
@@ -29,18 +35,20 @@ export interface Product {
   name: string;
   slug: string;
   description: string;
-  price: string;
+  weight?: string;
   currency: string;
   is_featured: boolean;
   is_active: boolean;
   is_approved: boolean;
+  in_wishlist?: boolean;
   sample_available: boolean;
   sample_price: string;
   category: CategoryBrief;
-  tags: string[];
+  tiers?: PriceTier[];
+  tags?: string[];
   seller: Seller;
   main_image: ProductImage | null;
-  images: string[];
+  images: ProductImage[];
 }
 
 export interface WishlistMeta {

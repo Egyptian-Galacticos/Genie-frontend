@@ -180,7 +180,7 @@
             <div class="lg:col-span-1">
               <div class="w-48 h-48 rounded-lg overflow-hidden mx-auto border border-surface-300">
                 <img
-                  [src]="getMainImage(selectedRFQ.initial_product.media)"
+                  [src]="getMainImage(selectedRFQ.initial_product)"
                   [alt]="selectedRFQ.initial_product.name"
                   class="w-full h-full object-cover cursor-pointer"
                   (error)="onImageError($event)"
@@ -197,65 +197,36 @@
                 <div class="flex flex-wrap gap-2 mb-3">
                   <p-tag [value]="selectedRFQ.initial_product.brand" [severity]="'info'"></p-tag>
                   <p-tag
-                    [value]="'SKU: ' + selectedRFQ.initial_product.sku"
-                    [severity]="'secondary'"
-                  ></p-tag>
-                  <p-tag
                     [value]="'Model: ' + selectedRFQ.initial_product.model_number"
                     [severity]="'secondary'"
                   ></p-tag>
+                  @if (selectedRFQ.initial_product.sample_available) {
+                    <p-tag
+                      [value]="'Sample Available'"
+                      [severity]="'success'"
+                    ></p-tag>
+                  }
                 </div>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-2">
                   <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[80px]">Origin:</span>
-                    <span class="text-sm">{{ selectedRFQ.initial_product.origin }}</span>
+                    <span class="text-sm font-medium text-secondary min-w-[80px]">Weight:</span>
+                    <span class="text-sm">{{ selectedRFQ.initial_product.weight || 'N/A' }}</span>
                   </div>
                   <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[80px]">HS Code:</span>
-                    <span class="text-sm">{{ selectedRFQ.initial_product.hs_code }}</span>
+                    <span class="text-sm font-medium text-secondary min-w-[80px]">Currency:</span>
+                    <span class="text-sm">{{ selectedRFQ.initial_product.currency }}</span>
                   </div>
                 </div>
 
                 <div class="space-y-2">
                   <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[100px]">Material:</span>
-                    <span class="text-sm">{{
-                      selectedRFQ.initial_product.specifications?.material || 'N/A'
-                    }}</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[100px]">Warranty:</span>
-                    <span class="text-sm">{{
-                      selectedRFQ.initial_product.specifications?.warranty || 'N/A'
-                    }}</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-secondary min-w-[100px]"
-                      >Certification:</span
-                    >
-                    <span class="text-sm">{{
-                      selectedRFQ.initial_product.specifications?.certification || 'N/A'
-                    }}</span>
+                    <span class="text-sm font-medium text-secondary min-w-[100px]">Featured:</span>
+                    <span class="text-sm">{{ selectedRFQ.initial_product.is_featured ? 'Yes' : 'No' }}</span>
                   </div>
                 </div>
               </div>
-
-              <!-- Dimensions -->
-              @if (selectedRFQ.initial_product.dimensions) {
-                <div class="pt-2">
-                  <span class="text-sm font-medium text-secondary">Dimensions:</span>
-                  <span class="text-sm ml-2">
-                    {{ selectedRFQ.initial_product.dimensions.length
-                    }}{{ selectedRFQ.initial_product.dimensions.unit }} ×
-                    {{ selectedRFQ.initial_product.dimensions.width
-                    }}{{ selectedRFQ.initial_product.dimensions.unit }} ×
-                    {{ selectedRFQ.initial_product.dimensions.height
-                    }}{{ selectedRFQ.initial_product.dimensions.unit }}
-                  </span>
-                </div>
-              }
 
               <!-- Description -->
               <div>
@@ -277,7 +248,7 @@
               <div class="flex items-center gap-3">
                 <span class="text-sm font-medium text-secondary min-w-[120px]">Company:</span>
                 <span class="text-sm font-bold">{{
-                  selectedRFQ.seller.company?.name || 'Unknown Company'
+                  selectedRFQ.seller.company.name || 'Unknown Company'
                 }}</span>
               </div>
               <div class="flex items-center gap-3">
@@ -289,12 +260,20 @@
               <div class="flex items-center gap-3">
                 <span class="text-sm font-medium text-secondary min-w-[120px]">Email:</span>
                 <span class="text-sm text-primary">{{
-                  selectedRFQ.seller.email || 'seller@example.com'
+                  getContactEmail(selectedRFQ.seller)
                 }}</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-medium text-secondary min-w-[120px]">Company Phone:</span>
+                <span class="text-sm">{{ getCompanyPhone(selectedRFQ.seller.company) }}</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-medium text-secondary min-w-[120px]">Tax ID:</span>
+                <span class="text-sm">{{ getCompanyTaxId(selectedRFQ.seller.company) }}</span>
               </div>
               @if (selectedRFQ.seller.phone_number) {
                 <div class="flex items-center gap-3">
-                  <span class="text-sm font-medium text-secondary min-w-[120px]">Phone:</span>
+                  <span class="text-sm font-medium text-secondary min-w-[120px]">Personal Phone:</span>
                   <span class="text-sm">{{ selectedRFQ.seller.phone_number }}</span>
                 </div>
               }
@@ -308,23 +287,23 @@
                 >
                 </p-badge>
               </div>
-              @if (selectedRFQ.seller.company?.address) {
+              @if (selectedRFQ.seller.company.address) {
                 <div class="space-y-1">
                   <span class="text-sm font-medium text-secondary">Address:</span>
                   <p class="text-sm bg-surface-50 p-2 rounded">
-                    {{ formatAddress(selectedRFQ.seller.company?.address) }}
+                    {{ formatCompanyAddress(selectedRFQ.seller.company) }}
                   </p>
                 </div>
               }
-              @if (selectedRFQ.seller.company?.website) {
+              @if (selectedRFQ.seller.company.website) {
                 <div class="flex items-center gap-3">
                   <span class="text-sm font-medium text-secondary min-w-[100px]">Website:</span>
                   <a
-                    [href]="selectedRFQ.seller.company?.website"
+                    [href]="selectedRFQ.seller.company.website"
                     target="_blank"
                     class="text-sm text-primary hover:underline"
                   >
-                    {{ selectedRFQ.seller.company?.website }}
+                    {{ selectedRFQ.seller.company.website }}
                   </a>
                 </div>
               }
@@ -378,7 +357,7 @@
                         >
                         <span class="text-sm">{{
                           selectedRFQ.seller.full_name ||
-                            selectedRFQ.seller.company?.name ||
+                            selectedRFQ.seller.company.name ||
                             'Unknown Seller'
                         }}</span>
                       </div>
@@ -390,7 +369,7 @@
                           <span class="text-sm font-bold text-primary">
                             {{
                               formatCurrency(
-                                quote.total_amount ?? quote.total_price ?? 0,
+                                quote.total_amount || quote.total_price || 0,
                                 selectedRFQ.initial_product.currency
                               )
                             }}
@@ -399,13 +378,13 @@
                       }
                     </div>
                     <div class="space-y-2">
-                      @if (quote.quote_items?.length || quote.items?.length) {
+                      @if ((quote.quote_items && quote.quote_items.length > 0) || (quote.items && quote.items.length > 0)) {
                         <div class="flex items-center gap-3">
                           <span class="text-sm font-medium text-secondary min-w-[80px]"
                             >Items:</span
                           >
                           <span class="text-sm"
-                            >{{ (quote.quote_items || quote.items)?.length }} item(s)</span
+                            >{{ (quote.quote_items || quote.items || []).length }} item(s)</span
                           >
                         </div>
                       }
@@ -439,7 +418,7 @@
                   }
 
                   <!-- Quote Items -->
-                  @if (quote.quote_items?.length || quote.items?.length) {
+                  @if ((quote.quote_items && quote.quote_items.length > 0) || (quote.items && quote.items.length > 0)) {
                     <div class="mb-3">
                       <span class="text-sm font-medium text-primary block mb-2">Quote Items:</span>
                       <div class="bg-surface-0 rounded border-surface-200 border overflow-hidden">
@@ -451,18 +430,18 @@
                           <span class="text-center">Unit Price</span>
                           <span class="text-center">Total</span>
                         </div>
-                        @for (item of quote.quote_items || quote.items; track item.id || $index) {
+                        @for (item of (quote.quote_items || quote.items || []); track item.id || $index) {
                           <div
                             class="grid grid-cols-4 gap-2 p-2 border-t border-surface-200 text-xs"
                           >
-                            <span>{{ item.product_name || item.product?.name || 'N/A' }}</span>
+                            <span>{{ item.product_name || 'N/A' }}</span>
                             <span class="text-center">{{ item.quantity | number }}</span>
                             <span class="text-center">{{
                               formatCurrency(item.unit_price, selectedRFQ.initial_product.currency)
                             }}</span>
                             <span class="text-center font-medium">{{
                               formatCurrency(
-                                item.total_price ?? item.quantity * +item.unit_price,
+                                item.total_price || item.quantity * +item.unit_price,
                                 selectedRFQ.initial_product.currency
                               )
                             }}</span>

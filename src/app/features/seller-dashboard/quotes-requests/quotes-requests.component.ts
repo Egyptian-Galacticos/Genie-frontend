@@ -1,7 +1,7 @@
 import { CreateQuoteDto, IRequestForQuote } from './../../shared/utils/interfaces';
 import { PaginatedResponse, RequestOptions } from '../../../core/interfaces/api.interface';
 import { Component, inject, signal } from '@angular/core';
-import { DashboardInfoCardComponent } from '../../shared/dashboard-info-card/dashboard-info-card.component';
+import { DashboardInfoCardComponent } from './../../shared/dashboard-info-card/dashboard-info-card.component';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
@@ -10,14 +10,14 @@ import { MessageService, SortMeta } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
 import { DataTableComponent } from '../../shared/data-table/data-table.component';
-import { CreateQuoteModalComponent } from '../../shared/create-quote-modal/create-quote-modal.component';
+import { CreateQuoteModalComponent } from './../../shared/create-quote-modal/create-quote-modal.component';
 import { QuotesService } from '../../shared/services/quotes.service';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-quotes',
   imports: [
-    DashboardInfoCardComponent,
+DashboardInfoCardComponent,
     TableModule,
     BadgeModule,
     ButtonModule,
@@ -25,7 +25,6 @@ import { ToastModule } from 'primeng/toast';
     MultiSelectModule,
     FormsModule,
     DataTableComponent,
-    CreateQuoteModalComponent,
     CreateQuoteModalComponent,
     ToastModule,
   ],
@@ -56,7 +55,6 @@ export class QuotesRequestsComponent {
         this.quotesResponse = response;
       },
       error: error => {
-        console.log(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -135,7 +133,6 @@ export class QuotesRequestsComponent {
 
   // open create quote modal
   openCreateQuoteModal(quoteRequest: IRequestForQuote) {
-    console.log(quoteRequest, this.createQuoteModalVisible());
     this.beingQuotedQuoteRequest = quoteRequest;
     this.createQuoteModalVisible.set(true);
   }

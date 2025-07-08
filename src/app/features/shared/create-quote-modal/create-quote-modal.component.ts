@@ -96,11 +96,9 @@ export class CreateQuoteModalComponent implements OnInit {
   /**Close the modal and change the visible state in the parent */
   close() {
     this.visible.update(() => false);
-    console.log(this.quoteRequest());
   }
 
   onSubmit() {
-    console.log(this.quoteFormGroup.getRawValue());
     const quoteItems = this.quoteFormGroup.getRawValue();
     const quote_items = quoteItems.quoteItemFormArray
       .map(x => {

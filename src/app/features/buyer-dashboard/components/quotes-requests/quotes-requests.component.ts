@@ -1,10 +1,10 @@
 import { Component, OnInit, inject, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BuyerQuotesService } from '../../../shared/services/buyer-quotes.service';
-import { IBuyerRequestForQuote, IBuyerMedia } from '../../../shared/utils/buyer-interfaces';
+import { IBuyerRequestForQuote, IBuyerMedia, IBuyerProduct, IBuyerCompany, IBuyerUser } from '../../../shared/utils/buyer-interfaces';
 import { dataTableColumn } from '../../../shared/utils/interfaces';
 import { DataTableComponent } from '../../../shared/data-table/data-table.component';
-import { DashboardInfoCardComponent } from '../../../shared/dashboard-info-card/dashboard-info-card.component';
+import { DashboardInfoCardComponent } from './../../../shared/dashboard-info-card/dashboard-info-card.component';
 import { RequestOptions, ApiResponse } from '../../../../core/interfaces/api.interface';
 import { SortMeta, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -18,7 +18,7 @@ import { StatusUtils } from '../../../shared/utils/status-utils';
 @Component({
   selector: 'app-buyer-quotes-requests',
   imports: [
-    CommonModule,
+  CommonModule,
     DataTableComponent,
     DashboardInfoCardComponent,
     ToastModule,
@@ -162,15 +162,28 @@ export class BuyerQuotesRequestsComponent implements OnInit {
   }
 
   /**
-   * Retrieves the main product image from media array or returns placeholder
-   * Prioritizes images with 'main_image' collection name
+   * Retrieves the main product image from the product data
+   * Uses main_image first, then falls back to first image in images array
    */
-  getMainImage(media: IBuyerMedia[]): string {
-    if (!media || media.length === 0) {
-      return 'assets/placeholder-image.jpg';
+  getMainImage(product: IBuyerProduct): string {
+    if (product.main_image?.url) {
+      return product.main_image.url;
+    } else if (product.images && product.images.length > 0) {
+      return product.images[0].url;
     }
-    // For IBuyerMedia, we use file_path instead of original_url
-    return media[0]?.file_path || 'assets/placeholder-image.jpg';
+    return 'assets/placeholder-image.jpg';
+  }
+
+  /**
+   * Gets the thumbnail URL for the main product image
+   */
+  getThumbnailImage(product: IBuyerProduct): string {
+    if (product.main_image?.thumbnail_url) {
+      return product.main_image.thumbnail_url;
+    } else if (product.images && product.images.length > 0 && product.images[0].thumbnail_url) {
+      return product.images[0].thumbnail_url;
+    }
+    return this.getMainImage(product);
   }
 
   acceptQuote(quote: { id: string | number; status?: string }) {
@@ -332,7 +345,7 @@ export class BuyerQuotesRequestsComponent implements OnInit {
   formatAddress(
     address:
       | string
-      | { street?: string; city?: string; state?: string; country?: string; zip_code?: string }
+      | { street?: string; city?: string; state?: string; country?: string; postal_code?: string }
       | null
       | undefined
   ): string {
@@ -349,8 +362,46 @@ export class BuyerQuotesRequestsComponent implements OnInit {
     if (address.city) addressParts.push(address.city);
     if (address.state) addressParts.push(address.state);
     if (address.country) addressParts.push(address.country);
-    if (address.zip_code) addressParts.push(address.zip_code);
+    if (address.postal_code) addressParts.push(address.postal_code);
 
     return addressParts.length > 0 ? addressParts.join(', ') : 'N/A';
+  }
+
+  /**
+   * Formats company address specifically for the updated IBuyerCompany interface
+   */
+  formatCompanyAddress(company: IBuyerCompany): string {
+    if (!company.address) {
+      return 'N/A';
+    }
+    return this.formatAddress(company.address);
+  }
+
+  /**
+   * Safely gets company phone number
+   */
+  getCompanyPhone(company: IBuyerCompany): string {
+    return company.company_phone || 'N/A';
+  }
+
+  /**
+   * Safely gets company tax ID
+   */
+  getCompanyTaxId(company: IBuyerCompany): string {
+    return company.tax_id || 'N/A';
+  }
+
+  /**
+   * Formats boolean values for display
+   */
+  formatBoolean(value: boolean | undefined): string {
+    return value ? 'Yes' : 'No';
+  }
+
+  /**
+   * Gets the company email or falls back to user email
+   */
+  getContactEmail(seller: IBuyerUser): string {
+    return seller.company.email || seller.email || 'N/A';
   }
 }

@@ -105,7 +105,6 @@ export class ContactUsComponent implements AfterViewInit {
   }
 
   onSubmit(): void {
-    console.log('Form submitted:', this.contactForm);
     alert("Thank you for your message! We'll get back to you soon.");
     this.resetForm();
   }

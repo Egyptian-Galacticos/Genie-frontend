@@ -4,7 +4,7 @@ import { BuyerQuotesService } from '../../../shared/services/buyer-quotes.servic
 import { IBuyerQuote, IBuyerQuoteItem } from '../../../shared/utils/buyer-interfaces';
 import { dataTableColumn } from '../../../shared/utils/interfaces';
 import { DataTableComponent } from '../../../shared/data-table/data-table.component';
-import { DashboardInfoCardComponent } from '../../../shared/dashboard-info-card/dashboard-info-card.component';
+import { DashboardInfoCardComponent } from './../../../shared/dashboard-info-card/dashboard-info-card.component';
 import { RequestOptions, PaginatedResponse } from '../../../../core/interfaces/api.interface';
 import { SortMeta, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';

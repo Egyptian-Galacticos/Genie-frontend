@@ -9,7 +9,7 @@ export class WishlistService {
   private api = inject(ApiService);
 
   getWishlist(): Observable<Product[]> {
-    return this.api.get<WishlistResponse>('auth/wishlist').pipe(
+    return this.api.get<WishlistResponse>('user/wishlist').pipe(
       map(res => {
         if (res.success && res.data) {
           return res.data;
@@ -22,8 +22,9 @@ export class WishlistService {
       })
     );
   }
+  
   removeFromWishlist(productId: number): Observable<ApiResponse> {
-    return this.api.delete<ApiResponse>(`auth/wishlist?product_id=${productId}`).pipe(
+    return this.api.delete<ApiResponse>(`user/wishlist/${productId}`).pipe(
       catchError(error => {
         console.error('Remove from wishlist error:', error);
         return throwError(() => error);
@@ -32,7 +33,7 @@ export class WishlistService {
   }
 
   addToWishlist(productId: number): Observable<ApiResponse> {
-    return this.api.post<ApiResponse>('auth/wishlist', { product_id: productId }).pipe(
+    return this.api.post<ApiResponse>('user/wishlist', { product_id: productId }).pipe(
       catchError(error => {
         console.error('Add to wishlist error:', error);
         return throwError(() => error);

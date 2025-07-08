@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { MenuItemComponent } from '../menu-item/menu-item.component';
 import { ActivatedRoute } from '@angular/router';
+import { MenuItemComponent } from './../menu-item/menu-item.component';
 
 @Component({
   selector: 'app-menu',
@@ -14,9 +14,7 @@ export class MenuComponent implements OnInit {
   items: MenuItem[] = [];
   ngOnInit() {
     this.activatedRoute.url.subscribe(url => {
-      // console.log(url);
       if (url.find(x => x.path === 'seller')) {
-        console.log('seller');
         this.items = [
           {
             label: 'Seller Dashboard',
@@ -79,12 +77,16 @@ export class MenuComponent implements OnInit {
                   },
                 ],
               },
+              {
+                label: 'Chat',
+                icon: 'pi pi-fw pi-comments',
+                routerLink: ['/dashboard/seller/chat'],
+              },
             ],
           },
         ];
       }
       if (url.find(x => x.path === 'buyer')) {
-        console.log('buyer');
         this.items = [
           {
             label: 'Buyer Dashboard',
@@ -114,6 +116,11 @@ export class MenuComponent implements OnInit {
                     routerLink: ['/dashboard/buyer/quotes-requests'],
                   },
                 ],
+              },
+              {
+                label:'Chat',
+                icon: 'pi pi-fw pi-comments',
+                routerLink: ['/dashboard/buyer/chat'],
               },
             ],
           },
