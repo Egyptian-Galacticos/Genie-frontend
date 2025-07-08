@@ -1,0 +1,288 @@
+<div class="chat-container flex bg-surface-50 rounded-lg overflow-hidden" style="height: calc(100vh - 8rem);">
+  <!-- Left Sidebar - Conversations List -->
+  <div class="w-80 bg-surface-0 border-r border-surface-200 flex flex-col rounded-l-lg">
+    <!-- Header -->
+    <div class="p-3 rounded-tl-lg">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg font-bold text-surface-900">Conversations</h2>
+        <div class="flex items-center space-x-2">
+          @if (getConversationsArray().length > 0) {
+            <span class="unread-badge bg-red-500 text-white rounded-full text-xs px-2 py-1">
+              {{ getUnreadConversationsCount() }}
+            </span>
+          }
+          
+          <p-button
+            icon="pi pi-plus"
+            [rounded]="true"
+            [text]="true"
+            size="small"
+            pTooltip="Start new conversation"
+            tooltipPosition="bottom"
+            (onClick)="startNewConversation()"
+          />
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="relative">
+        <i class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400 text-xs"></i>
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="searchQueryValue"
+          (input)="searchConversations()"
+          placeholder="Search conversations..."
+          class="w-full pl-10 pr-4 py-2 text-xs border border-surface-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-500"
+        />
+      </div>
+    </div>
+
+    <!-- Conversations List -->
+    <div class="flex-1 overflow-y-auto rounded-bl-lg">
+      @if (loading()) {
+        <!-- Loading State -->
+        <div class="p-4 space-y-4">
+          @for (i of [1, 2, 3, 4, 5]; track i) {
+            <div class="flex items-center space-x-3">
+              <p-skeleton shape="circle" size="3rem" />
+              <div class="flex-1">
+                <p-skeleton width="100%" height="1rem" styleClass="mb-2" />
+                <p-skeleton width="60%" height="0.8rem" />
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <!-- Conversations -->
+        @for (conversation of filteredConversations(); track trackConversation(conversation, $index)) {
+          <div
+            class="conversation-item flex items-center p-3 cursor-pointer border-b border-surface-100 transition-colors hover:bg-surface-50"
+            [class.active]="selectedConversation()?.id === conversation.id"
+            [class.bg-primary-50]="selectedConversation()?.id === conversation.id"
+            [class.border-l-4]="selectedConversation()?.id === conversation.id"
+            [class.border-primary-500]="selectedConversation()?.id === conversation.id"
+            (click)="selectConversation(conversation)"
+          >
+            <!-- Avatar and Name -->
+            <div class="flex items-center flex-1 min-w-0">
+              <div class="relative mr-3">
+                <p-avatar
+                  [image]="conversation.other_participant.avatar_url || undefined"
+                  [label]="conversation.other_participant.full_name.charAt(0) || 'U'"
+                  size="normal"
+                  shape="circle"
+                  styleClass="bg-primary-100 text-primary-800"
+                />
+              </div>
+
+              <!-- Conversation Info -->
+              <div class="flex-1 min-w-0 flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                  <p class="font-medium text-sm text-surface-900 truncate leading-tight">
+                    {{ conversation.other_participant.full_name || 'Unknown User' }}
+                  </p>
+                  <p class="text-xs text-surface-600 truncate mt-1">
+                    {{ conversation.last_message?.content || 'No messages yet' }}
+                  </p>
+                </div>
+                
+                <div class="flex flex-col items-end ml-2">
+                  <span class="text-xs text-surface-500 mb-1">
+                    {{ getTimeAgo(conversation.last_activity_at) }}
+                  </span>
+                  @if (conversation.unread_count && conversation.unread_count > 0) {
+                    <div class="unread-badge bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-medium min-w-[1.5rem] h-6">
+                      {{ conversation.unread_count > 99 ? '99+' : conversation.unread_count }}
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+        
+        @if (filteredConversations().length === 0) {
+          <div class="p-8 text-center text-surface-500">
+            <i class="pi pi-comments text-4xl mb-4 block"></i>
+            <p class="text-sm">No conversations found</p>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- Right Side - Chat Area -->
+  <div class="flex-1 flex flex-col rounded-r-lg bg-surface-0">
+    @if (isConversationSelected()) {
+      <!-- Chat Header -->
+      <div class="p-3 bg-surface-0 rounded-tr-lg shadow-sm border-b border-surface-200">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <p-avatar
+              [image]="otherParticipant()?.avatar_url || undefined"
+              [label]="otherParticipant()?.full_name?.charAt(0) || 'U'"
+              size="normal"
+              shape="circle"
+              styleClass="bg-primary-100 text-primary-800"
+            />
+            <div>
+              <h2 class="text-lg font-semibold text-surface-900">
+                {{ otherParticipant()?.full_name || 'Unknown User' }}
+              </h2>
+              <p class="text-xs text-surface-600">
+                {{ otherParticipant()?.company_name || 'Company' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <p-button
+              icon="pi pi-ellipsis-v"
+              [rounded]="true"
+              [text]="true"
+              size="small"
+              pTooltip="More options"
+              tooltipPosition="bottom"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages Area -->
+      <div class="messages-container flex-1 overflow-y-auto bg-surface-50" #messagesContainer 
+           style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDAsIDAsIDAsIDAuMDUpIi8+PC9zdmc+'); background-repeat: repeat;">
+        <div class="p-4 space-y-3">
+          @if (loading()) {
+            <!-- Loading Messages -->
+            <div class="space-y-4">
+              @for (i of [1, 2, 3, 4]; track i) {
+                <div class="flex" [class.justify-end]="i % 2 === 0">
+                  <div class="max-w-xs">
+                    <p-skeleton width="200px" height="40px" borderRadius="20px" />
+                    <p-skeleton width="60px" height="12px" styleClass="mt-1" />
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <!-- Messages -->
+            @for (message of safeMessages(); track trackMessage(message, $index)) {
+              <div class="flex mb-4" [ngClass]="{ 'justify-end': isOwnMessage(message), 'justify-start': !isOwnMessage(message) }">
+                <div class="message-bubble max-w-xs lg:max-w-md xl:max-w-lg">
+                  <!-- Message bubble -->
+                  <div
+                    class="px-4 py-3 rounded-2xl text-sm break-words shadow-sm"
+                    [ngClass]="{
+                      'bg-primary-500 text-white': isOwnMessage(message),
+                      'bg-white text-surface-900 border border-surface-200': !isOwnMessage(message)
+                    }"
+                    [style.border-radius]="isOwnMessage(message) ? '18px 18px 4px 18px' : '18px 18px 18px 4px'"
+                  >
+                    {{ message.content }}
+                  </div>
+                  
+                  <!-- Message metadata -->
+                  <div class="message-time flex items-center mt-1 text-xs text-surface-500" 
+                       [ngClass]="{ 'justify-end': isOwnMessage(message), 'justify-start': !isOwnMessage(message) }">
+                    <span>{{ getMessageTime(message.sent_at) }}</span>
+                    @if (isOwnMessage(message)) {
+                      <span class="message-status ml-2" [ngClass]="{ 'text-green-500': message.is_read, 'text-surface-400': !message.is_read }">
+                        <i class="pi pi-check text-xs"></i>
+                        @if (message.is_read) {
+                          <i class="pi pi-check text-xs -ml-1"></i>
+                        }
+                      </span>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+            
+            @if (safeMessages().length === 0) {
+              <div class="text-center text-surface-500 py-8">
+                <i class="pi pi-comments text-4xl mb-4 block"></i>
+                <p class="text-sm">No messages yet. Start the conversation!</p>
+              </div>
+            }
+          }
+          
+          <!-- Typing Indicators -->
+          @if (currentConversationTypingUsers().length > 0) {
+            <div class="px-4 pb-2">
+              <div class="flex justify-start">
+                <div class="bg-surface-200 rounded-2xl px-4 py-2 max-w-xs">
+                  <div class="flex items-center space-x-2">
+                    <div class="typing-indicator flex space-x-1">
+                      <div class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse"></div>
+                      <div class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                      <div class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+                    </div>
+                    <span class="text-xs text-surface-600">
+                      Someone is typing...
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Message Input -->
+      <div class="p-4 bg-surface-0 border-t border-surface-200 rounded-br-lg">
+        <div class="flex items-end space-x-3">
+          <div class="flex-1">
+            <div class="relative">
+              <input
+                type="text"
+                pInputText
+                [(ngModel)]="newMessageValue"
+                (input)="onMessageInputChange()"
+                (blur)="onMessageInputBlur()"
+                (keydown)="onEnterKey($event)"
+                placeholder="Type a message..."
+                class="message-input w-full px-4 py-3 pr-12 rounded-full border border-surface-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                [disabled]="sendingMessage()"
+                #messageTextarea
+              />
+              <p-button
+                icon="pi pi-paperclip"
+                [rounded]="true"
+                [text]="true"
+                size="small"
+                styleClass="absolute right-2 top-1/2 transform -translate-y-1/2"
+                pTooltip="Attach file"
+                tooltipPosition="top"
+              />
+            </div>
+          </div>
+
+          <p-button
+            icon="pi pi-send"
+            [rounded]="true"
+            [loading]="sendingMessage()"
+            [disabled]="!newMessageValue.trim() || sendingMessage()"
+            (onClick)="sendMessage()"
+            styleClass="send-button w-12 h-12 bg-primary-500 hover:bg-primary-600"
+            pTooltip="Send message"
+            tooltipPosition="top"
+          />
+        </div>
+      </div>
+    } @else {
+      <!-- No Conversation Selected -->
+      <div class="flex-1 flex items-center justify-center bg-surface-50">
+        <div class="text-center">
+          <div class="w-20 h-20 bg-surface-200 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="pi pi-comments text-3xl text-surface-500"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-surface-900 mb-2">Select a conversation</h3>
+          <p class="text-surface-600">Choose a conversation from the sidebar to start messaging</p>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<p-toast />

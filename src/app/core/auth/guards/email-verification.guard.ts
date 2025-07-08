@@ -9,6 +9,7 @@ import { AuthService } from '../services/auth.service';
 /**
  * Email verification guard for route activation
  * Checks if the authenticated user has verified their email address
+ * Only applies to buyers
  * Redirects to email verification pending page if not verified
  */
 export const emailVerificationGuard: CanActivateFn = (route, state) => {
@@ -26,15 +27,26 @@ export const emailVerificationGuard: CanActivateFn = (route, state) => {
     map(() => {
       const user = authService.user();
       const isAuthenticated = authService.isAuthenticated();
-
+      
+      // If not authenticated or no user, allow navigation
       if (!isAuthenticated || !user) {
         return true;
       }
 
+      // If email is verified, allow navigation
       if (user.is_email_verified) {
         return true;
       }
 
+      // Check if user is a buyer
+      const isBuyer = authService.hasRole('buyer');
+
+      // Skip verification check for non-buyers
+      if (!isBuyer) {
+        return true;
+      }
+
+      // At this point: user is a buyer and email is not verified
       router.navigate(['/auth/email-pending'], {
         queryParams: { returnUrl: state.url },
         replaceUrl: true,

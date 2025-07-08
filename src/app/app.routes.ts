@@ -104,6 +104,12 @@ export const routes: Routes = [
             c => c.QuotesRequestsComponent
           ),
       },
+      {
+        path: 'chat',
+        loadComponent: () =>
+          import('./features/chat/chat.component').then(c => c.ChatComponent),
+        title: 'Messages - Genie',
+      },
     ],
   },
   {
@@ -146,6 +152,12 @@ export const routes: Routes = [
             './features/buyer-dashboard/components/quotes-responses/quotes-responses.component'
           ).then(c => c.BuyerQuotesResponsesComponent),
         title: 'Quote Responses - Genie',
+      },
+      {
+        path: 'chat',
+        loadComponent: () =>
+          import('./features/chat/chat.component').then(c => c.ChatComponent),
+        title: 'Messages - Genie',
       },
     ],
   },
