@@ -1,3 +1,4 @@
+import { DrawerModule } from 'primeng/drawer';
 import { ProductService } from './../../../shared/services/product.service';
 import { Component, inject, model, signal } from '@angular/core';
 import { DataTableComponent } from '../../../shared/data-table/data-table.component';
@@ -8,17 +9,29 @@ import { ButtonModule } from 'primeng/button';
 import { DatePipe } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Store } from '@ngrx/store';
+import * as ProductsActions from '../../../products/store/products.actions';
+import { ProductDetailComponent } from '../../../products/pages/product-detail/product-detail.component';
 
 @Component({
   selector: 'app-pending-products',
   templateUrl: './pending-products.component.html',
-  imports: [DataTableComponent, ButtonModule, DatePipe, ToastModule, ConfirmDialogModule],
+  imports: [
+    DataTableComponent,
+    ButtonModule,
+    DatePipe,
+    ToastModule,
+    ConfirmDialogModule,
+    DrawerModule,
+    ProductDetailComponent,
+  ],
   providers: [MessageService, ConfirmationService],
 })
 export class PendingProductsComponent {
   productService = inject(ProductService);
   messageService = inject(MessageService);
   confirmationService = inject(ConfirmationService);
+  store = inject(Store);
 
   pendingProducts = model<IProduct[]>([]);
   loading = signal<boolean>(true);
@@ -27,6 +40,8 @@ export class PendingProductsComponent {
   limit = model<number>(10);
   SortMeta = model<SortMeta[]>([{ field: 'created_at', order: -1 }]);
   currentRequestOptions!: RequestOptions;
+  viewVisible = signal<boolean>(false);
+  beingViewedProduct = model<IProduct | null>(null);
 
   // Fetch pending products from the service
   getPendingProducts(requestOptions: RequestOptions) {
@@ -116,6 +131,12 @@ export class PendingProductsComponent {
       },
     });
   }
+  viewProductDetails(product: IProduct) {
+    this.store.dispatch(ProductsActions.loadProduct({ slug: product.id.toString() }));
+    this.viewVisible.set(true);
+    this.beingViewedProduct.set(product);
+  }
+
   cols = [
     { field: 'id', header: 'ID' },
     { field: 'name', header: 'Product Name', sortable: true, filterable: true },

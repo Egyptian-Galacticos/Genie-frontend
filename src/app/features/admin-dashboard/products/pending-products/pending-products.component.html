@@ -28,6 +28,16 @@
     rejectButtonStyleClass="p-button-secondary"
   ></p-confirmDialog>
 </div>
+@if (viewVisible()) {
+  <p-drawer
+    header="Review Product"
+    [(visible)]="viewVisible"
+    styleClass="bg-surface-200 w-full lg:w-[80%]"
+  >
+    <app-product-detail [slug]="beingViewedProduct()?.slug || ''"></app-product-detail>
+  </p-drawer>
+}
+
 <ng-template #pendingProductsBody let-rowData let-rowIndex="rowIndex">
   <td class="text-center w-[5%] shrink-1">
     {{ rowData.id }}
@@ -71,6 +81,18 @@
         (onClick)="rejectProduct(rowData)"
         rounded="true"
         severity="danger"
+        size="small"
+        [disabled]="loading()"
+      />
+      <p-button
+        [label]="'view'"
+        [title]="'View Product as a customer'"
+        [raised]="true"
+        [icon]="'pi pi-eye'"
+        [outlined]="true"
+        (onClick)="viewProductDetails(rowData)"
+        rounded="true"
+        severity="info"
         size="small"
         [disabled]="loading()"
       />
