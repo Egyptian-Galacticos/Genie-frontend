@@ -229,6 +229,78 @@ export const CustomAura = definePreset(Aura, {
         },
       },
     },
+    popover: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            borderRadius: '12px',
+            shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            padding: '0',
+          },
+          content: {
+            background: '#ffffff',
+            color: '#0f172a',
+            padding: '0',
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            borderRadius: '12px',
+            shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1)',
+            padding: '0',
+          },
+          content: {
+            background: '#1e293b',
+            color: '#f8fafc',
+            padding: '0',
+          },
+        },
+      },
+    },
+    drawer: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            shadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          },
+          header: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+            padding: '1.5rem',
+          },
+          content: {
+            background: '#ffffff',
+            color: '#0f172a',
+            padding: '1.5rem',
+          },
+        },
+        dark: {
+          root: {
+            background: '#0f172a',
+            borderColor: '#334155',
+            shadow: '0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
+          },
+          header: {
+            background: '#0f172a',
+            borderColor: '#334155',
+            color: '#f8fafc',
+            padding: '1.5rem',
+          },
+          content: {
+            background: '#0f172a',
+            color: '#f8fafc',
+            padding: '1.5rem',
+          },
+        },
+      },
+    },
     select: {
       colorScheme: {
         light: {

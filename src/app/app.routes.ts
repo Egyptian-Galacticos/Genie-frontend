@@ -21,11 +21,13 @@ export const routes: Routes = [
         path: 'contact',
         loadComponent: () =>
           import('./pages/contact-us/contact-us.component').then(m => m.ContactUsComponent),
+        title: 'Contact Us - Genie',
       },
       {
         path: 'about',
         loadComponent: () =>
           import('./pages/about-us/about-us.component').then(m => m.AboutUsComponent),
+        title: 'About Us - Genie',
       },
       {
         path: 'terms-and-conditions',
@@ -33,6 +35,7 @@ export const routes: Routes = [
           import('./pages/terms-and-conditions/terms-and-conditions.component').then(
             m => m.TermsAndConditionsComponent
           ),
+        title: 'Terms and Conditions - Genie',
       },
       {
         path: 'products',

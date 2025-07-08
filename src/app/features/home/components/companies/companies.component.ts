@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AnimateOnScrollDirective } from '../../../../shared/directives/animate-on-scroll.directive';
 
 interface Company {
   name: string;
@@ -9,12 +10,12 @@ interface Company {
 
 @Component({
   selector: 'app-companies',
-  imports: [CommonModule],
+  imports: [CommonModule, AnimateOnScrollDirective],
   templateUrl: './companies.component.html',
   styleUrl: './companies.component.css',
 })
 export class CompaniesComponent implements OnInit {
-  companies: Company[] = [
+  companies = signal<Company[]>([
     { name: 'Mistranet', logo: 'pi pi-building' },
     { name: 'BriteMark', logo: 'pi pi-circle' },
     { name: 'Limerantz', logo: 'pi pi-box' },
@@ -25,14 +26,14 @@ export class CompaniesComponent implements OnInit {
     { name: 'TechCore', logo: 'pi pi-server' },
     { name: 'Nexus', logo: 'pi pi-database' },
     { name: 'Quantum', logo: 'pi pi-cog' },
-  ];
+  ]);
 
-  duplicatedCompanies: Company[] = [];
+  duplicatedCompanies = signal<Company[]>([]);
 
   ngOnInit() {
-    this.duplicatedCompanies = [
-      ...this.companies.map((company, index) => ({ ...company, uniqueId: `original-${index}` })),
-      ...this.companies.map((company, index) => ({ ...company, uniqueId: `duplicate-${index}` })),
-    ];
+    this.duplicatedCompanies.set([
+      ...this.companies().map((company, index) => ({ ...company, uniqueId: `original-${index}` })),
+      ...this.companies().map((company, index) => ({ ...company, uniqueId: `duplicate-${index}` })),
+    ]);
   }
 }
