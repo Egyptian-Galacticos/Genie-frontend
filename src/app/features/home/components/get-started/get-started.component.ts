@@ -1,20 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { AnimationService } from '../../../../core/services/animation.service';
+import { AnimateOnScrollDirective } from '../../../../shared/directives/animate-on-scroll.directive';
 
 @Component({
   selector: 'app-get-started',
-  imports: [CommonModule, ButtonModule],
+  imports: [CommonModule, ButtonModule, AnimateOnScrollDirective],
   templateUrl: './get-started.component.html',
   styleUrl: './get-started.component.css',
-  animations: [AnimationService.fadeInUp, AnimationService.staggerFadeIn],
 })
-export class GetStartedComponent implements AfterViewInit {
-  private elementRef = inject(ElementRef<HTMLElement>);
-  private animationService = inject(AnimationService);
-
-  ngAfterViewInit(): void {
-    this.animationService.animateElements(this.elementRef.nativeElement, ['.animate-item']);
-  }
+export class GetStartedComponent {
+  animationConfig = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px',
+    staggerDelay: 200,
+  };
 }
