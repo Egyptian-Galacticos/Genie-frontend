@@ -1,0 +1,355 @@
+<div class="flex flex-col gap-6 min-h-full w-full">
+  <!-- Header Banner -->
+  <div class="bg-card rounded-xl shadow px-6 py-8 mb-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-primary mb-2">Seller Dashboard</h1>
+        <p class="text-secondary text-lg">Overview of your RFQs, quotes, contracts, and products</p>
+      </div>
+      <div class="hidden md:flex items-center">
+        <i class="pi pi-shop text-4xl text-primary opacity-20"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Statistics Cards -->
+  <div class="flex flex-row gap-4 justify-between flex-wrap">
+    <div class="w-full sm:w-[48%] lg:w-[24%] shrink-0">
+      <app-dashboard-info-card
+        [cardTitle]="'Total RFQs'"
+        [cardDescription]="getTotalRfqCount().toString()"
+        [cardIconClass]="'pi pi-file-edit'"
+        [cardFooter]="'$' + (getTotalRfqValue() | number: '1.0-0') + ' total value'"
+      />
+    </div>
+    <div class="w-full sm:w-[48%] lg:w-[24%] shrink-0">
+      <app-dashboard-info-card
+        [cardTitle]="'Total Quotes'"
+        [cardDescription]="getTotalQuoteCount().toString()"
+        [cardIconClass]="'pi pi-money-bill'"
+        [cardFooter]="'$' + (getTotalQuoteValue() | number: '1.0-0') + ' total value'"
+      />
+    </div>
+    <div class="w-full sm:w-[48%] lg:w-[24%] shrink-0">
+      <app-dashboard-info-card
+        [cardTitle]="'Total Contracts'"
+        [cardDescription]="getTotalContractCount().toString()"
+        [cardIconClass]="'pi pi-file-check'"
+        [cardFooter]="'$' + (getTotalContractValue() | number: '1.0-0') + ' total value'"
+      />
+    </div>
+    <div class="w-full sm:w-[48%] lg:w-[24%] shrink-0">
+      <app-dashboard-info-card
+        [cardTitle]="'Total Products'"
+        [cardDescription]="getTotalProductCount().toString()"
+        [cardIconClass]="'pi pi-box'"
+        [cardFooter]="'Product portfolio'"
+      />
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow">
+    <div class="px-6 flex flex-col gap-1 mb-6">
+      <span class="font-bold text-2xl text-primary">Analytics Overview</span>
+      <span class="text-sm text-secondary">
+        Visual breakdown of your RFQs, quotes, contracts, and product status
+      </span>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="px-6 grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
+      <!-- RFQ Status Chart -->
+      <div class="bg-card rounded-lg shadow-md p-6 border border-default">
+        <h3 class="text-lg font-semibold text-primary mb-4">RFQ Status Distribution</h3>
+        <div class="doughnut-chart-container">
+          <div class="doughnut-chart-wrapper">
+            @if (rfqStatusChart()) {
+              <p-chart
+                type="doughnut"
+                [data]="rfqStatusChart()"
+                [options]="chartOptions()"
+                class="w-full h-full"
+              >
+              </p-chart>
+            }
+          </div>
+          @if (!rfqStatusChart()) {
+            <div class="flex items-center justify-center h-full text-muted">
+              No RFQ data available
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Quote Status Chart -->
+      <div class="bg-card rounded-lg shadow-md p-6 border border-default">
+        <h3 class="text-lg font-semibold text-primary mb-4">Quote Status Distribution</h3>
+        <div class="doughnut-chart-container">
+          <div class="doughnut-chart-wrapper">
+            @if (quoteStatusChart()) {
+              <p-chart
+                type="doughnut"
+                [data]="quoteStatusChart()"
+                [options]="chartOptions()"
+                class="w-full h-full"
+              >
+              </p-chart>
+            }
+          </div>
+          @if (!quoteStatusChart()) {
+            <div class="flex items-center justify-center h-full text-muted">
+              No quote data available
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Product Status Chart -->
+      <div class="bg-card rounded-lg shadow-md p-6 border border-default">
+        <h3 class="text-lg font-semibold text-primary mb-4">Product Status Distribution</h3>
+        <div class="doughnut-chart-container">
+          <div class="doughnut-chart-wrapper">
+            @if (productStatusChart()) {
+              <p-chart
+                type="doughnut"
+                [data]="productStatusChart()"
+                [options]="chartOptions()"
+                class="w-full h-full"
+              >
+              </p-chart>
+            }
+          </div>
+          @if (!productStatusChart()) {
+            <div class="flex items-center justify-center h-full text-muted">
+              No product data available
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Value Comparison Chart -->
+      <div class="bg-card rounded-lg shadow-md p-6 border border-default">
+        <h3 class="text-lg font-semibold text-primary mb-4">Total Value Comparison</h3>
+        <div class="bar-chart-container">
+          @if (valueComparisonChart()) {
+            <p-chart
+              type="bar"
+              [data]="valueComparisonChart()"
+              [options]="barChartOptions()"
+              class="w-full h-full"
+            >
+            </p-chart>
+          }
+          @if (!valueComparisonChart()) {
+            <div class="flex items-center justify-center h-full text-muted">
+              No value data available
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Status Cards -->
+  <div class="flex flex-col pb-6 pt-6 border-0 bg-card rounded-xl shadow">
+    <div class="px-6 flex flex-col gap-2 mb-6">
+      <span class="font-bold text-2xl text-primary">Detailed Status</span>
+      <span class="text-sm text-secondary">
+        Comprehensive breakdown of your business activities and product portfolio
+      </span>
+    </div>
+
+    <div class="px-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <!-- RFQ Details -->
+      <div class="bg-card rounded-lg shadow-lg p-6 border border-default">
+        <h3 class="text-lg font-semibold text-primary mb-4 flex items-center">
+          <i class="pi pi-file-edit mr-2"></i>
+          RFQ Details
+        </h3>
+        <div class="space-y-3">
+          @if (sellerStatistics().rfqs?.Pending) {
+            <div
+              class="flex justify-between items-center p-4 bg-danger-50 dark:bg-danger-500/10 rounded-lg border-l-4 border-danger-500 dark:border-danger-500/20"
+            >
+              <div>
+                <p class="text-sm font-medium text-danger-800 dark:text-danger-300">Pending</p>
+                <p class="text-xs text-danger-600 dark:text-danger-400">
+                  {{ sellerStatistics().rfqs?.Pending?.count || 0 }} items
+                </p>
+              </div>
+              <p class="text-sm font-bold text-danger-900 dark:text-danger-200">
+                ${{ sellerStatistics().rfqs?.Pending?.value || 0 | number: '1.2-2' }}
+              </p>
+            </div>
+          }
+
+          @if (sellerStatistics().rfqs?.['In Progress']) {
+            <div
+              class="flex justify-between items-center p-4 bg-warning-50 dark:bg-warning-500/10 rounded-lg border-l-4 border-warning-500 dark:border-warning-500/20"
+            >
+              <div>
+                <p class="text-sm font-medium text-warning-800 dark:text-warning-300">
+                  In Progress
+                </p>
+                <p class="text-xs text-warning-600 dark:text-warning-400">
+                  {{ sellerStatistics().rfqs?.['In Progress']?.count || 0 }} items
+                </p>
+              </div>
+              <p class="text-sm font-bold text-warning-900 dark:text-warning-200">
+                ${{ sellerStatistics().rfqs?.['In Progress']?.value || 0 | number: '1.2-2' }}
+              </p>
+            </div>
+          }
+
+          @if (sellerStatistics().rfqs?.Quoted) {
+            <div
+              class="flex justify-between items-center p-4 bg-success-50 dark:bg-success-500/10 rounded-lg border-l-4 border-success-500 dark:border-success-500/20"
+            >
+              <div>
+                <p class="text-sm font-medium text-success-800 dark:text-success-300">Quoted</p>
+                <p class="text-xs text-success-600 dark:text-success-400">
+                  {{ sellerStatistics().rfqs?.Quoted?.count || 0 }} items
+                </p>
+              </div>
+              <p class="text-sm font-bold text-success-900 dark:text-success-200">
+                ${{ sellerStatistics().rfqs?.Quoted?.value || 0 | number: '1.2-2' }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Quote Details -->
+      <div class="bg-card rounded-lg shadow-lg p-6 border border-default">
+        <h3 class="text-lg font-semibold text-primary mb-4 flex items-center">
+          <i class="pi pi-money-bill mr-2"></i>
+          Quote Details
+        </h3>
+        <div class="space-y-3">
+          @if (sellerStatistics().quotes?.sent) {
+            <div
+              class="flex justify-between items-center p-4 bg-info-50 dark:bg-info-500/10 rounded-lg border-l-4 border-info-500 dark:border-info-500/20"
+            >
+              <div>
+                <p class="text-sm font-medium text-info-800 dark:text-info-300">Sent</p>
+                <p class="text-xs text-info-600 dark:text-info-400">
+                  {{ sellerStatistics().quotes?.sent?.count || 0 }} items
+                </p>
+              </div>
+              <p class="text-sm font-bold text-info-900 dark:text-info-200">
+                ${{ sellerStatistics().quotes?.sent?.value || 0 | number: '1.2-2' }}
+              </p>
+            </div>
+          }
+
+          @if (sellerStatistics().quotes?.accepted) {
+            <div
+              class="flex justify-between items-center p-4 bg-success-50 dark:bg-success-500/10 rounded-lg border-l-4 border-success-500 dark:border-success-500/20"
+            >
+              <div>
+                <p class="text-sm font-medium text-success-800 dark:text-success-300">Accepted</p>
+                <p class="text-xs text-success-600 dark:text-success-400">
+                  {{ sellerStatistics().quotes?.accepted?.count || 0 }} items
+                </p>
+              </div>
+              <p class="text-sm font-bold text-success-900 dark:text-success-200">
+                ${{ sellerStatistics().quotes?.accepted?.value || 0 | number: '1.2-2' }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Contract Details -->
+      <div class="bg-card rounded-lg shadow-lg p-6 border border-default">
+        <h3 class="text-lg font-semibold text-primary mb-4 flex items-center">
+          <i class="pi pi-file-check mr-2"></i>
+          Contract Details
+        </h3>
+        <div class="space-y-3">
+          @if (sellerStatistics().contracts?.approved) {
+            <div
+              class="flex justify-between items-center p-4 bg-success-50 dark:bg-success-500/10 rounded-lg border-l-4 border-success-500 dark:border-success-500/20"
+            >
+              <div>
+                <p class="text-sm font-medium text-success-800 dark:text-success-300">Approved</p>
+                <p class="text-xs text-success-600 dark:text-success-400">
+                  {{ sellerStatistics().contracts?.approved?.count || 0 }} items
+                </p>
+              </div>
+              <p class="text-sm font-bold text-success-900 dark:text-success-200">
+                ${{ sellerStatistics().contracts?.approved?.value || 0 | number: '1.2-2' }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Product Details -->
+      <div class="bg-card rounded-lg shadow-lg p-6 border border-default">
+        <h3 class="text-lg font-semibold text-primary mb-4 flex items-center">
+          <i class="pi pi-box mr-2"></i>
+          Product Details
+        </h3>
+        <div class="space-y-3">
+          @if (sellerStatistics().products?.active) {
+            <div
+              class="flex justify-between items-center p-4 bg-success-50 dark:bg-success-500/10 rounded-lg border-l-4 border-success-500 dark:border-success-500/20"
+            >
+              <div>
+                <p class="text-sm font-medium text-success-800 dark:text-success-300">Active</p>
+                <p class="text-xs text-success-600 dark:text-success-400">Products live</p>
+              </div>
+              <p class="text-sm font-bold text-success-900 dark:text-success-200">
+                {{ sellerStatistics().products?.active || 0 }}
+              </p>
+            </div>
+          }
+
+          @if (sellerStatistics().products?.pending_approval) {
+            <div
+              class="flex justify-between items-center p-4 bg-warning-50 dark:bg-warning-500/10 rounded-lg border-l-4 border-warning-500 dark:border-warning-500/20"
+            >
+              <div>
+                <p class="text-sm font-medium text-warning-800 dark:text-warning-300">Pending</p>
+                <p class="text-xs text-warning-600 dark:text-warning-400">Awaiting approval</p>
+              </div>
+              <p class="text-sm font-bold text-warning-900 dark:text-warning-200">
+                {{ sellerStatistics().products?.pending_approval || 0 }}
+              </p>
+            </div>
+          }
+
+          @if (sellerStatistics().products?.featured) {
+            <div
+              class="flex justify-between items-center p-4 bg-purple-50 dark:bg-purple-500/10 rounded-lg border-l-4 border-purple-500 dark:border-purple-500/20"
+            >
+              <div>
+                <p class="text-sm font-medium text-purple-800 dark:text-purple-300">Featured</p>
+                <p class="text-xs text-purple-600 dark:text-purple-400">Premium placement</p>
+              </div>
+              <p class="text-sm font-bold text-purple-900 dark:text-purple-200">
+                {{ sellerStatistics().products?.featured || 0 }}
+              </p>
+            </div>
+          }
+
+          @if (sellerStatistics().products?.inactive) {
+            <div
+              class="flex justify-between items-center p-4 bg-danger-50 dark:bg-danger-500/10 rounded-lg border-l-4 border-danger-500 dark:border-danger-500/20"
+            >
+              <div>
+                <p class="text-sm font-medium text-danger-800 dark:text-danger-300">Inactive</p>
+                <p class="text-xs text-danger-600 dark:text-danger-400">Not visible</p>
+              </div>
+              <p class="text-sm font-bold text-danger-900 dark:text-danger-200">
+                {{ sellerStatistics().products?.inactive || 0 }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
