@@ -1,5 +1,5 @@
-import { Component, input, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input, computed, signal, effect, inject } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { GalleriaModule } from 'primeng/galleria';
 import { SkeletonModule } from 'primeng/skeleton';
 import { BadgeModule } from 'primeng/badge';
@@ -13,6 +13,8 @@ import { Product, MediaFile } from '../../../../interfaces/product.interface';
 export class ProductGalleryComponent {
   product = input<Product | null>(null);
   loading = input<boolean>(false);
+
+  private document = inject(DOCUMENT);
 
   activeIndex = signal<number>(0);
   fullScreenVisible = signal<boolean>(false);
@@ -58,6 +60,38 @@ export class ProductGalleryComponent {
     }
     return images;
   });
+  constructor() {
+    effect(onCleanup => {
+      if (this.fullScreenVisible()) {
+        const handleEscape = (event: KeyboardEvent) => {
+          if (event.key === 'Escape') {
+            this.closeFullScreen();
+          }
+        };
+
+        const handleBackdropClick = (event: MouseEvent) => {
+          const target = event.target as HTMLElement;
+          if (
+            target.classList.contains('p-galleria-mask') ||
+            target.classList.contains('p-galleria-mask-visible') ||
+            target.closest('.p-galleria-mask')
+          ) {
+            if (!target.closest('.p-galleria-content')) {
+              this.closeFullScreen();
+            }
+          }
+        };
+
+        this.document.addEventListener('keydown', handleEscape);
+        this.document.addEventListener('click', handleBackdropClick);
+
+        onCleanup(() => {
+          this.document.removeEventListener('keydown', handleEscape);
+          this.document.removeEventListener('click', handleBackdropClick);
+        });
+      }
+    });
+  }
 
   onActiveIndexChange(index: number) {
     this.activeIndex.set(index);
@@ -73,5 +107,15 @@ export class ProductGalleryComponent {
 
   onFullScreenVisibilityChange(visible: boolean) {
     this.fullScreenVisible.set(visible);
+  }
+
+  onFullScreenBackdropClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if (
+      target.classList.contains('p-galleria-mask') ||
+      target.classList.contains('p-galleria-mask-visible')
+    ) {
+      this.closeFullScreen();
+    }
   }
 }
