@@ -193,6 +193,52 @@
   --chart-text-color: #ffffff;
 }
 
+/* Force chart refresh on theme change */
+:host ::ng-deep .p-chart {
+  transition: color 0.2s ease;
+}
+
+/* Chart text color variables that update with theme */
+:root {
+  --chart-text-color: #0f172a;
+  --chart-axis-color: #64748b;
+  --chart-tooltip-bg: #ffffff;
+  --chart-border-color: #e2e8f0;
+}
+
+[data-theme='dark'] {
+  --chart-text-color: #ffffff;
+  --chart-axis-color: #94a3b8;
+  --chart-tooltip-bg: #1e293b;
+  --chart-border-color: #475569;
+}
+
+/* Use CSS variables for chart styling */
+:host ::ng-deep .p-chart .chartjs-legend li {
+  color: var(--chart-text-color) !important;
+}
+
+:host ::ng-deep .p-chart .chartjs-tooltip {
+  background-color: var(--chart-tooltip-bg) !important;
+  color: var(--chart-text-color) !important;
+  border: 1px solid var(--chart-border-color) !important;
+}
+
+:host ::ng-deep .p-chart .chartjs-render-monitor {
+  color: var(--chart-axis-color) !important;
+}
+
+/* Enhanced chart element selectors using CSS variables */
+:host ::ng-deep .p-chart .chartjs-axis-label,
+:host ::ng-deep .p-chart .chartjs-axis-tick,
+:host ::ng-deep .p-chart .chartjs-legend-item,
+:host ::ng-deep .p-chart .chartjs-scale-label,
+:host ::ng-deep .p-chart .chartjs-tooltip-title,
+:host ::ng-deep .p-chart .chartjs-tooltip-body,
+:host ::ng-deep .p-chart .chartjs-tooltip-item {
+  color: var(--chart-text-color) !important;
+}
+
 /* Banner and header styling */
 .banner-icon {
   transition: all 0.3s ease;

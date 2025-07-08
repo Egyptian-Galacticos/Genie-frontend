@@ -1,6 +1,14 @@
 import { IBuyerStatistics } from '../shared/utils/interfaces';
 import { StatisticsService } from './../shared/services/statistics.service';
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef,
+  signal,
+  computed,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { CardModule } from 'primeng/card';
@@ -12,10 +20,14 @@ import { DashboardInfoCardComponent } from '../shared/dashboard-info-card/dashbo
   templateUrl: './buyer-dashboard.component.html',
   styleUrl: './buyer-dashboard.component.css',
 })
-export class BuyerDashboardComponent implements OnInit {
+export class BuyerDashboardComponent implements OnInit, OnDestroy {
   statisticsService = inject(StatisticsService);
+  cdr = inject(ChangeDetectorRef);
 
   buyerStatistics = signal<IBuyerStatistics>({} as IBuyerStatistics);
+
+  // Theme change observer
+  private themeObserver?: MutationObserver;
 
   // Chart data signals
   rfqStatusChart = signal<
@@ -157,12 +169,55 @@ export class BuyerDashboardComponent implements OnInit {
       console.log(this.buyerStatistics());
       this.initializeCharts();
     });
+
+    // Set up theme observer to refresh charts when theme changes
+    this.setupThemeObserver();
+  }
+
+  ngOnDestroy() {
+    // Clean up the theme observer
+    if (this.themeObserver) {
+      this.themeObserver.disconnect();
+    }
+  }
+
+  private setupThemeObserver() {
+    // Observe changes to the data-theme attribute on the document element
+    this.themeObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+          // Theme changed, refresh chart options and reinitialize charts
+          this.refreshChartsForTheme();
+        }
+      });
+    });
+
+    // Start observing
+    this.themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
   }
 
   // Method to refresh charts when theme changes
   refreshChartsForTheme() {
+    // Clear chart data temporarily to force re-render
+    this.rfqStatusChart.set(undefined);
+    this.quoteStatusChart.set(undefined);
+    this.contractStatusChart.set(undefined);
+    this.valueComparisonChart.set(undefined);
+
+    // Update chart options with new theme colors
     this.updateChartOptions();
-    this.initializeCharts();
+
+    // Force change detection
+    this.cdr.detectChanges();
+
+    // Re-initialize charts with new options after a small delay
+    setTimeout(() => {
+      this.initializeCharts();
+      this.cdr.detectChanges();
+    }, 50);
   }
 
   private updateChartOptions() {
