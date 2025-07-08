@@ -1,8 +1,9 @@
 import { Component, input } from '@angular/core';
-import { CardModule } from 'primeng/card';
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-dashboard-info-card',
-  imports: [CardModule],
+  imports: [CommonModule],
   templateUrl: './dashboard-info-card.component.html',
   styleUrl: './dashboard-info-card.component.css',
 })

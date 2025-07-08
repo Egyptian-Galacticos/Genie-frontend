@@ -1,0 +1,38 @@
+/* Dashboard Info Card Styling */
+.hover\:shadow-xl:hover {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.transition-shadow {
+  transition-property: box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.bg-primary\/10 {
+  background-color: color-mix(in srgb, var(--color-primary-500) 10%, transparent);
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+/* Dark mode adjustments */
+[data-theme='dark'] .bg-primary\/10 {
+  background-color: color-mix(in srgb, var(--color-primary-400) 15%, transparent);
+}
+
+[data-theme='dark'] .hover\:shadow-xl:hover {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.3),
+    0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
