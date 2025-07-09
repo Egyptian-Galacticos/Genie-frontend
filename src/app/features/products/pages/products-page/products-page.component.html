@@ -66,11 +66,12 @@
                 }
               </div>
             } @else if (categoriesError()) {
-              <div class="space-y-4">
+              <div class="flex flex-col gap-4">
                 <p-message
                   severity="error"
                   [text]="categoriesError() || 'Failed to load categories'"
                   [closable]="false"
+                  styleClass=" text-left line-clamp-2"
                 />
                 <p-button
                   label="Retry"
@@ -164,7 +165,7 @@
                   <i class="pi pi-exclamation-triangle text-4xl"></i>
                   <div class="text-center">
                     <h3 class="text-lg font-medium mb-2">Error Loading Products</h3>
-                    <p class="mb-4">{{ productsError() }}</p>
+                    <p class="mb-4 text-center">{{ productsError() }}</p>
                     <p-button
                       id="retry-products-btn"
                       label="Try Again"
