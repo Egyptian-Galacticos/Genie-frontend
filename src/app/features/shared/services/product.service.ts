@@ -1,115 +1,54 @@
-import { Injectable, inject } from '@angular/core';
-import { Observable, map, catchError, throwError } from 'rxjs';
-import { ApiService } from '../../../core/services/api.service';
-import { PaginatedResponse, RequestOptions } from '../../../core/interfaces/api.interface';
-import { Product } from '../../../core/interfaces/product.interface';
-
-export interface ProductFilters {
-  category_id?: number;
-  min_price?: number;
-  max_price?: number;
-  brand?: string;
-  search?: string;
-  is_featured?: boolean;
-}
+import { CreateProductDto } from './../utils/interfaces';
+import { ApiResponse, PaginatedResponse } from './../../../core/interfaces/api.interface';
+import { IProduct } from '../utils/interfaces';
+import { ApiService } from './../../../core/services/api.service';
+import { inject, Injectable } from '@angular/core';
+import { RequestOptions } from '../../../core/interfaces/api.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  private readonly api = inject(ApiService);
+  private readonly apiService = inject(ApiService);
 
-  /**
-   * Get all products with optional filters and pagination
-   * Used for: Product listings, search results
-   */
-  getProducts(
-    filters?: ProductFilters,
-    options?: RequestOptions
-  ): Observable<PaginatedResponse<Product>> {
-    const params = { ...filters, ...(options?.params || {}) };
-
-    return this.api
-      .get<PaginatedResponse<Product>>('products', {
-        ...options,
-        params,
-      })
-      .pipe(
-        catchError(error => {
-          console.error('Get products error:', error);
-          return throwError(() => error);
-        })
-      );
+  createProduct(dto: FormData) {
+    return this.apiService.post<ApiResponse<IProduct>>('products', dto);
   }
-
-  /**
-   * Get a single product by ID
-   * Used for: Product detail pages, wishlist item details
-   */
-  getProductById(productId: number): Observable<Product> {
-    return this.api.get<{ success: boolean; data: Product }>(`products/${productId}`).pipe(
-      map(response => {
-        if (response.success && response.data) {
-          return response.data;
-        }
-        throw new Error('Failed to fetch product details');
-      }),
-      catchError(error => {
-        console.error('Get product by ID error:', error);
-        return throwError(() => error);
-      })
-    );
+  getMyProducts(RequestOptions: RequestOptions) {
+    return this.apiService.get<PaginatedResponse<IProduct>>('seller/products', RequestOptions);
   }
-
-  /**
-   * Search products
-   * Used for: Search functionality
-   */
-  searchProducts(
-    query: string,
-    filters?: ProductFilters,
-    options?: RequestOptions
-  ): Observable<PaginatedResponse<Product>> {
-    const params = {
-      search: query,
-      ...filters,
-      ...(options?.params || {}),
-    };
-
-    return this.getProducts(undefined, { ...options, params });
+  updateProductActiveStatus(id: number, isActive: boolean) {
+    return this.apiService.patch<ApiResponse>(`products/${id}`, { is_active: isActive });
   }
-
-  /**
-   * Get featured products
-   * Used for: Homepage, recommendations
-   */
-  getFeaturedProducts(limit = 10, options?: RequestOptions): Observable<Product[]> {
-    return this.api
-      .get<PaginatedResponse<Product>>('products', {
-        ...options,
-        params: {
-          is_featured: true,
-          limit,
-          ...(options?.params || {}),
-        },
-      })
-      .pipe(
-        map(response => response.data),
-        catchError(error => {
-          console.error('Get featured products error:', error);
-          return throwError(() => error);
-        })
-      );
+  updateProductFeaturedStatus(id: number, isFeatured: boolean) {
+    return this.apiService.patch<ApiResponse>(`products/${id}`, { is_featured: isFeatured });
   }
-
-  /**
-   * Get products by category
-   * Used for: Category pages
-   */
-  getProductsByCategory(
-    categoryId: number,
-    options?: RequestOptions
-  ): Observable<PaginatedResponse<Product>> {
-    return this.getProducts({ category_id: categoryId }, options);
+  DeleteProduct(id: number) {
+    return this.apiService.delete<ApiResponse>(`products/${id}`);
+  }
+  getProduct(slug: string) {
+    return this.apiService.get<ApiResponse<IProduct>>(`products/${slug}`);
+  }
+  updateProduct(id: number, dto: FormData) {
+    dto.append('_method', 'PUT');
+    return this.apiService.post<ApiResponse>(`products/${id}`, dto);
+  }
+  getAllTags() {
+    return this.apiService.get<ApiResponse<string[]>>('products/tags/all');
+  }
+  deleteImage(slug: string, id: number, collection: string, mediaId: number) {
+    return this.apiService.delete<ApiResponse>(`products/${slug}/media/${collection}/${mediaId}`);
+  }
+  UploadBulk(dto: CreateProductDto[]) {
+    return this.apiService.post<ApiResponse>('products/bulk-import', { products: dto });
+  }
+  getProductsForAdmin(RequestOptions: RequestOptions) {
+    return this.apiService.get<PaginatedResponse<IProduct>>('admin/products', RequestOptions);
+  }
+  deleteProductForAdmin(id: number) {
+    return this.apiService.delete<ApiResponse>(`products/${id}`);
+  }
+  approveProduct(id: number) {
+    return this.apiService.put<ApiResponse>(`admin/products/${id}/status`, { is_approved: true });
   }
 }

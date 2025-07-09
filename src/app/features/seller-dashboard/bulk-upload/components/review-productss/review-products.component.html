@@ -1,0 +1,220 @@
+<div class="flex flex-col gap-6">
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+      <div class="flex items-center gap-3">
+        <i class="pi pi-check-circle text-green-600 text-2xl"></i>
+        <div>
+          <p class="text-green-600 text-sm">Valid Products</p>
+          <p class="text-green-800 font-semibold text-lg">{{ validProducts().length }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <div class="flex items-center gap-3">
+        <i class="pi pi-times-circle text-red-600 text-2xl"></i>
+        <div>
+          <p class="text-red-600 text-sm">Invalid Products</p>
+          <p class="text-red-800 font-semibold text-lg">{{ invalidProducts().length }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div class="flex items-center gap-3">
+        <i class="pi pi-info-circle text-blue-600 text-2xl"></i>
+        <div>
+          <p class="text-blue-600 text-sm">Total Products</p>
+          <p class="text-blue-800 font-semibold text-lg">{{ products().length }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Valid Products Table -->
+  @if (validProducts().length > 0) {
+    <div>
+      <h3 class="text-lg font-semibold mb-4 text-green-800 flex items-center gap-2">
+        <i class="pi pi-check-circle"></i>
+        Valid Products ({{ validProducts().length }})
+      </h3>
+
+      <p-table
+        [value]="validProducts()"
+        [scrollable]="true"
+        scrollHeight="400px"
+        styleClass="p-datatable-sm"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 150px">Name</th>
+            <th style="width: 200px">Description</th>
+            <th style="width: 100px">SKU</th>
+            <th style="width: 80px">Origin</th>
+            <th style="width: 80px">Weight</th>
+            <th style="width: 120px">Dimensions</th>
+            <th style="width: 100px">Brand</th>
+            <th style="width: 100px">Tags</th>
+            <th style="width: 100px">Sample</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>{{ product.name }}</td>
+            <td>
+              {{ product.description | slice: 0 : 50
+              }}{{ product.description.length > 50 ? '...' : '' }}
+            </td>
+            <td>{{ product.sku }}</td>
+            <td>{{ product.origin }}</td>
+            <td>{{ product.weight }} kg</td>
+            <td>
+              {{ product.dimensions.length }}×{{ product.dimensions.width }}×{{
+                product.dimensions.height
+              }}
+            </td>
+            <td>{{ product.brand || '-' }}</td>
+            <td>
+              @for (tag of product.product_tags.slice(0, 2); track $index) {
+                <p-tag [value]="tag" severity="info" class="me-1 mb-1"></p-tag>
+              }
+              @if (product.product_tags && product.product_tags.length > 2) {
+                <span class="text-xs text-muted-color">
+                  +{{ product.product_tags.length - 2 }} more
+                </span>
+              }
+            </td>
+            <td>
+              <p-tag
+                [value]="product.sample_available ? 'Available' : 'Not Available'"
+                [severity]="product.sample_available ? 'success' : 'secondary'"
+              ></p-tag>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  }
+
+  <!-- Invalid Products Table -->
+  @if (invalidProducts().length > 0 || false) {
+    <div>
+      <h3 class="text-lg font-semibold mb-4 text-red-800 flex items-center gap-2">
+        <i class="pi pi-times-circle"></i>
+        Invalid Products ({{ invalidProducts().length }})
+      </h3>
+
+      <p-table
+        [value]="invalidProducts()"
+        [scrollable]="true"
+        scrollHeight="400px"
+        styleClass="p-datatable-sm"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 40px" class="text-center">Row</th>
+            <th style="width: 120px" class="text-center">Name</th>
+            <th style="width: 250px" class="text-center">Errors</th>
+            <th style="width: 80px" class="text-center">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product let-i="rowIndex">
+          <tr>
+            <td class="text-center">{{ product.rowIndex }}</td>
+            <td class="text-center">
+              <p>{{ product.name || 'N/A' }}</p>
+            </td>
+            <td class="text-center">
+              <div class="flex gap-1 flex-wrap">
+                @for (error of product.errors; track $index) {
+                  <p-tag [value]="error" severity="danger" class="text-xs"> </p-tag>
+                }
+              </div>
+            </td>
+            <td>
+              <div class="flex gap-4 justify-around">
+                <p-button
+                  [icon]="'pi pi-pencil'"
+                  [title]="'Update Product'"
+                  [severity]="isCorrectable(product) ? 'secondary' : 'success'"
+                  [rounded]="true"
+                  [raised]="true"
+                  [outlined]="true"
+                  (onClick)="editProduct(product)"
+                  [disabled]="isCorrectable(product)"
+                >
+                </p-button>
+
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [text]="true"
+                  [rounded]="true"
+                  [raised]="true"
+                  [outlined]="true"
+                  pTooltip="Remove product"
+                  (onClick)="removeInvalidProduct(i)"
+                >
+                </p-button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Detailed Product View Modal Trigger -->
+    <div class="mt-4">
+      <p class="text-sm text-muted-color">
+        <i class="pi pi-info-circle"></i>
+        Click on any field in the invalid products table to edit it directly. Products with
+        dimension errors need to be fixed in the original file and re-uploaded.
+      </p>
+    </div>
+  }
+
+  <!-- Action Buttons -->
+  <div class="flex justify-between items-center pt-4 border-t border-surface">
+    <p-button
+      label="Back to Upload"
+      icon="pi pi-arrow-left"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="goBackToUpload()"
+    >
+    </p-button>
+
+    <div class="flex gap-3">
+      <p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="reset()">
+      </p-button>
+
+      <p-button
+        [label]="'Submit ' + validProducts().length + ' Products'"
+        icon="pi pi-check"
+        [disabled]="validProducts().length === 0 || isLoading()"
+        [loading]="isLoading()"
+        (onClick)="submitProducts()"
+      >
+      </p-button>
+    </div>
+  </div>
+
+  <!-- Edit Product Drawer -->
+  @if (editDrawerVisible()) {
+    <p-drawer
+      header="Edit Invalid Product"
+      [visible]="editDrawerVisible()"
+      position="right"
+      styleClass="bg-surface-200 w-full lg:w-[80vw]"
+      [modal]="true"
+      [dismissible]="true"
+      (onHide)="onCloseEditDrawer()"
+    >
+      <app-edit-product
+        [beingEditedProduct]="editingProduct()"
+        (productUpdated)="onProductEdited($event)"
+      ></app-edit-product>
+    </p-drawer>
+  }
+</div>

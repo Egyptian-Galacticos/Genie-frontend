@@ -25,38 +25,6 @@ export class MenuComponent implements OnInit {
                 routerLink: ['/dashboard/seller'],
               },
               {
-                label: 'Customers',
-                icon: 'pi pi-fw pi-users',
-                routerLink: ['/dashboard/seller/customers'],
-              },
-              {
-                label: 'Quotes',
-                icon: 'pi pi-fw pi-receipt',
-                items: [
-                  {
-                    label: 'Requests',
-                    icon: 'pi pi-fw pi-receipt',
-                    routerLink: ['/dashboard/seller/quotes-requests'],
-                  },
-                  {
-                    label: 'Quotes',
-                    icon: 'pi pi-fw pi-receipt',
-                    routerLink: ['/dashboard/seller/quotes'],
-                  },
-                ],
-              },
-              {
-                label: 'Contracts',
-                icon: 'pi pi-fw pi-paperclip',
-                items: [
-                  {
-                    label: 'All Contracts',
-                    icon: 'pi pi-fw pi-paperclip',
-                    routerLink: ['/dashboard/seller/contracts'],
-                  },
-                ],
-              },
-              {
                 label: 'Products',
                 icon: 'pi pi-fw pi-box',
                 items: [
@@ -74,6 +42,33 @@ export class MenuComponent implements OnInit {
                     label: 'Bulk Upload',
                     icon: 'pi pi-fw pi-upload',
                     routerLink: ['/dashboard/seller/products/bulk-upload'],
+                  },
+                ],
+              },
+              {
+                label: 'Quotes',
+                icon: 'pi pi-fw pi-receipt',
+                items: [
+                  {
+                    label: 'Requests',
+                    icon: 'pi pi-fw pi-inbox',
+                    routerLink: ['/dashboard/seller/quotes-requests'],
+                  },
+                  {
+                    label: 'Responses',
+                    icon: 'pi pi-fw pi-send',
+                    routerLink: ['/dashboard/seller/quotes-responses'],
+                  },
+                ],
+              },
+              {
+                label: 'Contracts',
+                icon: 'pi pi-fw pi-paperclip',
+                items: [
+                  {
+                    label: 'All Contracts',
+                    icon: 'pi pi-fw pi-paperclip',
+                    routerLink: ['/dashboard/seller/contracts'],
                   },
                 ],
               },
@@ -118,9 +113,61 @@ export class MenuComponent implements OnInit {
                 ],
               },
               {
-                label:'Chat',
+                label: 'Chat',
                 icon: 'pi pi-fw pi-comments',
                 routerLink: ['/dashboard/buyer/chat'],
+              },
+            ],
+          },
+        ];
+      }
+      if (url.find(x => x.path === 'admin')) {
+        this.items = [
+          {
+            label: 'Admin Dashboard',
+            items: [
+              {
+                label: 'Dashboard',
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/dashboard/admin'],
+              },
+              {
+                label: 'Users',
+                icon: 'pi pi-fw pi-users',
+                items: [
+                  {
+                    label: 'Pending Users',
+                    icon: 'pi pi-fw pi-user-plus',
+                    routerLink: ['/dashboard/admin/pending-users'],
+                  },
+                ],
+              },
+              {
+                label: 'Products',
+                icon: 'pi pi-fw pi-box',
+                items: [
+                  {
+                    label: 'Pending Products',
+                    icon: 'pi pi-fw pi-clock',
+                    routerLink: ['/dashboard/admin/pending-products'],
+                  },
+                ],
+              },
+              {
+                label: 'Categories',
+                icon: 'pi pi-fw pi-tags',
+                items: [
+                  {
+                    label: 'Pending Categories',
+                    icon: 'pi pi-fw pi-tag',
+                    routerLink: ['/dashboard/admin/pending-categories'],
+                  },
+                ],
+              },
+              {
+                label: 'Orders',
+                icon: 'pi pi-fw pi-shopping-cart',
+                routerLink: ['/dashboard/admin/orders'],
               },
             ],
           },

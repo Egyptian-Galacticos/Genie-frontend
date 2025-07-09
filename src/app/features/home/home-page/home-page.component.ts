@@ -21,6 +21,5 @@ import { GetStartedComponent } from '../components/get-started/get-started.compo
     GetStartedComponent,
   ],
   templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {}

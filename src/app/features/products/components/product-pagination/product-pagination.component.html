@@ -1,0 +1,15 @@
+<div>
+  <p-paginator
+    [first]="(currentPage() - 1) * pageSize()"
+    [rows]="pageSize()"
+    [totalRecords]="totalItems()"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+    [showPageLinks]="true"
+    [showFirstLastIcon]="true"
+    [showJumpToPageDropdown]="false"
+    styleClass="card-style rounded-3xl"
+    (onPageChange)="onPageChange($event)"
+  >
+  </p-paginator>
+</div>

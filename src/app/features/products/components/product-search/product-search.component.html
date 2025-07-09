@@ -1,0 +1,29 @@
+<p-iconfield iconPosition="left" class="w-full">
+  <p-inputicon class="pi pi-search" />
+  <input
+    pInputText
+    type="text"
+    [value]="localSearchValue()"
+    (input)="onSearchInput($event)"
+    placeholder="Search products..."
+    class="w-full"
+  />
+  <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
+    @if (loading()) {
+      <p-progressspinner
+        styleClass="!h-5 !w-5 flex items-center"
+        strokeWidth="4"
+        animationDuration=".5s"
+      />
+    } @else if (localSearchValue()) {
+      <p-button
+        icon="pi pi-times"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        (click)="clearSearch()"
+        styleClass="!h-8 !w-8"
+      />
+    }
+  </div>
+</p-iconfield>

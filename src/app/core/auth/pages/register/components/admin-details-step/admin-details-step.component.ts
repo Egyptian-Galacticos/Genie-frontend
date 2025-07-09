@@ -9,9 +9,9 @@ import { DividerModule } from 'primeng/divider';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { AdminFormData } from '../../../../interfaces/register.interface';
-import { phoneNumberValidator } from '../../../../validators/phone-number.validator';
-import { passwordMatchValidator } from '../../../../validators/password.validator';
-import { PhoneInputComponent } from '../phone-input.component';
+import { phoneNumberValidator } from '../../../../../../shared/validators/phone-number.validator';
+import { passwordMatchValidator } from '../../../../../../shared/validators/password.validator';
+import { PhoneInputComponent } from '../../../../../../shared/components/phone-input/phone-input.component';
 
 @Component({
   selector: 'app-admin-details-step',

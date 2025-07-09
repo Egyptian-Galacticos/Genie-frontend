@@ -22,7 +22,7 @@ export class WishlistService {
       })
     );
   }
-  
+
   removeFromWishlist(productId: number): Observable<ApiResponse> {
     return this.api.delete<ApiResponse>(`user/wishlist/${productId}`).pipe(
       catchError(error => {

@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { MessageModule } from 'primeng/message';
@@ -25,8 +25,8 @@ import { signal } from '@angular/core';
 export class CompanyEmailVerificationComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
 
-  // State signals
   isLoading = signal<boolean>(false);
   isResending = signal<boolean>(false);
   emailSent = signal<boolean>(false);
@@ -34,8 +34,16 @@ export class CompanyEmailVerificationComponent implements OnInit {
   message = signal<string>('');
   messageType = signal<'success' | 'error'>('success');
 
+  private get isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
+
   ngOnInit() {
-    this.sendInitialVerification();
+    if (this.isBrowser) {
+      this.sendInitialVerification();
+    } else {
+      this.isLoading.set(true);
+    }
   }
 
   /**
@@ -75,6 +83,10 @@ export class CompanyEmailVerificationComponent implements OnInit {
    * Resend company email verification
    */
   resendVerification(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     this.isResending.set(true);
     this.message.set('');
 
@@ -90,7 +102,6 @@ export class CompanyEmailVerificationComponent implements OnInit {
         const message =
           error.error?.message || 'Failed to resend verification email. Please try again.';
 
-        // Check if the error is because company email is already verified
         if (message.includes('already verified') || message.includes('Already verified')) {
           this.alreadyVerified.set(true);
           this.emailSent.set(false);
@@ -107,7 +118,7 @@ export class CompanyEmailVerificationComponent implements OnInit {
    * Navigate back to dashboard
    */
   goToProfile(): void {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/profile']);
   }
 
   /**

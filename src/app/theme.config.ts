@@ -229,6 +229,78 @@ export const CustomAura = definePreset(Aura, {
         },
       },
     },
+    popover: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            borderRadius: '12px',
+            shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            padding: '0',
+          },
+          content: {
+            background: '#ffffff',
+            color: '#0f172a',
+            padding: '0',
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            borderRadius: '12px',
+            shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1)',
+            padding: '0',
+          },
+          content: {
+            background: '#1e293b',
+            color: '#f8fafc',
+            padding: '0',
+          },
+        },
+      },
+    },
+    drawer: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            shadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          },
+          header: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+            padding: '1.5rem',
+          },
+          content: {
+            background: '#ffffff',
+            color: '#0f172a',
+            padding: '1.5rem',
+          },
+        },
+        dark: {
+          root: {
+            background: '#0f172a',
+            borderColor: '#334155',
+            shadow: '0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
+          },
+          header: {
+            background: '#0f172a',
+            borderColor: '#334155',
+            color: '#f8fafc',
+            padding: '1.5rem',
+          },
+          content: {
+            background: '#0f172a',
+            color: '#f8fafc',
+            padding: '1.5rem',
+          },
+        },
+      },
+    },
     select: {
       colorScheme: {
         light: {
@@ -306,10 +378,13 @@ export const CustomAura = definePreset(Aura, {
         light: {
           root: {
             background: '#ffffff',
+            disabledBackground: '#f8fafc',
             borderColor: '#e2e8f0',
             hoverBorderColor: '#cbd5e1',
             focusBorderColor: '#636ae8',
+            disabledBorderColor: '#e2e8f0',
             color: '#0f172a',
+            disabledColor: '#64748b',
             placeholderColor: '#64748b',
             borderRadius: '8px',
             fontSize: '14px',
@@ -320,15 +395,208 @@ export const CustomAura = definePreset(Aura, {
         dark: {
           root: {
             background: '#1e293b',
+            disabledBackground: '#334155',
             borderColor: '#334155',
             hoverBorderColor: '#475569',
             focusBorderColor: '#8894f1',
+            disabledBorderColor: '#475569',
             color: '#f8fafc',
+            disabledColor: '#94a3b8',
             placeholderColor: '#94a3b8',
             borderRadius: '8px',
             fontSize: '14px',
             padding: '12px 16px',
             height: '44px',
+          },
+        },
+      },
+    },
+    inputnumber: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            disabledBackground: '#f8fafc',
+            borderColor: '#e2e8f0',
+            hoverBorderColor: '#cbd5e1',
+            focusBorderColor: '#636ae8',
+            disabledBorderColor: '#e2e8f0',
+            color: '#0f172a',
+            disabledColor: '#64748b',
+            placeholderColor: '#64748b',
+            borderRadius: '8px',
+            fontSize: '14px',
+            padding: '12px 16px',
+            height: '44px',
+          },
+          button: {
+            background: '#f8fafc',
+            hoverBackground: '#f1f5f9',
+            borderColor: '#e2e8f0',
+            hoverBorderColor: '#cbd5e1',
+            color: '#0f172a',
+            hoverColor: '#1e293b',
+            borderRadius: '6px',
+            size: '44px',
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            disabledBackground: '#334155',
+            borderColor: '#334155',
+            hoverBorderColor: '#475569',
+            focusBorderColor: '#8894f1',
+            disabledBorderColor: '#475569',
+            color: '#f8fafc',
+            disabledColor: '#94a3b8',
+            placeholderColor: '#94a3b8',
+            borderRadius: '8px',
+            fontSize: '14px',
+            padding: '12px 16px',
+            height: '44px',
+          },
+          button: {
+            background: '#334155',
+            hoverBackground: '#475569',
+            borderColor: '#334155',
+            hoverBorderColor: '#475569',
+            color: '#f8fafc',
+            hoverColor: '#ffffff',
+            borderRadius: '6px',
+            size: '44px',
+          },
+        },
+      },
+    },
+    textarea: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            disabledBackground: '#f8fafc',
+            borderColor: '#e2e8f0',
+            hoverBorderColor: '#cbd5e1',
+            focusBorderColor: '#636ae8',
+            disabledBorderColor: '#e2e8f0',
+            color: '#0f172a',
+            disabledColor: '#64748b',
+            placeholderColor: '#64748b',
+            borderRadius: '8px',
+            fontSize: '14px',
+            padding: '12px 16px',
+            focusRing: {
+              width: '2px',
+              style: 'solid',
+              color: 'rgba(99, 106, 232, 0.2)',
+              offset: '2px',
+            },
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            disabledBackground: '#334155',
+            borderColor: '#334155',
+            hoverBorderColor: '#475569',
+            focusBorderColor: '#8894f1',
+            disabledBorderColor: '#475569',
+            color: '#f8fafc',
+            disabledColor: '#94a3b8',
+            placeholderColor: '#94a3b8',
+            borderRadius: '8px',
+            fontSize: '14px',
+            padding: '12px 16px',
+            focusRing: {
+              width: '2px',
+              style: 'solid',
+              color: 'rgba(136, 148, 241, 0.3)',
+              offset: '2px',
+            },
+          },
+        },
+      },
+    },
+    fileupload: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            borderRadius: '12px',
+            transitionDuration: '0.2s',
+          },
+          header: {
+            background: '#f8fafc',
+            color: '#0f172a',
+            borderColor: '#e2e8f0',
+            borderWidth: '0 0 1px 0',
+            borderRadius: '12px 12px 0 0',
+            padding: '1rem 1.5rem',
+          },
+          content: {
+            background: '#ffffff',
+            color: '#0f172a',
+            borderRadius: '0 0 12px 12px',
+            padding: '1.5rem',
+          },
+          file: {
+            background: '#f8fafc',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+            borderRadius: '8px',
+            padding: '1rem',
+          },
+          progressbar: {
+            background: '#636ae8',
+            height: '4px',
+          },
+          basic: {
+            background: 'transparent',
+            borderColor: 'transparent',
+            color: '#636ae8',
+            borderRadius: '8px',
+            padding: '0.75rem 1.5rem',
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            borderRadius: '12px',
+            transitionDuration: '0.2s',
+          },
+          header: {
+            background: '#334155',
+            color: '#f8fafc',
+            borderColor: '#475569',
+            borderWidth: '0 0 1px 0',
+            borderRadius: '12px 12px 0 0',
+            padding: '1rem 1.5rem',
+          },
+          content: {
+            background: '#1e293b',
+            color: '#f8fafc',
+            borderRadius: '0 0 12px 12px',
+            padding: '1.5rem',
+          },
+          file: {
+            background: '#334155',
+            borderColor: '#475569',
+            color: '#f8fafc',
+            borderRadius: '8px',
+            padding: '1rem',
+          },
+          progressbar: {
+            background: '#8894f1',
+            height: '4px',
+          },
+          basic: {
+            background: 'transparent',
+            borderColor: 'transparent',
+            color: '#8894f1',
+            borderRadius: '8px',
+            padding: '0.75rem 1.5rem',
           },
         },
       },
@@ -577,11 +845,11 @@ export const CustomAura = definePreset(Aura, {
             shadow: '0 4px 12px rgba(20, 83, 45, 0.4)',
           },
           warn: {
-            background: '#92400e',
+            background: '#1f2937',
             borderColor: '#f59e0b',
-            color: '#fef3c7',
-            detailColor: '#fde68a',
-            shadow: '0 4px 12px rgba(146, 64, 14, 0.4)',
+            color: '#f59e0b',
+            detailColor: '#d97706',
+            shadow: '0 4px 12px rgba(31, 41, 55, 0.4)',
           },
           error: {
             background: '#991b1b',
@@ -611,6 +879,296 @@ export const CustomAura = definePreset(Aura, {
             hoverBackground: 'rgba(255, 255, 255, 0.1)',
             focusRingWidth: '2px',
             focusRingColor: 'rgba(136, 148, 241, 0.3)',
+          },
+        },
+      },
+    },
+    tag: {
+      colorScheme: {
+        light: {
+          root: {
+            fontSize: '0.875rem',
+            fontWeight: '500',
+            padding: '4px 8px',
+            borderRadius: '6px',
+            gap: '4px',
+          },
+          primary: {
+            background: '#e0e7ff',
+            color: '#3730a3',
+          },
+          secondary: {
+            background: '#f1f5f9',
+            color: '#475569',
+          },
+          success: {
+            background: '#dcfce7',
+            color: '#15803d',
+          },
+          info: {
+            background: '#dbeafe',
+            color: '#1e40af',
+          },
+          warn: {
+            background: '#fef3c7',
+            color: '#b45309',
+          },
+          danger: {
+            background: '#fee2e2',
+            color: '#b91c1c',
+          },
+          contrast: {
+            background: '#334155',
+            color: '#f8fafc',
+          },
+          icon: {
+            size: '12px',
+          },
+        },
+        dark: {
+          root: {
+            fontSize: '0.875rem',
+            fontWeight: '500',
+            padding: '4px 8px',
+            borderRadius: '6px',
+            gap: '4px',
+          },
+          primary: {
+            background: '#312e81',
+            color: '#c7d2fe',
+          },
+          secondary: {
+            background: '#475569',
+            color: '#e2e8f0',
+          },
+          success: {
+            background: '#14532d',
+            color: '#bbf7d0',
+          },
+          info: {
+            background: '#1e3a8a',
+            color: '#bfdbfe',
+          },
+          warn: {
+            background: '#92400e',
+            color: '#fed7aa',
+          },
+          danger: {
+            background: '#991b1b',
+            color: '#fecaca',
+          },
+          contrast: {
+            background: '#f8fafc',
+            color: '#334155',
+          },
+          icon: {
+            size: '12px',
+          },
+        },
+      },
+    },
+    menu: {
+      colorScheme: {
+        light: {
+          root: {
+            background: 'transparent',
+            borderRadius: '12px',
+            padding: '8px',
+          },
+          item: {
+            focusBackground:
+              'color-mix(in srgb, var(--p-content-hover-background) 60%, transparent)',
+            activeBackground: 'color-mix(in srgb, var(--p-primary-color) 10%, transparent)',
+            color: 'var(--p-text-color)',
+            focusColor: 'var(--p-text-hover-color)',
+            activeColor: 'var(--p-primary-color)',
+            padding: '12px 16px',
+            borderRadius: '8px',
+            gap: '12px',
+            fontWeight: '500',
+            transition: 'all 0.2s ease',
+            border: '1px solid transparent',
+            activeBorderColor: 'color-mix(in srgb, var(--p-primary-color) 20%, transparent)',
+            shadow: '0 0 0 0 transparent',
+            activeShadow: '0 2px 8px color-mix(in srgb, var(--p-primary-color) 15%, transparent)',
+          },
+          submenuIcon: {
+            color: 'var(--p-text-muted-color)',
+            focusColor: 'var(--p-text-color)',
+            activeColor: 'var(--p-primary-color)',
+          },
+        },
+        dark: {
+          root: {
+            background: 'transparent',
+            borderRadius: '12px',
+            padding: '8px',
+          },
+          item: {
+            focusBackground:
+              'color-mix(in srgb, var(--p-content-hover-background) 60%, transparent)',
+            activeBackground: 'color-mix(in srgb, var(--p-primary-color) 15%, transparent)',
+            color: 'var(--p-text-color)',
+            focusColor: 'var(--p-text-hover-color)',
+            activeColor: 'var(--p-primary-color)',
+            padding: '12px 16px',
+            borderRadius: '8px',
+            gap: '12px',
+            fontWeight: '500',
+            transition: 'all 0.2s ease',
+            border: '1px solid transparent',
+            activeBorderColor: 'color-mix(in srgb, var(--p-primary-color) 25%, transparent)',
+            shadow: '0 0 0 0 transparent',
+            activeShadow: '0 2px 8px color-mix(in srgb, var(--p-primary-color) 20%, transparent)',
+          },
+          submenuIcon: {
+            color: 'var(--p-text-muted-color)',
+            focusColor: 'var(--p-text-color)',
+            activeColor: 'var(--p-primary-color)',
+          },
+        },
+      },
+    },
+    dialog: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+            borderRadius: '12px',
+            shadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          },
+          header: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+            borderBottom: '1px solid #e2e8f0',
+            borderRadius: '12px 12px 0 0',
+            padding: '1.5rem',
+          },
+          content: {
+            background: '#ffffff',
+            color: '#0f172a',
+            padding: '1.5rem',
+          },
+          footer: {
+            background: '#ffffff',
+            borderColor: '#e2e8f0',
+            color: '#0f172a',
+            borderTop: '1px solid #e2e8f0',
+            borderRadius: '0 0 12px 12px',
+            padding: '1rem 1.5rem',
+            gap: '0.75rem',
+          },
+        },
+        dark: {
+          root: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            color: '#f8fafc',
+            borderRadius: '12px',
+            shadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
+          },
+          header: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            color: '#f8fafc',
+            borderBottom: '1px solid #334155',
+            borderRadius: '12px 12px 0 0',
+            padding: '1.5rem',
+          },
+          content: {
+            background: '#1e293b',
+            color: '#f8fafc',
+            padding: '1.5rem',
+          },
+          footer: {
+            background: '#1e293b',
+            borderColor: '#334155',
+            color: '#f8fafc',
+            borderTop: '1px solid #334155',
+            borderRadius: '0 0 12px 12px',
+            padding: '1rem 1.5rem',
+            gap: '0.75rem',
+          },
+        },
+      },
+    },
+    galleria: {
+      colorScheme: {
+        light: {
+          root: {
+            borderColor: 'transparent',
+            background: 'transparent',
+          },
+          navButton: {
+            background: 'rgba(255, 255, 255, 0.9)',
+            hoverBackground: '#636ae8',
+            color: '#636ae8',
+            hoverColor: '#ffffff',
+            borderRadius: '50%',
+            shadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+            width: '3rem',
+            height: '3rem',
+          },
+          thumbnailNavButton: {
+            background: 'rgba(255, 255, 255, 0.8)',
+            hoverBackground: '#636ae8',
+            color: '#636ae8',
+            hoverColor: '#ffffff',
+            borderRadius: '50%',
+            shadow: '0 1px 4px rgba(0, 0, 0, 0.1)',
+          },
+          indicator: {
+            background: 'rgba(0, 0, 0, 0.3)',
+            activeBackground: '#636ae8',
+            hoverBackground: 'rgba(99, 106, 232, 0.7)',
+            borderRadius: '50%',
+            width: '12px',
+            height: '12px',
+          },
+          thumbnail: {
+            borderColor: 'transparent',
+            activeBorderColor: '#636ae8',
+            borderRadius: '8px',
+          },
+        },
+        dark: {
+          root: {
+            borderColor: 'transparent',
+            background: 'transparent',
+          },
+          navButton: {
+            background: 'rgba(30, 41, 59, 0.9)',
+            hoverBackground: '#8894f1',
+            color: '#8894f1',
+            hoverColor: '#0f172a',
+            borderRadius: '50%',
+            shadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+            width: '3rem',
+            height: '3rem',
+          },
+          thumbnailNavButton: {
+            background: 'rgba(30, 41, 59, 0.8)',
+            hoverBackground: '#8894f1',
+            color: '#8894f1',
+            hoverColor: '#0f172a',
+            borderRadius: '50%',
+            shadow: '0 1px 4px rgba(0, 0, 0, 0.3)',
+          },
+          indicator: {
+            background: 'rgba(255, 255, 255, 0.2)',
+            activeBackground: '#8894f1',
+            hoverBackground: 'rgba(136, 148, 241, 0.7)',
+            borderRadius: '50%',
+            width: '12px',
+            height: '12px',
+          },
+          thumbnail: {
+            borderColor: 'transparent',
+            activeBorderColor: '#8894f1',
+            borderRadius: '8px',
           },
         },
       },

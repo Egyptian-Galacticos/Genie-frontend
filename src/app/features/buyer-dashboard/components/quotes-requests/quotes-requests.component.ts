@@ -1,8 +1,11 @@
 import { Component, OnInit, inject, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BuyerQuotesService } from '../../../shared/services/buyer-quotes.service';
-import { IBuyerRequestForQuote, IBuyerMedia, IBuyerProduct, IBuyerCompany, IBuyerUser } from '../../../shared/utils/buyer-interfaces';
-import { dataTableColumn } from '../../../shared/utils/interfaces';
+import {
+  dataTableColumn,
+  ICompany,
+  IRequestForQuote,
+  IUser,
+} from '../../../shared/utils/interfaces';
 import { DataTableComponent } from '../../../shared/data-table/data-table.component';
 import { DashboardInfoCardComponent } from './../../../shared/dashboard-info-card/dashboard-info-card.component';
 import { RequestOptions, ApiResponse } from '../../../../core/interfaces/api.interface';
@@ -14,11 +17,13 @@ import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { DividerModule } from 'primeng/divider';
 import { StatusUtils } from '../../../shared/utils/status-utils';
+import { QuotesService } from '../../../shared/services/quotes.service';
+import { RfqDetailsDialogComponent } from '../../../shared/rfq-details-dialog/rfq-details-dialog.component';
 
 @Component({
   selector: 'app-buyer-quotes-requests',
   imports: [
-  CommonModule,
+    CommonModule,
     DataTableComponent,
     DashboardInfoCardComponent,
     ToastModule,
@@ -27,6 +32,7 @@ import { StatusUtils } from '../../../shared/utils/status-utils';
     DialogModule,
     TagModule,
     DividerModule,
+    RfqDetailsDialogComponent,
   ],
   providers: [MessageService],
   templateUrl: './quotes-requests.component.html',
@@ -34,10 +40,10 @@ import { StatusUtils } from '../../../shared/utils/status-utils';
 })
 export class BuyerQuotesRequestsComponent implements OnInit {
   @ViewChild('customBodyTemplate', { static: true }) customBodyTemplate!: TemplateRef<unknown>;
-  private quotesService = inject(BuyerQuotesService);
+  private quotesService = inject(QuotesService);
   private messageService = inject(MessageService);
-  rfqResponse: ApiResponse<IBuyerRequestForQuote[]> | null = null;
-  rfqData: IBuyerRequestForQuote[] = [];
+  rfqResponse: ApiResponse<IRequestForQuote[]> | null = null;
+  rfqData: IRequestForQuote[] = [];
   loading = false;
   first = 0;
   multiSortMeta: SortMeta[] = [{ field: 'date', order: -1 }];
@@ -45,7 +51,8 @@ export class BuyerQuotesRequestsComponent implements OnInit {
   totalRecords = 0;
 
   showRFQDetailsModal = false;
-  selectedRFQ: IBuyerRequestForQuote | null = null;
+  selectedRFQ: IRequestForQuote | null = null;
+  rfqDetailsDialogVisible = false;
   cols: dataTableColumn[] = [
     {
       field: 'id',
@@ -111,7 +118,7 @@ export class BuyerQuotesRequestsComponent implements OnInit {
   loadRFQs(requestOptions: RequestOptions) {
     this.loading = true;
     this.quotesService.getBuyerRFQs(requestOptions).subscribe({
-      next: (response: ApiResponse<IBuyerRequestForQuote[]>) => {
+      next: (response: ApiResponse<IRequestForQuote[]>) => {
         this.rfqResponse = response;
         this.rfqData = response.data || [];
         this.totalRecords = (response as { meta?: { total?: number } }).meta?.total || 0;
@@ -129,9 +136,20 @@ export class BuyerQuotesRequestsComponent implements OnInit {
     });
   }
   createNewRFQ() {}
-  viewRFQ(rfq: IBuyerRequestForQuote) {
+  viewRFQ(rfq: IRequestForQuote) {
     this.selectedRFQ = rfq;
-    this.showRFQDetailsModal = true;
+    this.rfqDetailsDialogVisible = true;
+  }
+
+  closeRFQDetailsDialog() {
+    this.rfqDetailsDialogVisible = false;
+    this.selectedRFQ = null;
+  }
+
+  // Handle RFQ dialog actions
+  onRfqChat(rfq: IRequestForQuote) {
+    console.log('Opening chat for RFQ:', rfq.id);
+    // Implement chat functionality
   }
 
   viewQuotes(): void {}
@@ -156,124 +174,10 @@ export class BuyerQuotesRequestsComponent implements OnInit {
   }
   onImageError(event: Event) {
     const target = event.target as HTMLImageElement;
-    if (target) {
+    if (target && !target.dataset['errorHandled']) {
+      target.dataset['errorHandled'] = 'true';
       target.src = 'assets/placeholder-image.jpg';
     }
-  }
-
-  /**
-   * Retrieves the main product image from the product data
-   * Uses main_image first, then falls back to first image in images array
-   */
-  getMainImage(product: IBuyerProduct): string {
-    if (product.main_image?.url) {
-      return product.main_image.url;
-    } else if (product.images && product.images.length > 0) {
-      return product.images[0].url;
-    }
-    return 'assets/placeholder-image.jpg';
-  }
-
-  /**
-   * Gets the thumbnail URL for the main product image
-   */
-  getThumbnailImage(product: IBuyerProduct): string {
-    if (product.main_image?.thumbnail_url) {
-      return product.main_image.thumbnail_url;
-    } else if (product.images && product.images.length > 0 && product.images[0].thumbnail_url) {
-      return product.images[0].thumbnail_url;
-    }
-    return this.getMainImage(product);
-  }
-
-  acceptQuote(quote: { id: string | number; status?: string }) {
-    if (!quote?.id) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Invalid quote ID',
-        life: 5000,
-      });
-      return;
-    }
-
-    const quoteId = typeof quote.id === 'string' ? parseInt(quote.id, 10) : quote.id;
-    this.quotesService.acceptQuote(quoteId).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Quote accepted successfully',
-          life: 5000,
-        });
-        if (this.selectedRFQ?.quotes) {
-          const quoteIndex = this.selectedRFQ.quotes.findIndex(q => q.id === quote.id);
-          if (quoteIndex !== -1) {
-            this.selectedRFQ.quotes[quoteIndex].status = 'accepted';
-          }
-        }
-
-        this.loadRFQs({
-          params: {
-            page: Math.floor(this.first / this.rows) + 1,
-            per_page: this.rows,
-          },
-        });
-      },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Could not accept quote. Please try again.',
-          life: 5000,
-        });
-      },
-    });
-  }
-
-  rejectQuote(quote: { id: string | number; status?: string }) {
-    if (!quote?.id) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Invalid quote ID',
-        life: 5000,
-      });
-      return;
-    }
-
-    const quoteId = typeof quote.id === 'string' ? parseInt(quote.id, 10) : quote.id;
-    this.quotesService.rejectQuote(quoteId).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Quote rejected successfully',
-          life: 5000,
-        });
-
-        if (this.selectedRFQ?.quotes) {
-          const quoteIndex = this.selectedRFQ.quotes.findIndex(q => q.id === quote.id);
-          if (quoteIndex !== -1) {
-            this.selectedRFQ.quotes[quoteIndex].status = 'rejected';
-          }
-        }
-        this.loadRFQs({
-          params: {
-            page: Math.floor(this.first / this.rows) + 1,
-            per_page: this.rows,
-          },
-        });
-      },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Could not reject quote. Please try again.',
-          life: 5000,
-        });
-      },
-    });
   }
 
   /**
@@ -370,7 +274,7 @@ export class BuyerQuotesRequestsComponent implements OnInit {
   /**
    * Formats company address specifically for the updated IBuyerCompany interface
    */
-  formatCompanyAddress(company: IBuyerCompany): string {
+  formatCompanyAddress(company: ICompany): string {
     if (!company.address) {
       return 'N/A';
     }
@@ -380,14 +284,14 @@ export class BuyerQuotesRequestsComponent implements OnInit {
   /**
    * Safely gets company phone number
    */
-  getCompanyPhone(company: IBuyerCompany): string {
+  getCompanyPhone(company: ICompany): string {
     return company.company_phone || 'N/A';
   }
 
   /**
    * Safely gets company tax ID
    */
-  getCompanyTaxId(company: IBuyerCompany): string {
+  getCompanyTaxId(company: ICompany): string {
     return company.tax_id || 'N/A';
   }
 
@@ -401,7 +305,7 @@ export class BuyerQuotesRequestsComponent implements OnInit {
   /**
    * Gets the company email or falls back to user email
    */
-  getContactEmail(seller: IBuyerUser): string {
-    return seller.company.email || seller.email || 'N/A';
+  getContactEmail(seller: IUser): string {
+    return seller.company?.email || seller.email || 'N/A';
   }
 }

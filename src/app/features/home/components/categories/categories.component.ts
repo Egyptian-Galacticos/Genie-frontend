@@ -1,19 +1,11 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  ElementRef,
-  inject,
-  PLATFORM_ID,
-  OnDestroy,
-} from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, inject, OnDestroy, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CarouselModule, CarouselResponsiveOptions } from 'primeng/carousel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { Subject, takeUntil } from 'rxjs';
 import { CategoryService } from '../../../shared/services/category.service';
-import { Category } from '../../../../core/interfaces/category.interface';
+import { Category } from '../../../shared/utils/interfaces';
 
 @Component({
   selector: 'app-categories',
@@ -21,30 +13,24 @@ import { Category } from '../../../../core/interfaces/category.interface';
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.css',
 })
-export class CategoriesComponent implements OnInit, AfterViewInit, OnDestroy {
-  private elementRef = inject(ElementRef<HTMLElement>);
-  private platformId = inject(PLATFORM_ID);
+export class CategoriesComponent implements OnInit, OnDestroy {
   private categoryService = inject(CategoryService);
   private destroy$ = new Subject<void>();
 
-  categories: Category[] = [];
-  loading = true;
-  error: string | null = null;
+  animationConfig = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px',
+    staggerDelay: 200,
+  };
+
+  categories = signal<Category[]>([]);
+  loading = signal(true);
+  error = signal<string | null>(null);
   responsiveOptions: CarouselResponsiveOptions[] = [];
 
   ngOnInit(): void {
     this.setupResponsiveOptions();
     this.loadCategories();
-  }
-
-  ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
-    setTimeout(() => {
-      this.setupAnimations();
-    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -83,51 +69,24 @@ export class CategoriesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private loadCategories(): void {
-    this.loading = true;
-    this.error = null;
+    this.loading.set(true);
+    this.error.set(null);
 
     this.categoryService
       .getTopLevelCategories()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: categories => {
-          this.categories = categories.filter(cat => cat.status === 'active');
-          this.loading = false;
-
-          setTimeout(() => {
-            this.setupAnimations();
-          }, 100);
+          const activeCategories = categories.filter(cat => cat.status === 'active');
+          this.categories.set(activeCategories);
+          this.loading.set(false);
         },
         error: error => {
           console.error('Failed to load categories:', error);
-          this.error = 'Failed to load categories. Please try again later.';
-          this.loading = false;
+          this.error.set('Failed to load categories. Please try again later.');
+          this.loading.set(false);
         },
       });
-  }
-
-  private setupAnimations(): void {
-    if (typeof IntersectionObserver === 'undefined') return;
-
-    const animateElements = this.elementRef.nativeElement.querySelectorAll(
-      '.animate-item'
-    ) as NodeListOf<HTMLElement>;
-
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach((entry, index) => {
-          if (entry.isIntersecting) {
-            const el = entry.target as HTMLElement;
-            el.style.setProperty('--animate-delay', `${index * 0.1}s`);
-            el.classList.add('animate-in');
-            observer.unobserve(el);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    animateElements.forEach(el => observer.observe(el));
   }
 
   /**
@@ -135,19 +94,15 @@ export class CategoriesComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param category Category object
    * @returns Icon class string
    */
-
   getCategoryIcon(category: Category): string {
-    // If the API provides a specific icon class, use it
     if (category.icon && category.icon.startsWith('pi ')) {
       return category.icon;
     }
 
-    // If icon_url is provided, you might want to use it as an image
     if (category.icon_url) {
       return 'pi pi-image';
     }
 
-    // Fallback to a default icon based on category name or use the icon field
     return category.icon || 'pi pi-tag';
   }
 

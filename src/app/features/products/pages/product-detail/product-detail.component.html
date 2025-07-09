@@ -1,0 +1,105 @@
+<section
+  class="min-h-screen bg-gradient-to-br from-surface-50 to-surface-100 dark:from-surface-900 dark:to-surface-800"
+>
+  <p-toast position="top-right" />
+
+  <app-product-breadcrumb [breadcrumbItems]="breadcrumbItems()" [breadcrumbHome]="breadcrumbHome" />
+
+  @if (loading()) {
+    <div class="container mx-auto px-4 pb-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-7">
+          <p-card styleClass="shadow-lg border-0 rounded-3xl overflow-hidden">
+            <app-product-gallery [loading]="true" />
+          </p-card>
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col gap-6">
+          <p-skeleton height="1.5rem" width="30%" />
+          <p-skeleton height="3rem" width="90%" />
+          <p-skeleton height="1rem" width="60%" />
+          <p-skeleton height="8rem" width="100%" />
+          <p-skeleton height="3rem" width="70%" />
+          <div class="flex gap-4">
+            <p-skeleton height="3rem" width="45%" />
+            <p-skeleton height="3rem" width="45%" />
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (product(); as currentProduct) {
+    <div class="container mx-auto px-4 pb-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-7">
+          <p-card styleClass="shadow-lg border-0 rounded-3xl overflow-hidden">
+            <app-product-gallery [product]="currentProduct" [loading]="loading()" />
+          </p-card>
+        </div>
+
+        <div class="lg:col-span-5">
+          <app-product-info
+            [product]="currentProduct"
+            [pricingDisplay]="pricingDisplay()"
+            [companyInfo]="companyInfo()"
+            [wishlistLoading]="wishlistLoading()"
+            (requestQuote)="onRequestQuote()"
+            (wishlistToggle)="onWishlistToggle()"
+          />
+        </div>
+      </div>
+
+      <app-product-tabs
+        [product]="currentProduct"
+        [productSpecs]="productSpecs()"
+        [activeTab]="activeTab()"
+        (tabChange)="onTabChange($event)"
+        (downloadDocument)="onDownloadDocument($event)"
+      />
+    </div>
+  }
+
+  <app-request-quote-dialog
+    [visible]="showRequestQuoteDialog()"
+    [product]="product()"
+    [rfqFormData]="rfqFormData()"
+    [rfqLoading]="rfqLoading()"
+    [countries]="countries()"
+    (dialogClosed)="onCancelRfq()"
+    (quoteSubmitted)="onSubmitRfq()"
+    (quoteCancelled)="onCancelRfq()"
+    (fieldChange)="updateRfqField($event)"
+  />
+
+  @if (error()) {
+    <div class="container mx-auto px-4 py-20">
+      <div class="text-center">
+        <p-card styleClass="max-w-lg mx-auto shadow-lg border-0 rounded-3xl">
+          <div class="py-8">
+            <div
+              class="w-24 h-24 mx-auto rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center mb-6"
+            >
+              <i class="pi pi-exclamation-triangle text-4xl text-red-500"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-red-600 dark:text-red-400 mb-3">
+              Product Not Found
+            </h3>
+            <p class="text-surface-600 dark:text-surface-400 mb-6">
+              {{ error() }}
+            </p>
+            <p-button
+              label="Back to Products"
+              icon="pi pi-arrow-left"
+              severity="danger"
+              [outlined]="true"
+              [routerLink]="['/products']"
+              styleClass="h-12 px-8 rounded-2xl font-semibold"
+              size="large"
+            />
+          </div>
+        </p-card>
+      </div>
+    </div>
+  }
+</section>

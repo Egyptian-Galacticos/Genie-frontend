@@ -1,6 +1,7 @@
-import { Component, type OnInit } from '@angular/core';
+import { Component, type OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarouselModule } from 'primeng/carousel';
+import { AnimateOnScrollDirective } from '../../../../shared/directives/animate-on-scroll.directive';
 
 interface CarouselImage {
   src: string;
@@ -31,83 +32,87 @@ interface Deal {
 
 @Component({
   selector: 'app-trending-products',
-  imports: [CommonModule, CarouselModule],
+  imports: [CommonModule, CarouselModule, AnimateOnScrollDirective],
   templateUrl: './trending-products.component.html',
-  styleUrls: ['./trending-products.component.css'],
+  styleUrl: './trending-products.component.css',
 })
 export class TrendingProductsComponent implements OnInit {
-  carouselImages: CarouselImage[] = [];
-  selectedImageIndex = 0;
+  carouselImages = signal<CarouselImage[]>([]);
+  selectedImageIndex = signal<number>(0);
 
-  topRanking: RankingItem = {
+  topRanking = signal<RankingItem>({
     title: 'Most popular',
     category: 'LCL+Trucking',
     popularityScore: 4.5,
     thumbnails: [
-      { src: '/unnamed.jpg?height=60&width=60&text=Saudi+Map', alt: 'Saudi Arabia logistics' },
-      { src: '/unnamed.jpg?height=60&width=60&text=Green+Flag', alt: 'International shipping' },
-      { src: '/unnamed.jpg?height=60&width=60&text=Plane+Model', alt: 'Air freight services' },
+      { src: '/product_1.jpg', alt: 'Popular product 1' },
+      { src: '/product_2.jpg', alt: 'Popular product 2' },
+      { src: '/product_3.jpg', alt: 'Popular product 3' },
     ],
-  };
+  });
 
-  newArrivals: NewArrival[] = [
+  newArrivals = signal<NewArrival[]>([
     {
-      image: '/unnamed.jpg?height=150&width=150&text=China+to+USA+Shipping',
-      alt: 'China to USA shipping',
+      image: '/product_4.jpg',
+      alt: 'New arrival product 4',
     },
     {
-      image: '/unnamed.jpg?height=150&width=150&text=DHL+Express+Delivery',
-      alt: 'DHL Express delivery',
+      image: '/product_5.jpg',
+      alt: 'New arrival product 5',
     },
     {
-      image: '/unnamed.jpg?height=150&width=150&text=Worldwide+Shipping',
-      alt: 'Worldwide shipping service',
+      image: '/product_6.jpg',
+      alt: 'New arrival product 6',
     },
     {
-      image: '/unnamed.jpg?height=150&width=150&text=Kids+Fashion+Clothes',
-      alt: 'Kids fashion clothing',
+      image: '/product_7.jpg',
+      alt: 'New arrival product 7',
     },
-  ];
+  ]);
 
-  newThisWeek = {
-    image: '/unnamed.jpg?height=80&width=80&text=Wooden+Blocks',
+  newThisWeek = signal({
+    image: '/product_8.jpg',
     title: 'New this week',
     subtitle: 'Products from Verified Suppliers only',
-  };
+  });
 
-  topDeals: Deal[] = [
+  topDeals = signal<Deal[]>([
     {
       title: '180-day lowest price',
-      image: '/unnamed.jpg?height=80&width=80&text=Coffee+Machine',
+      image: '/product_9.jpg',
     },
     {
       title: 'Deals on best sellers',
-      image: '/unnamed.jpg?height=200&width=300&text=Colorful+Waist+Bags+Grid',
+      image: '/product_10.jpg',
     },
-  ];
+    {
+      title: 'Limited time offer',
+      image: '/product_2.jpg',
+    },
+  ]);
 
   ngOnInit(): void {
-    this.carouselImages = [
+    this.carouselImages.set([
       {
-        src: '/unnamed.jpg?height=300&width=400&text=Freight+Forwarder+Main',
-        alt: 'Main freight forwarding service',
+        src: '/product_11.jpg',
+        alt: 'Featured product 11',
       },
       {
-        src: '/unnamed.jpg?height=300&width=400&text=Air+Cargo+Service',
-        alt: 'Air cargo transportation',
+        src: '/product_12.jpg',
+        alt: 'Featured product 12',
       },
       {
-        src: '/unnamed.jpg?height=300&width=400&text=Ocean+Freight',
-        alt: 'Ocean freight shipping',
+        src: '/product_13.jpg',
+        alt: 'Featured product 13',
       },
       {
-        src: '/unnamed.jpg?height=300&width=400&text=Truck+Logistics',
-        alt: 'Ground transportation',
+        src: '/product_1.jpg',
+        alt: 'Featured product 1',
       },
-    ];
+    ]);
   }
 
   selectMainImage(index: number): void {
-    this.selectedImageIndex = index;
+    this.selectedImageIndex.set(index);
   }
 }

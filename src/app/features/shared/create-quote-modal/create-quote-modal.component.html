@@ -20,7 +20,10 @@
       <form [formGroup]="quoteFormGroup" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
         <div formArrayName="quoteItemFormArray" class="px-4 flex flex-col gap-3">
           @for (item of quoteItems.controls; track item.value?.id || $index) {
-            <div [formGroupName]="$index" class="flex gap-4 justify-between items-end flex-wrap">
+            <div
+              [formGroupName]="$index"
+              class="flex gap-4 justify-between align-items-start flex-wrap"
+            >
               <div class="space-y-3 shrink-0">
                 @if ($index === 0) {
                   <label
@@ -160,13 +163,13 @@
               >Add a message for the buyer</label
             >
             <div class="relative">
-              <input
-                pInputText
+              <textarea
+                pInputTextarea
                 id="seller_message"
                 type="text"
                 formControlName="seller_message"
                 class="w-full transition-all duration-300 focus:scale-102"
-              />
+              ></textarea>
             </div>
           </div>
         </div>

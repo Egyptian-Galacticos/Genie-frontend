@@ -6,13 +6,13 @@ import { AuthService } from '../core/auth/services/auth.service';
 import type Echo from 'laravel-echo';
 
 // Event interfaces
-interface PresenceUser {
+export interface PresenceUser {
   id: number;
   name?: string;
   [key: string]: unknown;
 }
 
-interface MessageSentEvent {
+export interface MessageSentEvent {
   message: {
     id: number;
     content: string;
@@ -28,19 +28,19 @@ interface MessageSentEvent {
   };
 }
 
-interface MessageReadEvent {
+export interface MessageReadEvent {
   message_id: number;
   read_by_user_id: number;
   read_at: string;
 }
 
-interface TypingEvent {
+export interface TypingEvent {
   user_id: number;
   user_name: string;
   is_typing: boolean;
 }
 
-interface ConversationCreatedEvent {
+export interface ConversationCreatedEvent {
   conversation: {
     id: number;
     participants: Array<{
@@ -52,13 +52,13 @@ interface ConversationCreatedEvent {
   };
 }
 
-interface ProcessedMessageReadEvent {
+export interface ProcessedMessageReadEvent {
   messageId: number;
   conversationId: number;
   userId: number;
 }
 
-interface ProcessedNewMessageEvent extends MessageSentEvent {
+export interface ProcessedNewMessageEvent extends MessageSentEvent {
   conversationId: number;
 }
 

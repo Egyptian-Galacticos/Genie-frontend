@@ -2,6 +2,7 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 @plugin "tailwindcss-primeui";
 @import 'primeicons/primeicons.css';
+@import './app/shared/styles/animations.css';
 
 @theme {
   /* Light Theme Colors */
@@ -142,10 +143,10 @@ body {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-500) 10%, transparent) !important;
 }
 
-/* Focus styles for accessibility */
-.p-inputtext:focus-visible,
-.p-select:focus-visible,
-.p-button:focus-visible {
-  outline: 2px solid var(--color-primary-500) !important;
-  outline-offset: 2px !important;
+.card-style {
+  background: color-mix(in srgb, var(--p-surface-0) 80%, transparent) !important;
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--p-surface-border) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }

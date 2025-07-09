@@ -1,0 +1,123 @@
+<div
+  class="flex flex-col gap-2 w-full bg-card rounded-lg shadow p-6 min-h-[400px]"
+  [formGroup]="images_group()"
+>
+  <div class="flex gap-4 items-center">
+    <i class="pi pi-images text-primary"></i>
+    <p class="text-lg font-semibold text-primary">Product Images</p>
+  </div>
+  <p-divider></p-divider>
+
+  <!-- Main Image -->
+  <div class="space-y-3">
+    <p class="block text-sm font-semibold" style="color: var(--p-text-color)">Main Image *</p>
+    @if (!mainImagePreview) {
+      <div
+        class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors duration-300 cursor-pointer"
+        (click)="mainImageInput.click()"
+        (keydown.enter)="mainImageInput.click()"
+        (keydown.space)="mainImageInput.click()"
+        tabindex="0"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event, 'main')"
+        role="button"
+      >
+        <i class="pi pi-cloud-upload text-3xl text-gray-400 mb-3"></i>
+        <p class="text-sm text-gray-500 mb-2">Click to upload or drag and drop main image</p>
+        <p class="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</p>
+      </div>
+      <input
+        #mainImageInput
+        type="file"
+        accept="image/*"
+        class="hidden"
+        (change)="onMainImageSelect($any($event))"
+      />
+    }
+    <!-- Main Image Preview -->
+    @if (mainImagePreview) {
+      <div class="mt-4">
+        <div class="relative inline-block">
+          <img
+            [src]="mainImagePreview"
+            class="w-32 h-32 object-cover rounded-lg border"
+            alt="Main image preview"
+          />
+          <button
+            type="button"
+            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+            (click)="removeMainImage()"
+          >
+            ×
+          </button>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">{{ mainImageFile?.name }}</p>
+      </div>
+    }
+    @if (
+      images_group().get('main_image')?.errors?.['required'] &&
+      images_group().get('main_image')?.touched
+    ) {
+      <small class="text-red-500">Main image is required</small>
+    }
+  </div>
+
+  <!-- Additional Images -->
+  <div class="space-y-3">
+    <p class="block text-sm font-semibold" style="color: var(--p-text-color)">
+      Additional Images *
+    </p>
+
+    <!-- Additional Images Preview -->
+    <div
+      class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors duration-300 cursor-pointer"
+      (click)="additionalImagesInput.click()"
+      (keydown.enter)="additionalImagesInput.click()"
+      (keydown.space)="additionalImagesInput.click()"
+      tabindex="0"
+      role="button"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event, 'additional')"
+    >
+      <i class="pi pi-images text-3xl text-gray-400 mb-3"></i>
+      <p class="text-sm text-gray-500 mb-2">Click to upload or drag and drop additional images</p>
+      <p class="text-xs text-gray-400">PNG, JPG, GIF up to 10MB each</p>
+    </div>
+    <input
+      #additionalImagesInput
+      type="file"
+      accept="image/*"
+      multiple
+      class="hidden"
+      (change)="onAdditionalImagesSelect($any($event))"
+    />
+    @if (additionalImagePreviews.length >= 0) {
+      <div class="flex flex-wrap gap-2 justify-around">
+        @for (preview of additionalImagePreviews; track $index) {
+          <div class="relative w-[31%]">
+            <img
+              [src]="preview.url"
+              class="w-full h-24 object-cover rounded-lg border"
+              [alt]="'Additional image ' + ($index + 1)"
+            />
+            <button
+              type="button"
+              class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+              (click)="removeAdditionalImage($index)"
+            >
+              ×
+            </button>
+            <p class="text-xs text-gray-600 mt-1 truncate">{{ preview.name }}</p>
+          </div>
+        }
+      </div>
+    }
+    @if (
+      images_group().get('images')?.errors?.['required'] && images_group().get('images')?.touched
+    ) {
+      <small class="text-red-500">At least one additional image is required</small>
+    }
+  </div>
+</div>

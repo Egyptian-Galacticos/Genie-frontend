@@ -1,0 +1,662 @@
+<div class="p-6">
+  <div class="mb-8 text-center">
+    <div class="mb-6">
+      <div
+        class="w-16 h-16 mx-auto rounded-full bg-[var(--p-primary-50)] flex items-center justify-center mb-4 animate-[pulse_3s_ease-in-out_infinite] hover:bg-[var(--p-primary-100)] transition-colors duration-300"
+      >
+        <i
+          class="pi pi-building text-2xl text-[var(--p-primary-500)] animate-[pulse_2s_ease-in-out_infinite] hover:scale-110 transition-transform duration-300"
+        ></i>
+      </div>
+    </div>
+
+    <h2 class="text-3xl font-bold mb-3 text-[var(--p-text-color)]">Company Information</h2>
+    <p class="text-base mb-6 max-w-xl mx-auto text-[var(--p-text-muted-color)]">
+      Manage your company details and business information
+    </p>
+
+    @if (roles().length) {
+      <div class="mb-6">
+        <div class="flex items-center justify-center gap-3 mb-3">
+          <i class="pi pi-tags text-[var(--p-primary-500)]"></i>
+          <h3 class="text-lg font-semibold text-[var(--p-text-color)]">Company Roles</h3>
+        </div>
+        <div class="flex gap-2 flex-wrap justify-center">
+          @for (role of roles(); track role) {
+            <p-tag
+              [value]="role.charAt(0).toUpperCase() + role.slice(1)"
+              [severity]="getRoleSeverity(role)"
+              [icon]="getRoleIcon(role)"
+            />
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="mb-8">
+    <div class="flex items-center gap-3 mb-6">
+      <i class="pi pi-image text-xl text-[var(--p-primary-500)]"></i>
+      <h3 class="text-lg font-semibold text-[var(--p-text-color)]">Company Logo</h3>
+    </div>
+
+    <div class="flex flex-col items-center">
+      @if (logoPreview() && !removeExistingLogo()) {
+        <div class="mb-6">
+          <div
+            class="p-6 bg-[var(--p-surface-0)] border-2 border-[var(--p-surface-200)] rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 hover:border-[var(--p-primary-300)]"
+          >
+            <img
+              [src]="logoPreview()"
+              alt="Logo preview"
+              class="w-48 h-48 object-contain mx-auto"
+            />
+          </div>
+        </div>
+      }
+
+      @if (!logoPreview() || removeExistingLogo()) {
+        <div class="w-full max-w-lg">
+          <div
+            #dropZone
+            class="flex flex-col items-center justify-center py-12 px-8 border-2 border-dashed rounded-2xl transition-all duration-300 cursor-pointer"
+            [style]="
+              isDragOver()
+                ? {
+                    'border-color': 'var(--p-primary-color)',
+                    background: 'var(--p-surface-100)',
+                    transform: 'scale(1.02)',
+                    'box-shadow': '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                  }
+                : {
+                    'border-color': 'var(--p-surface-300)',
+                    background: 'var(--p-surface-50)',
+                    transform: 'scale(1)',
+                  }
+            "
+            tabindex="0"
+            role="button"
+            aria-label="Upload company logo - click or press Enter to browse files, or drag and drop files here"
+            (click)="triggerFileInput()"
+            (keydown)="onDropZoneKeydown($event)"
+            (keyup)="onDropZoneKeyup($event)"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onFileDrop($event)"
+          >
+            <i
+              class="pi pi-cloud-upload text-4xl mb-4 transition-all duration-300"
+              [style.color]="isDragOver() ? 'var(--p-primary-color)' : 'var(--p-text-muted-color)'"
+            ></i>
+
+            <h4
+              class="text-xl font-semibold mb-3 transition-colors duration-300"
+              [style.color]="isDragOver() ? 'var(--p-primary-color)' : 'var(--p-text-color)'"
+            >
+              @if (isDragOver()) {
+                Release to upload
+              } @else {
+                Drop your logo here
+              }
+            </h4>
+
+            <p
+              class="text-sm mb-4 transition-colors duration-300"
+              [style.color]="isDragOver() ? 'var(--p-primary-color)' : 'var(--p-text-muted-color)'"
+            >
+              or <span class="font-medium underline">click to browse</span>
+            </p>
+
+            <div
+              class="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs transition-all duration-300 border"
+              [style]="
+                isDragOver()
+                  ? {
+                      background: 'var(--p-surface-200)',
+                      color: 'var(--p-primary-color)',
+                      'border-color': 'var(--p-primary-color)',
+                    }
+                  : {
+                      background: 'var(--p-surface-100)',
+                      color: 'var(--p-text-muted-color)',
+                      'border-color': 'var(--p-surface-300)',
+                    }
+              "
+            >
+              <i class="pi pi-info-circle"></i>
+              <span>JPG, PNG, SVG • Max 5MB</span>
+            </div>
+
+            <input
+              #fileInput
+              type="file"
+              accept="image/jpeg,image/png,image/jpg,image/svg+xml"
+              (change)="onFileInputChange($event)"
+              class="hidden"
+            />
+          </div>
+        </div>
+      }
+
+      @if (logoPreview() && !removeExistingLogo()) {
+        <div class="flex gap-3">
+          <p-button
+            label="Change Logo"
+            icon="pi pi-refresh"
+            severity="secondary"
+            [outlined]="true"
+            size="small"
+            (onClick)="changeLogoClick()"
+          />
+          <p-button
+            label="Remove"
+            icon="pi pi-trash"
+            severity="danger"
+            [outlined]="true"
+            size="small"
+            (onClick)="removeLogo()"
+          />
+        </div>
+      }
+    </div>
+  </div>
+
+  <div
+    class="p-6 bg-[var(--p-surface-0)] border border-[var(--p-surface-200)] rounded-xl shadow-sm"
+  >
+    <form [formGroup]="companyForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <label for="name" class="block text-sm font-semibold text-[var(--p-text-color)]">
+            Company Name *
+          </label>
+          <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+            <p-iconfield>
+              <p-inputicon class="pi pi-building" />
+              <input
+                id="name"
+                type="text"
+                pInputText
+                formControlName="name"
+                class="w-full pl-10"
+                [class.ng-invalid]="isFieldInvalid('name')"
+                placeholder="Enter company name"
+              />
+            </p-iconfield>
+          </div>
+          @if (isFieldInvalid('name')) {
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('name')"
+              styleClass="mt-2 w-full"
+            >
+            </p-message>
+          }
+        </div>
+
+        <div class="space-y-3">
+          <label for="email" class="block text-sm font-semibold text-[var(--p-text-color)]">
+            Company Email *
+          </label>
+          <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+            <p-iconfield>
+              <p-inputicon class="pi pi-envelope" />
+              <input
+                id="email"
+                type="email"
+                pInputText
+                formControlName="email"
+                class="w-full pl-10"
+                [class.ng-invalid]="isFieldInvalid('email')"
+                placeholder="Enter company email"
+                [pTooltip]="emailTooltip()"
+                tooltipPosition="top"
+              />
+            </p-iconfield>
+            @if (permissions().isCompanyEmailVerified) {
+              <i
+                class="pi pi-check-circle absolute right-3 top-1/2 transform -translate-y-1/2 text-sm pointer-events-none"
+                style="color: var(--p-green-500)"
+                pTooltip="Company email verified"
+                tooltipPosition="top"
+              ></i>
+            } @else {
+              <i
+                class="pi pi-exclamation-circle absolute right-3 top-1/2 transform -translate-y-1/2 text-sm pointer-events-none"
+                style="color: var(--p-orange-500)"
+                pTooltip="Company email verification pending"
+                tooltipPosition="top"
+              ></i>
+            }
+          </div>
+
+          @if (!permissions().isCompanyEmailVerified) {
+            <div class="flex-shrink-0 sm:ml-auto">
+              <p-button
+                label="Resend verification Email"
+                icon="pi pi-external-link"
+                size="small"
+                [link]="true"
+                (onClick)="goToCompanyEmailVerification()"
+                styleClass="text-xs px-4 py-2 h-8 font-medium hover:scale-105 transition-all duration-200 shadow-sm"
+                [style]="{ 'border-radius': '8px' }"
+              ></p-button>
+            </div>
+          }
+
+          @if (isFieldInvalid('email')) {
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('email')"
+              styleClass="mt-2 w-full"
+            >
+            </p-message>
+          }
+        </div>
+      </div>
+
+      <div
+        [class]="
+          'grid grid-cols-1 gap-6 ' +
+          (permissions().canViewRestrictedCompanyFields ? 'lg:grid-cols-2' : '')
+        "
+      >
+        @if (permissions().canViewRestrictedCompanyFields) {
+          <div class="space-y-3">
+            <label for="tax_id" class="block text-sm font-semibold text-[var(--p-text-color)]">
+              Tax ID *
+            </label>
+            <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+              <p-iconfield>
+                <p-inputicon class="pi pi-file-o" />
+                <input
+                  id="tax_id"
+                  type="text"
+                  pInputText
+                  formControlName="tax_id"
+                  class="w-full pl-10"
+                  [class.ng-invalid]="isFieldInvalid('tax_id')"
+                  placeholder="Enter tax ID"
+                  [pTooltip]="restrictedFieldTooltip()"
+                  tooltipPosition="top"
+                />
+                @if (!permissions().canUpdateRestrictedCompanyFields) {
+                  <i
+                    class="pi pi-lock absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-[var(--p-blue-500)] pointer-events-none"
+                    [pTooltip]="
+                      this.permissions().userStatus === 'pending'
+                        ? 'Account is pending approval'
+                        : permissions().userRoles.includes('seller')
+                          ? 'Seller accounts cannot update this field'
+                          : ''
+                    "
+                    tooltipPosition="top"
+                  ></i>
+                }
+              </p-iconfield>
+            </div>
+
+            @if (isFieldInvalid('tax_id')) {
+              <p-message
+                severity="error"
+                variant="simple"
+                [text]="getFieldError('tax_id')"
+                styleClass="mt-2 w-full"
+              >
+              </p-message>
+            }
+          </div>
+        }
+
+        <div class="space-y-3">
+          <label for="company_phone" class="block text-sm font-semibold text-[var(--p-text-color)]"
+            >Company Phone *</label
+          >
+          <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+            <app-phone-input formControlName="company_phone" placeholder="+1 (555) 123-4567" />
+          </div>
+          @if (isFieldInvalid('company_phone')) {
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('company_phone')"
+              styleClass="mt-2 w-full"
+            >
+            </p-message>
+          }
+        </div>
+      </div>
+
+      <div
+        [class]="
+          'grid grid-cols-1 gap-6 ' +
+          (permissions().canViewRestrictedCompanyFields ? 'lg:grid-cols-2' : '')
+        "
+      >
+        @if (permissions().canViewRestrictedCompanyFields) {
+          <div class="space-y-3">
+            <label
+              for="commercial_registration"
+              class="block text-sm font-semibold text-[var(--p-text-color)]"
+            >
+              Commercial Registration *
+            </label>
+            <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+              <p-iconfield>
+                <p-inputicon class="pi pi-file-o" />
+                <input
+                  id="commercial_registration"
+                  type="text"
+                  pInputText
+                  formControlName="commercial_registration"
+                  class="w-full pl-10"
+                  [class.ng-invalid]="isFieldInvalid('commercial_registration')"
+                  placeholder="Enter commercial registration"
+                  [pTooltip]="restrictedFieldTooltip()"
+                  tooltipPosition="top"
+                />
+                @if (!permissions().canUpdateRestrictedCompanyFields) {
+                  <i
+                    class="pi pi-lock absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-[var(--p-blue-500)] pointer-events-none"
+                    [pTooltip]="
+                      this.permissions().userStatus === 'pending'
+                        ? 'Account is pending approval'
+                        : permissions().userRoles.includes('seller')
+                          ? 'Seller accounts cannot update this field'
+                          : ''
+                    "
+                    tooltipPosition="top"
+                  ></i>
+                }
+              </p-iconfield>
+            </div>
+
+            @if (isFieldInvalid('commercial_registration')) {
+              <p-message
+                severity="error"
+                variant="simple"
+                [text]="getFieldError('commercial_registration')"
+                styleClass="mt-2 w-full"
+              >
+              </p-message>
+            }
+          </div>
+        }
+
+        <div class="space-y-3">
+          <label for="website" class="block text-sm font-semibold text-[var(--p-text-color)]">
+            Website
+          </label>
+          <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+            <p-iconfield>
+              <p-inputicon class="pi pi-globe" />
+              <input
+                id="website"
+                type="url"
+                pInputText
+                formControlName="website"
+                class="w-full pl-10"
+                [class.ng-invalid]="isFieldInvalid('website')"
+                placeholder="https://www.example.com"
+              />
+            </p-iconfield>
+          </div>
+          @if (isFieldInvalid('website')) {
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('website')"
+              styleClass="mt-2 w-full"
+            >
+            </p-message>
+          }
+        </div>
+      </div>
+
+      <div formGroupName="address" class="space-y-6">
+        <div class="flex items-center gap-3 mb-4">
+          <i class="pi pi-map-marker text-[var(--p-primary-500)]"></i>
+          <h3 class="text-lg font-semibold m-0 text-[var(--p-text-color)]">Company Address</h3>
+        </div>
+
+        <div class="space-y-3">
+          <label for="street" class="block text-sm font-semibold text-[var(--p-text-color)]">
+            Street Address *
+          </label>
+          <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+            <p-iconfield>
+              <p-inputicon class="pi pi-map" />
+              <input
+                id="street"
+                type="text"
+                pInputText
+                formControlName="street"
+                class="w-full pl-10"
+                [class.ng-invalid]="isFieldInvalid('address.street')"
+                placeholder="Enter street address"
+              />
+            </p-iconfield>
+          </div>
+          @if (isFieldInvalid('address.street')) {
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('address.street')"
+              styleClass="mt-2 w-full"
+            >
+            </p-message>
+          }
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="space-y-3">
+            <label for="city" class="block text-sm font-semibold text-[var(--p-text-color)]">
+              City *
+            </label>
+            <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+              <p-iconfield>
+                <p-inputicon class="pi pi-map-marker" />
+                <input
+                  id="city"
+                  type="text"
+                  pInputText
+                  formControlName="city"
+                  class="w-full pl-10"
+                  [class.ng-invalid]="isFieldInvalid('address.city')"
+                  placeholder="Enter city"
+                />
+              </p-iconfield>
+            </div>
+            @if (isFieldInvalid('address.city')) {
+              <p-message
+                severity="error"
+                variant="simple"
+                [text]="getFieldError('address.city')"
+                styleClass="mt-2 w-full"
+              >
+              </p-message>
+            }
+          </div>
+
+          <div class="space-y-3">
+            <label for="state" class="block text-sm font-semibold text-[var(--p-text-color)]">
+              State/Province *
+            </label>
+            <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+              <p-iconfield>
+                <p-inputicon class="pi pi-map" />
+                <input
+                  id="state"
+                  type="text"
+                  pInputText
+                  formControlName="state"
+                  class="w-full pl-10"
+                  [class.ng-invalid]="isFieldInvalid('address.state')"
+                  placeholder="Enter state/province"
+                />
+              </p-iconfield>
+            </div>
+            @if (isFieldInvalid('address.state')) {
+              <p-message
+                severity="error"
+                variant="simple"
+                [text]="getFieldError('address.state')"
+                styleClass="mt-2 w-full"
+              >
+              </p-message>
+            }
+          </div>
+
+          <div class="space-y-3">
+            <label for="zip_code" class="block text-sm font-semibold text-[var(--p-text-color)]">
+              ZIP/Postal Code *
+            </label>
+            <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+              <p-iconfield>
+                <p-inputicon class="pi pi-hashtag" />
+                <input
+                  id="zip_code"
+                  type="text"
+                  pInputText
+                  formControlName="zip_code"
+                  class="w-full pl-10"
+                  [class.ng-invalid]="isFieldInvalid('address.zip_code')"
+                  placeholder="Enter ZIP/postal code"
+                />
+              </p-iconfield>
+            </div>
+            @if (isFieldInvalid('address.zip_code')) {
+              <p-message
+                severity="error"
+                variant="simple"
+                [text]="getFieldError('address.zip_code')"
+                styleClass="mt-2 w-full"
+              >
+              </p-message>
+            }
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <label for="country" class="block text-sm font-semibold text-[var(--p-text-color)]">
+            Country *
+          </label>
+          <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+            <p-select
+              [options]="countries()"
+              formControlName="country"
+              optionLabel="label"
+              optionValue="value"
+              [filter]="true"
+              filterBy="label"
+              placeholder="Select country"
+              [class]="'w-full ' + (isFieldInvalid('address.country') ? 'ng-invalid' : '')"
+              styleClass="w-full"
+              appendTo="body"
+            />
+          </div>
+          @if (isFieldInvalid('address.country')) {
+            <p-message
+              severity="error"
+              variant="simple"
+              [text]="getFieldError('address.country')"
+              styleClass="mt-2 w-full"
+            >
+            </p-message>
+          }
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <label for="description" class="block text-sm font-semibold text-[var(--p-text-color)]"
+          >Company Description</label
+        >
+        <div class="relative transition-all duration-300 focus-within:scale-105 transform-gpu">
+          <textarea
+            id="description"
+            pTextarea
+            formControlName="description"
+            rows="4"
+            class="w-full"
+            [class.ng-invalid]="isFieldInvalid('description')"
+            placeholder="Describe your company..."
+          ></textarea>
+        </div>
+        @if (isFieldInvalid('description')) {
+          <p-message
+            severity="error"
+            variant="simple"
+            [text]="getFieldError('description')"
+            styleClass="mt-2 w-full"
+          >
+          </p-message>
+        }
+      </div>
+
+      <div class="flex justify-end">
+        <p-button
+          type="submit"
+          label="Save Changes"
+          icon="pi pi-check"
+          [loading]="saving()"
+          styleClass="transition-all duration-300 hover:scale-105 hover:shadow-lg"
+        />
+      </div>
+    </form>
+  </div>
+
+  @if (company()) {
+    <div class="mt-8">
+      <div
+        class="p-6 rounded-2xl backdrop-blur-lg transition-all duration-300 hover:shadow-xl bg-[color-mix(in_srgb,var(--p-surface-0)_95%,transparent)] shadow-[0_10px_30px_-5px_rgba(0,0,0,0.1)]"
+      >
+        <h3 class="text-lg font-semibold mb-4 text-[var(--p-text-color)]">Company Summary</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+          @for (
+            item of [
+              {
+                label: 'Company Name',
+                value: company()?.name,
+                icon: 'pi pi-building',
+                color: 'blue',
+              },
+              {
+                label: 'Email Status',
+                value: company()?.is_email_verified ? 'Verified' : 'Pending',
+                icon: 'pi pi-envelope',
+                color: 'green',
+              },
+              {
+                label: 'Location',
+                value: company()?.address?.city + ', ' + company()?.address?.country,
+                icon: 'pi pi-map-marker',
+                color: 'purple',
+              },
+            ];
+            track item.label
+          ) {
+            <div
+              class="p-4 rounded-xl transition-all duration-300 hover:scale-105 bg-[var(--p-surface-100)] h-full flex items-center"
+            >
+              <div class="flex items-center gap-3 w-full">
+                <div [class]="getSummaryIconClasses(item.color)" class="flex-shrink-0">
+                  <i [class]="item.icon + ' text-white text-sm'"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-xs font-medium text-[var(--p-text-muted-color)] mb-1">
+                    {{ item.label }}
+                  </p>
+                  <p class="text-sm font-semibold text-[var(--p-text-color)] break-words">
+                    {{ item.value }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

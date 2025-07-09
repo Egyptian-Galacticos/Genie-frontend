@@ -1,44 +1,44 @@
-<!-- Hero Section -->
 <section
-  class="relative min-h-[60vh] bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 overflow-hidden pt-20"
+  class="relative min-h-[60vh] bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 dark:from-surface-dark-100 dark:via-surface-dark-200 dark:to-surface-dark-100 overflow-hidden pt-20"
+  appAnimateOnScroll
 >
   <div class="absolute inset-0">
     <div
       class="absolute top-20 left-10 w-72 h-72 bg-primary-500/20 rounded-full blur-3xl animate-pulse"
     ></div>
     <div
-      class="absolute top-40 right-20 w-96 h-96 bg-accent2-500/20 rounded-full blur-3xl animate-pulse animation-delay-1000"
+      class="absolute top-40 right-20 w-96 h-96 bg-green-500/20 rounded-full blur-3xl animate-pulse animation-delay-1000"
     ></div>
     <div
-      class="absolute bottom-20 left-1/3 w-80 h-80 bg-accent-500/20 rounded-full blur-3xl animate-pulse animation-delay-2000"
+      class="absolute bottom-20 left-1/3 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse animation-delay-2000"
     ></div>
 
     <div class="absolute inset-0 grid-pattern opacity-20"></div>
   </div>
-
-  <!-- Hero Content -->
   <div class="relative z-10 container mx-auto px-4 pt-24 pb-20">
     <div class="max-w-4xl mx-auto text-center">
       <div
-        class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 mb-8 animate-item"
+        class="inline-flex items-center gap-2 bg-surface-0/10 dark:bg-surface-dark-900/10 backdrop-blur-sm border border-surface-0/20 dark:border-surface-dark-900/20 rounded-full px-6 py-3 mb-8 animate-item"
       >
-        <div class="w-2 h-2 bg-accent2-400 rounded-full animate-pulse"></div>
-        <span class="text-white/90 text-sm font-medium">24/7 support available</span>
+        <div class="w-2 h-2 bg-primary-400 dark:bg-primary-300 rounded-full animate-pulse"></div>
+        <span class="text-surface-0/90 dark:text-surface-dark-900 text-sm font-medium"
+          >24/7 support available</span
+        >
       </div>
 
       <h1
-        class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight animate-item"
+        class="text-4xl md:text-6xl lg:text-7xl font-bold text-surface-0 dark:text-surface-dark-900 mb-8 leading-tight animate-item"
       >
         Get in
         <span
-          class="bg-gradient-to-r from-accent2-400 via-accent-400 to-accent1-400 bg-clip-text text-transparent"
+          class="bg-gradient-to-r from-primary-400 via-primary-300 to-primary-400 dark:from-primary-300 dark:via-primary-200 dark:to-primary-300 bg-clip-text text-transparent"
         >
           Touch
         </span>
       </h1>
 
       <p
-        class="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-12 leading-relaxed animate-item"
+        class="text-xl md:text-2xl text-surface-0/80 dark:text-surface-dark-900/80 max-w-3xl mx-auto mb-12 leading-relaxed animate-item"
       >
         Have questions or need assistance? We're here to help you succeed. Reach out through any of
         our channels and get the support you need.
@@ -47,29 +47,38 @@
   </div>
 </section>
 
-<!-- Main Content Section -->
-<section class="py-20 bg-gradient-to-br from-surface-50 to-surface-100 relative overflow-hidden">
+<section
+  class="py-20 bg-gradient-to-br from-surface-50 to-surface-100 dark:from-surface-dark-0 dark:to-surface-dark-50 relative overflow-hidden"
+  appAnimateOnScroll
+>
   <div class="container mx-auto px-4 relative z-10">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
-      <!-- Contact Information -->
       <div class="space-y-6">
-        <h3 class="text-2xl font-bold text-text-main mb-8 animate-item">Contact Information</h3>
-        @for (info of contactInfo; track info.title) {
-          <div class="contact-card">
+        <h3
+          class="text-2xl font-bold text-surface-900 dark:text-surface-dark-900 mb-8 animate-item"
+        >
+          Contact Information
+        </h3>
+        @for (info of contactInfo(); track info.title) {
+          <div class="animate-item">
             <div
-              class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-surface-200"
+              class="bg-surface-0 dark:bg-surface-dark-100 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-surface-200 dark:border-surface-dark-200"
             >
               <div class="flex items-start space-x-4">
                 <div
-                  [class]="'w-14 h-14 rounded-xl flex items-center justify-center ' + info.color"
+                  [class]="
+                    'w-14 h-14 rounded-xl flex items-center justify-center shadow-md ' + info.color
+                  "
                 >
                   <i [class]="info.icon + ' text-xl text-white'"></i>
                 </div>
                 <div class="flex-1">
-                  <h4 class="text-lg font-bold text-text-main mb-2">{{ info.title }}</h4>
+                  <h4 class="text-lg font-bold text-surface-900 dark:text-surface-dark-900 mb-2">
+                    {{ info.title }}
+                  </h4>
                   <div class="space-y-1">
                     @for (detail of info.details; track detail) {
-                      <p class="text-text-secondary">{{ detail }}</p>
+                      <p class="text-surface-600 dark:text-surface-dark-600">{{ detail }}</p>
                     }
                   </div>
                 </div>
@@ -79,118 +88,162 @@
         }
       </div>
 
-      <!-- Contact Form -->
-      <div class="form-element">
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-surface-200">
-          <h3 class="text-2xl font-bold text-text-main mb-6">Send us a Message</h3>
+      <div class="animate-item">
+        <div
+          class="bg-surface-0 dark:bg-surface-dark-100 rounded-2xl p-8 shadow-lg border border-surface-200 dark:border-surface-dark-200"
+        >
+          <h3 class="text-2xl font-bold text-surface-900 dark:text-surface-dark-900 mb-6">
+            Send us a Message
+          </h3>
           <form (ngSubmit)="onSubmit()" #contactFormRef="ngForm" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="form-element">
-                <label for="name" class="block text-sm font-medium text-text-main mb-2"
+              <div>
+                <label
+                  for="name"
+                  class="block text-sm font-medium text-surface-900 dark:text-surface-dark-900 mb-2"
                   >Full Name *</label
                 >
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  [(ngModel)]="contactForm.name"
+                  [value]="contactForm().name"
+                  (input)="updateFormField('name', $any($event.target).value)"
                   required
                   pInputText
-                  class="w-full p-3 border border-surface-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  class="w-full"
+                  [class.ng-invalid]="formErrors().name"
                   placeholder="Your full name"
                 />
+                @if (formErrors().name) {
+                  <small class="text-red-500 mt-1 block">{{ formErrors().name }}</small>
+                }
               </div>
-              <div class="form-element">
-                <label for="email" class="block text-sm font-medium text-text-main mb-2"
+              <div>
+                <label
+                  for="email"
+                  class="block text-sm font-medium text-surface-900 dark:text-surface-dark-900 mb-2"
                   >Email Address *</label
                 >
                 <input
                   type="email"
                   id="email"
                   name="email"
-                  [(ngModel)]="contactForm.email"
+                  [value]="contactForm().email"
+                  (input)="updateFormField('email', $any($event.target).value)"
                   required
                   pInputText
-                  class="w-full p-3 border border-surface-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  class="w-full"
+                  [class.ng-invalid]="formErrors().email"
                   placeholder="your@email.com"
                 />
+                @if (formErrors().email) {
+                  <small class="text-red-500 mt-1 block">{{ formErrors().email }}</small>
+                }
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="form-element">
-                <label for="company" class="block text-sm font-medium text-text-main mb-2"
+              <div>
+                <label
+                  for="company"
+                  class="block text-sm font-medium text-surface-900 dark:text-surface-dark-900 mb-2"
                   >Company</label
                 >
                 <input
                   type="text"
                   id="company"
                   name="company"
-                  [(ngModel)]="contactForm.company"
+                  [value]="contactForm().company"
+                  (input)="updateFormField('company', $any($event.target).value)"
                   pInputText
-                  class="w-full p-3 border border-surface-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  class="w-full"
                   placeholder="Your company name"
                 />
               </div>
-              <div class="form-element">
-                <label for="inquiryType" class="block text-sm font-medium text-text-main mb-2"
-                  >Inquiry Type</label
+              <div>
+                <label
+                  for="inquiryType"
+                  class="block text-sm font-medium text-surface-900 dark:text-surface-dark-900 mb-2"
+                  >Inquiry Type *</label
                 >
                 <p-select
-                  [options]="inquiryTypes"
-                  [(ngModel)]="contactForm.inquiryType"
+                  [options]="inquiryTypes()"
+                  [ngModel]="contactForm().inquiryType"
+                  (ngModelChange)="updateFormField('inquiryType', $event)"
                   name="inquiryType"
                   placeholder="Select inquiry type"
                   styleClass="w-full"
+                  [class.ng-invalid]="formErrors().inquiryType"
                 >
                 </p-select>
+                @if (formErrors().inquiryType) {
+                  <small class="text-red-500 mt-1 block">{{ formErrors().inquiryType }}</small>
+                }
               </div>
             </div>
 
-            <div class="form-element">
-              <label for="subject" class="block text-sm font-medium text-text-main mb-2"
+            <div>
+              <label
+                for="subject"
+                class="block text-sm font-medium text-surface-900 dark:text-surface-dark-900 mb-2"
                 >Subject *</label
               >
               <input
                 type="text"
                 id="subject"
                 name="subject"
-                [(ngModel)]="contactForm.subject"
+                [value]="contactForm().subject"
+                (input)="updateFormField('subject', $any($event.target).value)"
                 required
                 pInputText
-                class="w-full p-3 border border-surface-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                class="w-full"
+                [class.ng-invalid]="formErrors().subject"
                 placeholder="Brief subject of your message"
               />
+              @if (formErrors().subject) {
+                <small class="text-red-500 mt-1 block">{{ formErrors().subject }}</small>
+              }
             </div>
 
-            <div class="form-element">
-              <label for="message" class="block text-sm font-medium text-text-main mb-2"
+            <div>
+              <label
+                for="message"
+                class="block text-sm font-medium text-surface-900 dark:text-surface-dark-900 mb-2"
                 >Message *</label
               >
               <textarea
                 id="message"
                 name="message"
-                [(ngModel)]="contactForm.message"
+                [value]="contactForm().message"
+                (input)="updateFormField('message', $any($event.target).value)"
                 required
                 rows="6"
-                class="w-full p-3 border border-surface-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-none"
+                pTextarea
+                class="w-full resize-none"
+                [class.ng-invalid]="formErrors().message"
                 placeholder="Tell us more about your inquiry..."
               ></textarea>
+              @if (formErrors().message) {
+                <small class="text-red-500 mt-1 block">{{ formErrors().message }}</small>
+              }
             </div>
 
-            <div class="form-element">
-              <button
+            <div>
+              <p-button
                 type="submit"
-                [disabled]="!contactFormRef.form.valid"
-                class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-              >
-                <i class="pi pi-send mr-2"></i>
-                Send Message
-              </button>
+                label="Send Message"
+                icon="pi pi-send"
+                styleClass="w-full"
+                [loading]="isSubmitting()"
+                [disabled]="isSubmitting()"
+              ></p-button>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
+
+  <p-toast></p-toast>
 </section>

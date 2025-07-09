@@ -1,27 +1,27 @@
 <div class="flex flex-col gap-6 min-h-full w-full">
   <div class="flex flex-row gap-y-4 gap-xl-2 justify-between flex-wrap">
-    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'New Quotes'"
         [cardDescription]="'5'"
         [cardIconClass]="'pi pi-envelope'"
       />
     </div>
-    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'In Progress Quotes'"
         [cardDescription]="'3'"
         [cardIconClass]="'pi pi-spinner-dotted'"
       />
     </div>
-    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'Completed'"
         [cardDescription]="'1'"
         [cardIconClass]="'pi pi-check-circle'"
       />
     </div>
-    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'Unopened Quotes'"
         [cardDescription]="'0'"
@@ -41,12 +41,13 @@
       <app-data-table
         [cols]="cols"
         [rows]="10"
-        [totalRecords]="quotesResponse?.pagination?.total || 0"
+        [totalRecords]="quotesResponse?.meta?.total || 0"
         [dataLoading]="quotesLoading"
         [data]="quotesResponse?.data || []"
         (loadDataEvent)="loadQuoteRequests($event)"
         [multiSortMeta]="multiSortMeta"
         [bodyTemplate]="customBodyTemplate"
+        [selectionMode]="null"
       >
       </app-data-table>
     </div>
@@ -62,54 +63,78 @@
 }
 
 <ng-template #customBodyTemplate let-rowData let-rowIndex="rowIndex">
-  <tr [class]="rowData.status === 'new' ? 'surface-50' : ''">
-    <td class="text-center w-[5%] shrink-1">{{ rowData.id }}</td>
-    <td class="text-center w-[15%] text-nowrap">{{ rowData.buyer.name }}</td>
-    <td class="text-center w-[20%] text-nowrap">{{ rowData.product.name }}</td>
-    <td class="text-center w-[20%] text-nowrap">{{ rowData.date }}</td>
-    <td class="text-center w-[10%]">
-      <p-badge
-        [value]="rowData.status"
-        [severity]="rowData.status === 'New' ? 'success' : 'warn'"
-        [badgeSize]="'large'"
-        [styleClass]="'text-surface-500 font-normal  bg-transparent-75 px-5 rounded-4xl'"
+  <td class="text-center w-[5%] shrink-1">{{ rowData.id }}</td>
+  <td class="text-center w-[15%] text-nowrap">{{ rowData?.buyer?.company?.name || 'N/A' }}</td>
+  <td class="text-center w-[20%] text-nowrap">{{ rowData.initial_product?.name || 'N/A' }}</td>
+  <td class="text-center w-[20%] text-nowrap">{{ rowData.date | date }}</td>
+  <td class="text-center w-[10%]">
+    <p-badge
+      [value]="rowData.status"
+      [severity]="getStatusSeverity(rowData.status)"
+      [badgeSize]="'large'"
+      styleClass="text-nowrap"
+    />
+  </td>
+  <td class="flex justify-center shrink-1">
+    <div class="flex justify-center gap-2 w-80">
+      <p-button
+        [icon]="'pi pi-comment'"
+        label="chat"
+        [rounded]="true"
+        [raised]="true"
+        [size]="'small'"
       />
-    </td>
-    <td class="flex justify-center shrink-1">
-      <div class="flex justify-around w-80">
-        <div class="flex gap-5">
-          <p-button [icon]="'pi pi-comment'" label="chat" [rounded]="true" [raised]="true" />
-          <p-button
-            icon="pi pi-receipt"
-            rounded="true"
-            outlined="true"
-            raised="true"
-            label="Quote"
-            (onClick)="openCreateQuoteModal(rowData)"
-          />
-        </div>
-        @if (rowData.status.toLowerCase() === 'new') {
-          <p-button
-            [icon]="'pi pi-eye'"
-            styleClass=""
-            [rounded]="true"
-            [outlined]="true"
-            title="mark as seen"
-            (onClick)="markQuoteRequestAsSeen(rowData)"
-          />
-          <p-button
-            [icon]="'pi pi-times'"
-            styleClass=""
-            [severity]="'danger'"
-            [rounded]="true"
-            [outlined]="true"
-            title="Reject"
-            (onClick)="markQuoteRequestAsRejected(rowData)"
-          />
-        }
-      </div>
-    </td>
-  </tr>
+      <p-button
+        icon="pi pi-receipt"
+        rounded="true"
+        outlined="true"
+        raised="true"
+        label="Quote"
+        size="small"
+        (onClick)="openCreateQuoteModal(rowData)"
+        [disabled]="
+          rowData.status.toLowerCase() !== 'pending' && rowData.status.toLowerCase() !== 'seen'
+        "
+      />
+      <p-button
+        [icon]="'pi pi-eye'"
+        [rounded]="true"
+        [raised]="true"
+        [size]="'small'"
+        title="View Details"
+        (onClick)="viewDetails(rowData)"
+      />
+      <p-button
+        [icon]="'pi pi-times'"
+        [severity]="'danger'"
+        [rounded]="true"
+        [outlined]="true"
+        [raised]="true"
+        [size]="'small'"
+        title="Reject"
+        (onClick)="markQuoteRequestAsRejected(rowData)"
+        [disabled]="
+          rowData.status.toLowerCase() !== 'pending' && rowData.status.toLowerCase() !== 'seen'
+        "
+      />
+    </div>
+  </td>
 </ng-template>
+
+@if (rfqDetailsDialogVisible()) {
+  <app-rfq-details-dialog
+    [(visible)]="rfqDetailsDialogVisible"
+    [rfq]="selectedRfq"
+    [userType]="'seller'"
+    [showActions]="true"
+    [allowChat]="true"
+    [allowQuote]="true"
+    (chat)="onRfqChat($event)"
+    (quote)="onRfqQuote($event)"
+    (markAsSeen)="onRfqMarkAsSeen($event)"
+    (reject)="onRfqReject($event)"
+    (dialogClose)="closeRfqDetailsDialog()"
+  />
+}
 
 <p-toast />

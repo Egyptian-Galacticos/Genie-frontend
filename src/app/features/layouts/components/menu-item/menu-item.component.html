@@ -54,12 +54,14 @@
 @if (item().items && item().visible !== false) {
   <ul [@children]="submenuAnimation">
     @for (item of item().items; track $index) {
-      <app-menu-item
-        [item]="item"
-        [index]="$index"
-        [parentKey]="key"
-        [class]="item['badgeClass']"
-      ></app-menu-item>
+      <li>
+        <app-menu-item
+          [item]="item"
+          [index]="$index"
+          [parentKey]="key"
+          [class]="item['badgeClass']"
+        ></app-menu-item>
+      </li>
     }
   </ul>
 }

@@ -1,20 +1,25 @@
-<p-card styleClass="ps-4 pt-4 pe-6 min-h-35  ">
-  <ng-template #header>
-    <div class="flex justify-between text-secondary">
-      <span>{{ cardTitle() }}</span>
-      <i [class]="cardIconClass() + ' text-lg'"></i>
-    </div>
-  </ng-template>
-  <ng-template #content class="">
-    <div class="flex justify-between flex-grow items-center">
-      <span class="font-bold text-2xl">{{ cardDescription() }}</span>
-    </div>
-  </ng-template>
-  @if (cardFooter()) {
-    <ng-template #footer>
-      <div class="flex justify-between">
-        <span>{{ cardFooter() }}</span>
+<div
+  class="bg-card rounded-xl shadow-lg border border-default p-6 hover:shadow-xl transition-shadow duration-300 h-full"
+>
+  <div class="flex flex-col justify-between h-full">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-3">
+        <div class="p-3 rounded-full bg-primary/10">
+          <i [class]="cardIconClass() + ' text-primary text-xl'"></i>
+        </div>
+        <div>
+          <h3 class="text-sm font-medium text-secondary uppercase tracking-wide">
+            {{ cardTitle() }}
+          </h3>
+        </div>
       </div>
-    </ng-template>
-  }
-</p-card>
+    </div>
+
+    <div class="mt-4">
+      <p class="text-3xl font-bold text-primary mb-1">{{ cardDescription() }}</p>
+      @if (cardFooter()) {
+        <p class="text-sm text-muted">{{ cardFooter() }}</p>
+      }
+    </div>
+  </div>
+</div>

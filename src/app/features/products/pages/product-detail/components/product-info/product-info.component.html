@@ -1,0 +1,249 @@
+@if (product(); as currentProduct) {
+  <div class="sticky top-8 flex flex-col gap-6">
+    <div class="space-y-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <p-chip
+          [label]="currentProduct.category.name"
+          icon="pi pi-tag"
+          styleClass="bg-primary-50 text-primary-700 dark:bg-primary-900 dark:text-primary-300"
+        />
+        @if (currentProduct.brand) {
+          <p-chip
+            [label]="currentProduct.brand"
+            icon="pi pi-star"
+            styleClass="bg-surface-100 text-surface-700 dark:bg-surface-700 dark:text-surface-300"
+          />
+        }
+      </div>
+
+      <h1
+        class="text-3xl lg:text-4xl font-bold text-surface-900 dark:text-surface-50 leading-tight"
+      >
+        {{ currentProduct.name }}
+      </h1>
+
+      <div class="flex flex-wrap gap-2">
+        @if (currentProduct.model_number) {
+          <p-tag
+            [value]="'Model: ' + currentProduct.model_number"
+            severity="secondary"
+            styleClass="text-sm"
+          />
+        }
+        @if (currentProduct.sku) {
+          <p-tag [value]="'SKU: ' + currentProduct.sku" severity="secondary" styleClass="text-sm" />
+        }
+      </div>
+
+      @if (currentProduct.tags && currentProduct.tags.length > 0) {
+        <div class="space-y-2">
+          <h4 class="text-sm font-medium text-surface-600 dark:text-surface-400">Tags</h4>
+          <div class="flex flex-wrap gap-2">
+            @for (tag of currentProduct.tags; track tag) {
+              <p-tag [value]="tag" severity="info" styleClass="text-sm" />
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <p-card
+      styleClass="bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 border-0 shadow-md"
+    >
+      <div class="space-y-3">
+        @if (pricingDisplay()?.hasPrice) {
+          <div class="flex items-baseline gap-2">
+            <span class="text-3xl font-bold text-primary-700 dark:text-primary-300">
+              {{ pricingDisplay()?.price }}
+            </span>
+            <span class="text-lg text-surface-600 dark:text-surface-400">
+              {{ pricingDisplay()?.currency }}
+            </span>
+            @if (pricingDisplay()?.minQuantity) {
+              <span class="text-sm text-surface-500 dark:text-surface-400">
+                (Min: {{ pricingDisplay()?.minQuantity }})
+              </span>
+            }
+          </div>
+          @if (pricingDisplay()?.isVolumePricing) {
+            <p-tag
+              value="Volume Pricing Available"
+              severity="info"
+              icon="pi pi-chart-line"
+              styleClass="text-sm"
+            />
+          }
+        } @else {
+          <div class="text-center py-4">
+            <i class="pi pi-phone text-2xl text-primary-500 mb-2"></i>
+            <p class="text-lg font-semibold text-surface-700 dark:text-surface-300">
+              Price on Request
+            </p>
+            <p class="text-sm text-surface-500 dark:text-surface-400">
+              Contact seller for pricing details
+            </p>
+          </div>
+        }
+
+        @if (currentProduct.sample_available && currentProduct.sample_price) {
+          <p-divider />
+          <div class="text-center">
+            <p class="text-sm text-surface-600 dark:text-surface-400">
+              Sample available for {{ currentProduct.sample_price }}
+              {{ currentProduct.currency }}
+            </p>
+          </div>
+        }
+      </div>
+    </p-card>
+
+    @if (currentProduct.tiers && currentProduct.tiers.length > 0) {
+      <p-card
+        styleClass="border border-surface-200 dark:border-surface-700 shadow-lg rounded-2xl overflow-hidden"
+      >
+        <div class="space-y-5">
+          <div
+            class="flex items-center gap-3 pb-2 border-b border-surface-200 dark:border-surface-700"
+          >
+            <div
+              class="w-10 h-10 rounded-full bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center"
+            >
+              <i class="pi pi-chart-line text-primary-600 dark:text-primary-400 text-lg"></i>
+            </div>
+            <h3 class="text-xl font-bold text-surface-900 dark:text-surface-50">Volume Pricing</h3>
+          </div>
+          <div class="grid grid-cols-1 gap-3">
+            @for (tier of currentProduct.tiers; track tier.from_quantity; let i = $index) {
+              <div
+                class="group flex justify-between items-center p-4 bg-gradient-to-r from-surface-50 to-surface-100 dark:from-surface-800 dark:to-surface-700 rounded-xl border border-surface-200 dark:border-surface-600 hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all duration-300 ease-in-out transform hover:scale-[1.02]"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center"
+                  >
+                    <span class="text-primary-600 dark:text-primary-400 font-bold text-sm">
+                      {{ i + 1 }}
+                    </span>
+                  </div>
+                  <span
+                    class="font-semibold text-surface-700 dark:text-surface-300 group-hover:text-surface-900 dark:group-hover:text-surface-100 transition-colors duration-200"
+                  >
+                    {{ tier.from_quantity
+                    }}{{ tier.to_quantity ? ' - ' + tier.to_quantity : '+' }} units
+                  </span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="text-lg font-bold text-primary-600 dark:text-primary-400 group-hover:text-primary-700 dark:group-hover:text-primary-300 transition-colors duration-200"
+                  >
+                    {{ tier.price }}
+                  </span>
+                  <span class="text-sm font-medium text-surface-500 dark:text-surface-400">
+                    {{ currentProduct.currency }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </p-card>
+    }
+
+    <div class="flex gap-4">
+      <div class="flex-1">
+        <p-button
+          label="Request Quote"
+          icon="pi pi-envelope"
+          severity="primary"
+          (onClick)="requestQuote.emit()"
+          styleClass="w-full h-14 rounded-2xl font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 border-0"
+          size="large"
+        />
+      </div>
+
+      <button
+        (click)="wishlistToggle.emit()"
+        [disabled]="wishlistLoading()"
+        [attr.title]="currentProduct.in_wishlist ? 'Remove from wishlist' : 'Add to wishlist'"
+        [class]="
+          'group w-14 h-14 flex-shrink-0 rounded-full border-2 transition-all duration-300 ease-in-out flex items-center justify-center shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-105 active:scale-95' +
+          (currentProduct.in_wishlist
+            ? ' bg-gradient-to-r from-red-500 to-red-600 border-red-500 text-white hover:from-red-600 hover:to-red-700 hover:border-red-600'
+            : ' bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-400 hover:text-red-500 hover:border-red-300 dark:hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-900/10') +
+          (wishlistLoading() ? ' opacity-60 cursor-not-allowed transform-none' : '')
+        "
+      >
+        @if (wishlistLoading()) {
+          <i class="pi pi-spin pi-spinner text-2xl"></i>
+        } @else if (currentProduct.in_wishlist) {
+          <i
+            class="pi pi-heart-fill text-2xl group-hover:scale-110 transition-transform duration-200"
+          ></i>
+        } @else {
+          <i
+            class="pi pi-heart text-2xl group-hover:scale-110 transition-transform duration-200"
+          ></i>
+        }
+      </button>
+    </div>
+
+    @if (companyInfo(); as company) {
+      <p-card
+        styleClass="border border-surface-200 dark:border-surface-700 shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 ease-in-out bg-gradient-to-br from-white to-surface-50 dark:from-surface-800 dark:to-surface-900"
+      >
+        <div class="flex items-start gap-5">
+          <div class="relative">
+            <p-avatar
+              [image]="company.logo?.url"
+              [label]="company.name.charAt(0)"
+              size="xlarge"
+              shape="circle"
+              styleClass="bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border-4 border-white dark:border-surface-700"
+            />
+            @if (company.isVerified) {
+              <div
+                class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-green-500 border-2 border-white dark:border-surface-800 flex items-center justify-center"
+              >
+                <i class="pi pi-check text-white text-xs"></i>
+              </div>
+            }
+          </div>
+          <div class="flex-1 space-y-3">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <h3 class="text-xl font-bold text-surface-900 dark:text-surface-50">
+                  {{ company.name }}
+                </h3>
+                @if (company.isVerified) {
+                  <div class="px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded-full">
+                    <span class="text-green-700 dark:text-green-400 text-xs font-medium"
+                      >Verified</span
+                    >
+                  </div>
+                }
+              </div>
+              @if (company.address) {
+                <p class="text-surface-600 dark:text-surface-400 flex items-center gap-1">
+                  <i class="pi pi-map-marker text-primary-500 text-sm"></i>
+                  {{ company.address.city }}, {{ company.address.country }}
+                </p>
+              }
+            </div>
+            @if (company.website) {
+              <a
+                [href]="company.website"
+                target="_blank"
+                class="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium transition-colors duration-200 group"
+              >
+                <i
+                  class="pi pi-external-link text-sm group-hover:scale-110 transition-transform duration-200"
+                ></i>
+                Visit Website
+              </a>
+            }
+          </div>
+        </div>
+      </p-card>
+    }
+  </div>
+}

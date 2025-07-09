@@ -1,0 +1,314 @@
+<p-dialog
+  header="RFQ Details"
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '80vw', maxWidth: '800px' }"
+  styleClass="rfq-details-modal"
+  (onHide)="onVisibilityChange(false)"
+>
+  @if (rfq(); as currentRfq) {
+    <div class="p-4">
+      <!-- RFQ Information and Other Party Information -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- RFQ Information Panel -->
+        <div class="shadow-xl p-4 rounded-xl">
+          <h3 class="text-lg font-semibold mb-4 text-blue-600 flex items-center">
+            <i class="pi pi-file-text mr-2"></i>
+            RFQ Information
+          </h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-gray-600 min-w-[120px]">RFQ ID:</span>
+              <span class="text-sm font-bold">#{{ currentRfq.id }}</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-gray-600 min-w-[120px]">Status:</span>
+              <p-badge
+                [value]="currentRfq.status | titlecase"
+                [severity]="getStatusSeverity(currentRfq.status)"
+                [style]="{
+                  'background-color': getStatusColor(currentRfq.status),
+                  color: getStatusTextColor(currentRfq.status),
+                }"
+              ></p-badge>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-secondary min-w-[120px]">Date Created:</span>
+              <span class="text-sm">{{ currentRfq.date | date: 'medium' }}</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-secondary min-w-[120px]">Last Updated:</span>
+              <span class="text-sm">{{ currentRfq.updated_at | date: 'medium' }}</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-secondary min-w-[120px]"
+                >Initial Quantity:</span
+              >
+              <span class="text-sm font-bold text-blue-600">{{
+                currentRfq.initial_quantity | number
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other Party Information Panel -->
+        <div class="shadow-xl p-4 rounded-xl">
+          <h3 class="text-lg font-semibold mb-4 text-blue-600 flex items-center">
+            <i class="pi pi-user mr-2"></i>
+            {{ getOtherPartyLabel() }} Information
+          </h3>
+          @if (getOtherParty(); as otherParty) {
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-medium text-secondary min-w-[120px]">Name:</span>
+                <span class="text-sm">
+                  @if (otherParty.full_name) {
+                    {{ otherParty.full_name }}
+                  } @else if (otherParty.first_name && otherParty.last_name) {
+                    {{ otherParty.first_name }} {{ otherParty.last_name }}
+                  } @else {
+                    N/A
+                  }
+                </span>
+              </div>
+              @if (otherParty.email) {
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-secondary min-w-[120px]">Email:</span>
+                  <span class="text-sm">{{ otherParty.email }}</span>
+                </div>
+              }
+              @if (otherParty.phone_number) {
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-secondary min-w-[120px]">Phone:</span>
+                  <span class="text-sm">{{ otherParty.phone_number }}</span>
+                </div>
+              }
+              @if (otherParty.company?.name) {
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-secondary min-w-[120px]">Company:</span>
+                  <span class="text-sm">{{ otherParty.company?.name }}</span>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="text-gray-400 italic">
+              No {{ getOtherPartyLabel().toLowerCase() }} information available
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Shipping Information Section -->
+      <div class="shadow-xl p-4 rounded-xl mb-6">
+        <h3 class="text-lg font-semibold mb-4 text-blue-600 flex items-center">
+          <i class="pi pi-truck mr-2"></i>
+          Shipping Information
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-secondary min-w-[120px]"
+                >Shipping Country:</span
+              >
+              <span class="text-sm">{{ currentRfq.shipping_country || 'N/A' }}</span>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-secondary min-w-[120px]"
+                >Shipping Address:</span
+              >
+              <span class="text-sm">{{ formatAddress(currentRfq.shipping_address) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Information Section -->
+      @if (getProduct(); as product) {
+        <div class="shadow-xl p-4 rounded-xl mb-6">
+          <h3 class="text-lg font-semibold mb-4 text-blue-600 flex items-center">
+            <i class="pi pi-box mr-2"></i>
+            Product Information
+          </h3>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Product Image -->
+            <div class="lg:col-span-1">
+              @if (product.main_image?.url || (product.images && product.images.length > 0)) {
+                <div class="aspect-square rounded-lg overflow-hidden border border-gray-200">
+                  <img
+                    [src]="product.main_image?.url || product.images[0].url"
+                    [alt]="product.name"
+                    class="w-full h-full object-cover"
+                    (error)="onImageError($event)"
+                  />
+                </div>
+              } @else {
+                <div
+                  class="aspect-square rounded-lg bg-gray-100 flex items-center justify-center border border-gray-200"
+                >
+                  <i class="pi pi-image text-4xl text-gray-400"></i>
+                </div>
+              }
+            </div>
+
+            <!-- Product Details -->
+            <div class="lg:col-span-2 space-y-4">
+              <div>
+                <h4 class="font-semibold text-lg mb-2">{{ product.name }}</h4>
+                @if (product.description) {
+                  <p class="text-sm text-gray-600 mb-3">{{ product.description }}</p>
+                }
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                @if (product.brand) {
+                  <div>
+                    <span class="text-sm font-medium text-secondary">Brand:</span>
+                    <span class="text-sm ml-2">{{ product.brand }}</span>
+                  </div>
+                }
+                @if (product.model_number) {
+                  <div>
+                    <span class="text-sm font-medium text-secondary">Model:</span>
+                    <span class="text-sm ml-2">{{ product.model_number }}</span>
+                  </div>
+                }
+                @if (product.category.name) {
+                  <div>
+                    <span class="text-sm font-medium text-secondary">Category:</span>
+                    <span class="text-sm ml-2">{{ product.category.name }}</span>
+                  </div>
+                }
+                @if (product.hs_code) {
+                  <div>
+                    <span class="text-sm font-medium text-secondary">HS Code:</span>
+                    <span class="text-sm ml-2">{{ product.hs_code }}</span>
+                  </div>
+                }
+              </div>
+
+              @if (product.sample_available) {
+                <div class="bg-green-50 p-3 rounded-lg border border-green-200">
+                  <div class="flex items-center gap-2 mb-1">
+                    <i class="pi pi-check-circle text-green-600"></i>
+                    <span class="text-sm font-medium text-green-800">Sample Available</span>
+                  </div>
+                  @if (product.sample_price) {
+                    <span class="text-sm text-green-700">
+                      Sample Price: {{ formatCurrency(product.sample_price) }}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Buyer Message Section -->
+      @if (currentRfq.buyer_message) {
+        <div class="shadow-xl p-4 rounded-xl mb-6">
+          <h3 class="text-lg font-semibold mb-4 text-blue-600 flex items-center">
+            <i class="pi pi-comment mr-2"></i>
+            Buyer Message
+          </h3>
+          <div class="bg-gray-50 p-3 rounded-lg border-l-4 border-blue-500">
+            <p class="text-sm leading-relaxed whitespace-pre-wrap">
+              {{ currentRfq.buyer_message }}
+            </p>
+          </div>
+        </div>
+      }
+
+      <!-- Quotes Summary Section (if quotes exist) -->
+      @if (currentRfq.quotes && currentRfq.quotes.length > 0) {
+        <div class="shadow-xl p-4 rounded-xl">
+          <h3 class="text-lg font-semibold mb-4 text-blue-600 flex items-center">
+            <i class="pi pi-list mr-2"></i>
+            Quotes Summary ({{ getQuotesCount() }})
+          </h3>
+          <div class="overflow-x-auto">
+            <p-table
+              [value]="currentRfq.quotes"
+              [tableStyle]="{ 'min-width': '100%' }"
+              styleClass="p-datatable-sm"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Quote ID</th>
+                  <th>Status</th>
+                  <th>Total Amount</th>
+                  <th>Items Count</th>
+                  <th>Created Date</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-quote>
+                <tr>
+                  <td>#{{ quote.id }}</td>
+                  <td>
+                    <p-badge
+                      [value]="quote.status | titlecase"
+                      [severity]="getStatusSeverity(quote.status)"
+                    ></p-badge>
+                  </td>
+                  <td>{{ formatCurrency(quote.total_price || quote.total_amount) }}</td>
+                  <td>{{ quote.items?.length || 0 }}</td>
+                  <td>{{ quote.created_at | date: 'short' }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Modal Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3">
+      <p-button label="Close" severity="secondary" outlined="true" (onClick)="closeDialog()" />
+      @if (rfq() && showActions()) {
+        <div class="flex gap-2">
+          @if (allowChat()) {
+            <p-button
+              label="Chat"
+              icon="pi pi-comment"
+              severity="info"
+              (onClick)="openChat(); closeDialog()"
+            />
+          }
+          @if (userType() === 'seller' && canPerformActionsOnRfq()) {
+            @if (allowQuote()) {
+              <p-button
+                label="Quote"
+                icon="pi pi-receipt"
+                severity="success"
+                (onClick)="createQuote(); closeDialog()"
+              />
+            }
+            <p-button
+              label="Mark as Seen"
+              icon="pi pi-eye"
+              severity="warn"
+              outlined="true"
+              (onClick)="markRfqAsSeen(); closeDialog()"
+              [disabled]="rfq()?.status?.toLowerCase() !== 'pending'"
+            />
+            <p-button
+              label="Reject"
+              icon="pi pi-times"
+              severity="danger"
+              outlined="true"
+              (onClick)="rejectRfq(); closeDialog()"
+              [disabled]="rfq()?.status?.toLowerCase() !== 'pending'"
+            />
+          }
+        </div>
+      }
+    </div>
+  </ng-template>
+</p-dialog>
