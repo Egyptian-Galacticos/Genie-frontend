@@ -16,6 +16,8 @@ import { ToastModule } from 'primeng/toast';
 import { DatePipe } from '@angular/common';
 import { StatusUtils } from '../../shared/utils/status-utils';
 import { RfqDetailsDialogComponent } from '../../shared/rfq-details-dialog/rfq-details-dialog.component';
+import { ChatService } from '../../chat/services/chat.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quotes',
@@ -40,6 +42,8 @@ import { RfqDetailsDialogComponent } from '../../shared/rfq-details-dialog/rfq-d
 export class QuotesRequestsComponent {
   private quoteService = inject(QuotesService);
   private messageService = inject(MessageService);
+  private chatService = inject(ChatService);
+  private router = inject(Router);
 
   quotesResponse: PaginatedResponse<IRequestForQuote> | null = null;
   quotesLoading = true;
@@ -123,7 +127,8 @@ export class QuotesRequestsComponent {
   // create quote, then close modal, then reload quotes
   CreateQuote(event: Partial<CreateQuoteDto>) {
     this.creatingQuote = true;
-    this.quoteService.createQuote(event as CreateQuoteDto).subscribe({
+    const quote = event as CreateQuoteDto;
+    this.quoteService.createQuote(quote).subscribe({
       next: () => {
         this.messageService.add({
           severity: 'success',
@@ -134,6 +139,30 @@ export class QuotesRequestsComponent {
         this.creatingQuote = false;
         this.createQuoteModalVisible.set(false);
         this.beingQuotedQuoteRequest.status = 'Quoted';
+        this.chatService.startConversation(quote.buyer_id).subscribe({
+          next: conversation => {
+            this.chatService
+              .sendMessage(
+                conversation.id,
+                `Quote for RFQ #${this.beingQuotedQuoteRequest.id} has been sent.`,
+                'quote'
+              )
+              .subscribe({
+                next: () => {
+                  this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Chat started successfully',
+                    life: 5000,
+                  });
+                  this.loadQuoteRequests(this.currentRequestOptions);
+                },
+              });
+          },
+          error: () => {
+            this.showError("Couldn't start chat");
+          },
+        });
       },
       error: () => {
         this.showError("Couldn't send quote");
@@ -178,7 +207,15 @@ export class QuotesRequestsComponent {
   // Handle RFQ dialog actions
   onRfqChat(rfq: IRequestForQuote) {
     console.log('Opening chat for RFQ:', rfq.id);
-    // Implement chat functionality
+    if (!rfq.buyer || !rfq.buyer.id) {
+      this.showError('Buyer information is missing for this RFQ.');
+      return;
+    }
+    this.chatService.startConversation(rfq.buyer.id).subscribe({
+      next: conversation => {
+        this.router.navigate(['/dashboard/seller/chat'], { queryParams: { id: conversation.id } });
+      },
+    });
   }
 
   onRfqQuote(rfq: IRequestForQuote) {
