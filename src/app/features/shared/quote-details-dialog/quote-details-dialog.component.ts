@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { TableModule } from 'primeng/table';
 import { IQuote, IUser } from '../utils/interfaces';
-import { IBuyerQuote, IBuyerUser, IBuyerQuoteItem } from '../utils/buyer-interfaces';
+import { IBuyerUser, IBuyerQuoteItem } from '../utils/buyer-interfaces';
 import { StatusUtils } from '../utils/status-utils';
 
 interface RFQInfo {
@@ -31,16 +31,16 @@ export class QuoteDetailsDialogComponent {
   visible = model<boolean>(false);
 
   // Input signals using input() function
-  quote = input<IQuote | IBuyerQuote | null>(null);
+  quote = input<IQuote | null>(null);
   userType = input<'buyer' | 'seller'>('buyer'); // Determines which perspective to show
   showActions = input<boolean>(true); // Whether to show action buttons
   allowAcceptReject = input<boolean>(true); // Whether to show accept/reject buttons
   allowChat = input<boolean>(true); // Whether to show chat button
 
   // Output signals using output() function
-  accept = output<IQuote | IBuyerQuote>();
-  reject = output<IQuote | IBuyerQuote>();
-  chat = output<IQuote | IBuyerQuote>();
+  accept = output<IQuote>();
+  reject = output<IQuote>();
+  chat = output<IQuote>();
   dialogClose = output<void>();
 
   // Computed signals for derived values
@@ -75,8 +75,8 @@ export class QuoteDetailsDialogComponent {
   quoteItems = computed(() => {
     const quote = this.quote();
     if (!quote) return [];
-    const buyerQuote = quote as IBuyerQuote;
-    return quote.items || buyerQuote.quote_items || [];
+    const buyerQuote = quote as IQuote;
+    return quote.items || buyerQuote.items || [];
   });
 
   totalAmount = computed(() => {
@@ -103,7 +103,7 @@ export class QuoteDetailsDialogComponent {
   rfqDetails = computed(() => {
     const quote = this.quote();
     if (!quote || this.userType() !== 'buyer') return null;
-    const buyerQuote = quote as IBuyerQuote;
+    const buyerQuote = quote;
     return buyerQuote.rfq || null;
   });
 
