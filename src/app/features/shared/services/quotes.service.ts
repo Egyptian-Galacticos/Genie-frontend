@@ -1,3 +1,4 @@
+import { ApiResponse } from './../../../core/interfaces/conversation.interface';
 import { PaginatedResponse, RequestOptions } from '../../../core/interfaces/api.interface';
 import { ApiService } from './../../../core/services/api.service';
 import { CreateQuoteDto, IQuote, IRequestForQuote } from './../utils/interfaces';
@@ -10,10 +11,12 @@ export class QuotesService {
   private readonly apiService = inject(ApiService);
 
   getCurrentSellerQuoteRequest(requestOptions: RequestOptions) {
+    requestOptions.params = { ...requestOptions?.params, user_type: 'seller' };
     return this.apiService.get<PaginatedResponse<IRequestForQuote>>('rfqs', requestOptions);
   }
 
   getCurrentSellerQuotes(requestOptions: RequestOptions) {
+    requestOptions.params = { ...requestOptions?.params, user_type: 'seller' };
     return this.apiService.get<PaginatedResponse<IQuote>>('quotes', requestOptions);
   }
   updateQuoteRequestStatus(dto: Partial<IRequestForQuote>) {
@@ -21,13 +24,15 @@ export class QuotesService {
   }
 
   createQuote(dto: CreateQuoteDto) {
-    return this.apiService.post('quotes', dto);
+    return this.apiService.post<ApiResponse<IQuote>>('quotes', dto);
   }
-  getBuyerRFQs(requestOptions?: RequestOptions) {
+  getBuyerRFQs(requestOptions: RequestOptions) {
+    requestOptions.params = { ...requestOptions?.params, user_type: 'buyer' };
     return this.apiService.get<PaginatedResponse<IRequestForQuote>>('rfqs', requestOptions);
   }
 
-  getBuyerQuotes(requestOptions?: RequestOptions) {
+  getBuyerQuotes(requestOptions: RequestOptions) {
+    requestOptions.params = { ...requestOptions?.params, user_type: 'buyer' };
     return this.apiService.get<PaginatedResponse<IQuote>>('quotes', requestOptions);
   }
   createRFQ(rfqData: Partial<IRequestForQuote>) {
