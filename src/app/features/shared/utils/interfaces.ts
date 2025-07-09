@@ -157,7 +157,7 @@ export interface IProduct {
   sample_available: boolean;
   sample_price: number;
   seller: string;
-  main_image: MediaResource;
+  main_image?: MediaResource;
   images: MediaResource[];
   hs_code: string;
   sku: string;
@@ -310,4 +310,119 @@ export interface ContractDetails {
   total_amount: number;
   contract_date: string;
   estimated_delivery: string;
+}
+
+//statistics interfaces
+export interface IBuyerStatistics {
+  rfqs?: {
+    Pending?: {
+      count?: number;
+      value?: number;
+    };
+    'In Progress'?: {
+      count?: number;
+      value?: number;
+    };
+    Quoted?: {
+      count?: number;
+      value?: number;
+    };
+    total?: number;
+  };
+  quotes?: {
+    sent?: {
+      count?: number;
+      value?: number;
+    };
+    accepted?: {
+      count?: number;
+      value?: number;
+    };
+    total?: number;
+  };
+  contracts?: {
+    approved?: {
+      count?: number;
+      value?: number;
+    };
+    total?: number;
+  };
+}
+export interface ISellerStatistics {
+  rfqs?: {
+    Pending?: {
+      count?: number;
+      value?: number;
+    };
+    'In Progress'?: {
+      count?: number;
+      value?: number;
+    };
+    Quoted?: {
+      count?: number;
+      value?: number;
+    };
+    total?: number;
+  };
+  quotes?: {
+    sent?: {
+      count?: number;
+      value?: number;
+    };
+    accepted?: {
+      count?: number;
+      value?: number;
+    };
+    total?: number;
+  };
+  contracts?: {
+    approved?: {
+      count?: number;
+      value?: number;
+    };
+    total?: number;
+  };
+  products?: {
+    active?: number;
+    pending_approval?: number;
+    approved?: number;
+    featured?: number;
+    inactive?: number;
+    total?: number;
+  };
+}
+export interface IAdminStatistics {
+  rfqs?: {
+    Pending?: {
+      count?: number;
+      value?: number;
+    };
+    'In Progress'?: {
+      count?: number;
+      value?: number;
+    };
+    Quoted?: {
+      count?: number;
+      value?: number;
+    };
+    total?: number;
+  };
+  quotes?: {
+    sent?: {
+      count?: number;
+      value?: number;
+    };
+    accepted?: {
+      count?: number;
+      value?: number;
+    };
+    total?: number;
+  };
+  contracts?: {
+    approved?: {
+      count?: number;
+      value?: number;
+    };
+    total?: number;
+  };
 }

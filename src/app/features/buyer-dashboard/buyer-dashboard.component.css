@@ -1,0 +1,393 @@
+/* Chart container styles */
+.chart-container {
+  position: relative;
+  height: 320px;
+  width: 100%;
+}
+
+.doughnut-chart-container {
+  position: relative;
+  height: 320px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doughnut-chart-wrapper {
+  width: 100%;
+  height: 100%;
+  max-width: 280px;
+  max-height: 280px;
+}
+
+.bar-chart-container {
+  position: relative;
+  height: 320px;
+  width: 100%;
+}
+
+/* Ensure charts are responsive */
+:host ::ng-deep .p-chart {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+:host ::ng-deep .p-chart canvas {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Legend styles that adapt to theme */
+:host ::ng-deep .p-chart .chartjs-legend {
+  margin-top: 1rem;
+}
+
+:host ::ng-deep .p-chart .chartjs-legend ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+:host ::ng-deep .p-chart .chartjs-legend li {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  color: var(--text-primary);
+}
+
+/* Dark mode chart background */
+[data-theme='dark'] :host ::ng-deep .p-chart canvas {
+  background-color: transparent;
+}
+
+/* Ensure proper text colors in charts */
+:host ::ng-deep .p-chart .chartjs-tooltip {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Chart axis labels */
+:host ::ng-deep .p-chart .chartjs-render-monitor {
+  color: var(--text-secondary);
+}
+
+/* Chart legend and tooltip dark mode support */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-legend li {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-tooltip {
+  background-color: var(--bg-card) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Ensure chart text is visible in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-render-monitor {
+  color: #ffffff !important;
+}
+
+/* Chart axis text color in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-label {
+  color: #ffffff !important;
+}
+
+/* Chart tick labels in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-tick {
+  color: #ffffff !important;
+}
+
+/* Chart legend labels in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-legend-item {
+  color: #ffffff !important;
+}
+
+/* Chart axis ticks in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-y .chartjs-axis-tick,
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-x .chartjs-axis-tick {
+  color: #ffffff !important;
+}
+
+/* Comprehensive dark mode chart text styling */
+[data-theme='dark'] :host ::ng-deep .p-chart {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart * {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-scale-label {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-tooltip-title {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-tooltip-body {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-tooltip-item {
+  color: #ffffff !important;
+}
+
+/* Additional Chart.js selectors for dark mode text */
+[data-theme='dark'] :host ::ng-deep .p-chart canvas + div {
+  color: #ffffff !important;
+}
+
+/* Chart.js legend text elements */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-legend ul li span {
+  color: #ffffff !important;
+}
+
+/* Chart.js axis labels */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-x-label,
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-y-label {
+  color: #ffffff !important;
+}
+
+/* Chart.js scale labels */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-scale-x .chartjs-tick,
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-scale-y .chartjs-tick {
+  color: #ffffff !important;
+}
+
+/* Chart.js tooltip text */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-tooltip-label {
+  color: #ffffff !important;
+}
+
+/* Chart.js doughnut chart center text (if any) */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-doughnut-label {
+  color: #ffffff !important;
+}
+
+/* Chart.js bar chart value labels */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-bar-label {
+  color: #ffffff !important;
+}
+
+/* Universal chart text selector for dark mode - ensures all text is white */
+[data-theme='dark'] :host ::ng-deep .p-chart svg text,
+[data-theme='dark'] :host ::ng-deep .p-chart div text,
+[data-theme='dark'] :host ::ng-deep .p-chart span,
+[data-theme='dark'] :host ::ng-deep .p-chart .chart-legend-item,
+[data-theme='dark'] :host ::ng-deep .p-chart .chart-axis-label,
+[data-theme='dark'] :host ::ng-deep .p-chart .chart-tick-label,
+[data-theme='dark'] :host ::ng-deep .p-chart .chart-tooltip-text {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Ensure Chart.js rendered text is white in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart {
+  --chart-text-color: #ffffff;
+}
+
+/* Force chart refresh on theme change */
+:host ::ng-deep .p-chart {
+  transition: color 0.2s ease;
+}
+
+/* Chart text color variables that update with theme */
+:root {
+  --chart-text-color: #0f172a;
+  --chart-axis-color: #64748b;
+  --chart-tooltip-bg: #ffffff;
+  --chart-border-color: #e2e8f0;
+}
+
+[data-theme='dark'] {
+  --chart-text-color: #ffffff;
+  --chart-axis-color: #94a3b8;
+  --chart-tooltip-bg: #1e293b;
+  --chart-border-color: #475569;
+}
+
+/* Use CSS variables for chart styling */
+:host ::ng-deep .p-chart .chartjs-legend li {
+  color: var(--chart-text-color) !important;
+}
+
+:host ::ng-deep .p-chart .chartjs-tooltip {
+  background-color: var(--chart-tooltip-bg) !important;
+  color: var(--chart-text-color) !important;
+  border: 1px solid var(--chart-border-color) !important;
+}
+
+:host ::ng-deep .p-chart .chartjs-render-monitor {
+  color: var(--chart-axis-color) !important;
+}
+
+/* Enhanced chart element selectors using CSS variables */
+:host ::ng-deep .p-chart .chartjs-axis-label,
+:host ::ng-deep .p-chart .chartjs-axis-tick,
+:host ::ng-deep .p-chart .chartjs-legend-item,
+:host ::ng-deep .p-chart .chartjs-scale-label,
+:host ::ng-deep .p-chart .chartjs-tooltip-title,
+:host ::ng-deep .p-chart .chartjs-tooltip-body,
+:host ::ng-deep .p-chart .chartjs-tooltip-item {
+  color: var(--chart-text-color) !important;
+}
+
+/* Banner and header styling */
+.banner-icon {
+  transition: all 0.3s ease;
+}
+
+.banner-icon:hover {
+  transform: scale(1.05);
+  opacity: 0.3 !important;
+}
+
+/* Responsive banner styling */
+@media (max-width: 768px) {
+  .banner-icon {
+    display: none;
+  }
+}
+
+/* Enhanced card styling for better visual hierarchy */
+.status-card {
+  transition: all 0.3s ease;
+}
+
+.status-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme='dark'] .status-card:hover {
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Improved spacing and visual hierarchy */
+.section-header {
+  border-bottom: 2px solid var(--color-primary-100);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+[data-theme='dark'] .section-header {
+  border-bottom-color: var(--color-primary-800);
+}
+
+/* Better visual distinction for the bottom section */
+.detailed-status-section {
+  margin-top: 2rem;
+}
+
+.detailed-status-section .status-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.detailed-status-section .status-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 4px;
+  background: var(--color-primary-500);
+  transition: all 0.3s ease;
+}
+
+.detailed-status-section .status-item:hover::before {
+  width: 8px;
+}
+
+/* Enhanced dark mode support for cards */
+[data-theme='dark'] .bg-card {
+  background-color: var(--color-surface-dark-50);
+  border-color: var(--color-surface-dark-200);
+}
+
+[data-theme='dark'] .shadow-lg {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.3),
+    0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark mode enhancements for the detailed status section */
+[data-theme='dark'] .detailed-status-cards {
+  background-color: var(--color-surface-dark-50);
+  border-color: var(--color-surface-dark-200);
+}
+
+[data-theme='dark'] .detailed-status-cards .status-card {
+  background-color: var(--color-surface-dark-100);
+  border-color: var(--color-surface-dark-300);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.4),
+    0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .detailed-status-cards .status-card:hover {
+  background-color: var(--color-surface-dark-200);
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.5),
+    0 4px 6px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* Enhanced status item styling for dark mode */
+[data-theme='dark'] .status-item {
+  background-color: color-mix(in srgb, var(--color-surface-dark-100) 60%, transparent);
+  border-color: var(--color-surface-dark-300);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .status-item:hover {
+  background-color: color-mix(in srgb, var(--color-surface-dark-200) 70%, transparent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Status section header styling for dark mode */
+[data-theme='dark'] .status-section-header {
+  border-bottom: 1px solid var(--color-surface-dark-300);
+  background: linear-gradient(
+    135deg,
+    var(--color-surface-dark-50) 0%,
+    var(--color-surface-dark-100) 100%
+  );
+}
+
+/* Status item border accents for dark mode */
+[data-theme='dark'] .status-item.danger-accent {
+  border-left-color: var(--color-danger-400);
+  background-color: color-mix(in srgb, var(--color-danger-500) 8%, var(--color-surface-dark-100));
+}
+
+[data-theme='dark'] .status-item.warning-accent {
+  border-left-color: var(--color-warning-400);
+  background-color: color-mix(in srgb, var(--color-warning-500) 8%, var(--color-surface-dark-100));
+}
+
+[data-theme='dark'] .status-item.success-accent {
+  border-left-color: var(--color-success-400);
+  background-color: color-mix(in srgb, var(--color-success-500) 8%, var(--color-surface-dark-100));
+}
+
+[data-theme='dark'] .status-item.info-accent {
+  border-left-color: var(--color-info-400);
+  background-color: color-mix(in srgb, var(--color-info-500) 8%, var(--color-surface-dark-100));
+}
+
+/* Enhanced glass effect for status cards in dark mode */
+[data-theme='dark'] .status-card-glass {
+  background: color-mix(in srgb, var(--color-surface-dark-50) 70%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid color-mix(in srgb, var(--color-surface-dark-400) 30%, transparent);
+}

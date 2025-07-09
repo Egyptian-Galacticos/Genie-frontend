@@ -2,7 +2,7 @@
   <!-- Statistics cards section -->
   <div class="flex flex-row gap-y-4 gap-xl-2 justify-between flex-wrap">
     <!-- Pending quotes counter card -->
-    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'Pending Quotes'"
         [cardDescription]="getPendingCount().toString()"
@@ -10,7 +10,7 @@
       />
     </div>
     <!-- Accepted quotes counter card -->
-    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'Accepted'"
         [cardDescription]="getAcceptedCount().toString()"
@@ -18,7 +18,7 @@
       />
     </div>
     <!-- Rejected quotes counter card -->
-    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'Rejected'"
         [cardDescription]="getRejectedCount().toString()"
@@ -26,7 +26,7 @@
       />
     </div>
     <!-- Total quotes counter card -->
-    <div class="w-full sm:w-[48%] lg:xl:w-[24%] 2xl:w-1/5 shrink-0">
+    <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'Total Quotes'"
         [cardDescription]="totalRecords.toString()"

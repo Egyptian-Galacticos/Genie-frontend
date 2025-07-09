@@ -1,0 +1,353 @@
+/* Chart container styles */
+.chart-container {
+  position: relative;
+  height: 320px;
+  width: 100%;
+}
+
+.doughnut-chart-container {
+  position: relative;
+  height: 320px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doughnut-chart-wrapper {
+  width: 100%;
+  height: 100%;
+  max-width: 280px;
+  max-height: 280px;
+}
+
+.bar-chart-container {
+  position: relative;
+  height: 320px;
+  width: 100%;
+}
+
+/* Ensure charts are responsive */
+:host ::ng-deep .p-chart {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+:host ::ng-deep .p-chart canvas {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Legend styles that adapt to theme */
+:host ::ng-deep .p-chart .chartjs-legend {
+  margin-top: 1rem;
+}
+
+:host ::ng-deep .p-chart .chartjs-legend ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+:host ::ng-deep .p-chart .chartjs-legend li {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  color: var(--text-primary);
+}
+
+/* Dark mode chart background */
+[data-theme='dark'] :host ::ng-deep .p-chart canvas {
+  background-color: transparent;
+}
+
+/* Ensure proper text colors in charts */
+:host ::ng-deep .p-chart .chartjs-tooltip {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Chart axis labels */
+:host ::ng-deep .p-chart .chartjs-render-monitor {
+  color: var(--text-secondary);
+}
+
+/* Chart legend and tooltip dark mode support */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-legend li {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-tooltip {
+  background-color: var(--bg-card) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Ensure chart text is visible in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-render-monitor {
+  color: #ffffff !important;
+}
+
+/* Chart axis text color in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-label {
+  color: #ffffff !important;
+}
+
+/* Chart tick labels in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-tick {
+  color: #ffffff !important;
+}
+
+/* Chart legend labels in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-legend-item {
+  color: #ffffff !important;
+}
+
+/* Chart axis ticks in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-y .chartjs-axis-tick,
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-x .chartjs-axis-tick {
+  color: #ffffff !important;
+}
+
+/* Comprehensive dark mode chart text styling */
+[data-theme='dark'] :host ::ng-deep .p-chart {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart * {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-scale-label {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-tooltip-title {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-tooltip-body {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-tooltip-item {
+  color: #ffffff !important;
+}
+
+/* Additional Chart.js selectors for dark mode text */
+[data-theme='dark'] :host ::ng-deep .p-chart canvas + div {
+  color: #ffffff !important;
+}
+
+/* Chart.js legend text elements */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-legend ul li span {
+  color: #ffffff !important;
+}
+
+/* Chart.js axis labels */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-x-label,
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-axis-y-label {
+  color: #ffffff !important;
+}
+
+/* Chart.js scale labels */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-scale-x .chartjs-tick,
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-scale-y .chartjs-tick {
+  color: #ffffff !important;
+}
+
+/* Chart.js tooltip text */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-tooltip-label {
+  color: #ffffff !important;
+}
+
+/* Chart.js doughnut chart center text (if any) */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-doughnut-label {
+  color: #ffffff !important;
+}
+
+/* Chart.js bar chart value labels */
+[data-theme='dark'] :host ::ng-deep .p-chart .chartjs-bar-label {
+  color: #ffffff !important;
+}
+
+/* Universal chart text selector for dark mode - ensures all text is white */
+[data-theme='dark'] :host ::ng-deep .p-chart svg text,
+[data-theme='dark'] :host ::ng-deep .p-chart div text,
+[data-theme='dark'] :host ::ng-deep .p-chart span,
+[data-theme='dark'] :host ::ng-deep .p-chart .chart-legend-item,
+[data-theme='dark'] :host ::ng-deep .p-chart .chart-axis-label,
+[data-theme='dark'] :host ::ng-deep .p-chart .chart-tick-label,
+[data-theme='dark'] :host ::ng-deep .p-chart .chart-tooltip-text {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Ensure Chart.js rendered text is white in dark mode */
+[data-theme='dark'] :host ::ng-deep .p-chart {
+  --chart-text-color: #ffffff;
+}
+
+/* Force chart refresh on theme change */
+:host ::ng-deep .p-chart {
+  transition: color 0.2s ease;
+}
+
+/* Chart text color variables that update with theme */
+:root {
+  --chart-text-color: #0f172a;
+  --chart-axis-color: #64748b;
+  --chart-tooltip-bg: #ffffff;
+  --chart-border-color: #e2e8f0;
+}
+
+[data-theme='dark'] {
+  --chart-text-color: #ffffff;
+  --chart-axis-color: #94a3b8;
+  --chart-tooltip-bg: #1e293b;
+  --chart-border-color: #475569;
+}
+
+/* Use CSS variables for chart styling */
+:host ::ng-deep .p-chart .chartjs-legend li {
+  color: var(--chart-text-color) !important;
+}
+
+:host ::ng-deep .p-chart .chartjs-tooltip {
+  background-color: var(--chart-tooltip-bg) !important;
+  color: var(--chart-text-color) !important;
+  border: 1px solid var(--chart-border-color) !important;
+}
+
+:host ::ng-deep .p-chart .chartjs-render-monitor {
+  color: var(--chart-axis-color) !important;
+}
+
+/* Enhanced chart element selectors using CSS variables */
+:host ::ng-deep .p-chart .chartjs-axis-label,
+:host ::ng-deep .p-chart .chartjs-axis-tick,
+:host ::ng-deep .p-chart .chartjs-legend-item,
+:host ::ng-deep .p-chart .chartjs-scale-label,
+:host ::ng-deep .p-chart .chartjs-tooltip-title,
+:host ::ng-deep .p-chart .chartjs-tooltip-body,
+:host ::ng-deep .p-chart .chartjs-tooltip-item {
+  color: var(--chart-text-color) !important;
+}
+
+/* Chart title styling */
+.chart-title {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Product specific color overrides for purple elements */
+:root {
+  --color-purple-50: #faf5ff;
+  --color-purple-100: #f3e8ff;
+  --color-purple-200: #e9d5ff;
+  --color-purple-300: #d8b4fe;
+  --color-purple-400: #c084fc;
+  --color-purple-500: #a855f7;
+  --color-purple-600: #9333ea;
+  --color-purple-700: #7c3aed;
+  --color-purple-800: #6b21a8;
+  --color-purple-900: #581c87;
+}
+
+[data-theme='dark'] {
+  --color-purple-50: #1e1b26;
+  --color-purple-100: #2d1b33;
+  --color-purple-200: #3d2240;
+  --color-purple-300: #4d294d;
+  --color-purple-400: #6d3569;
+  --color-purple-500: #a855f7;
+  --color-purple-600: #b866f8;
+  --color-purple-700: #c877f9;
+  --color-purple-800: #d888fa;
+  --color-purple-900: #e899fb;
+}
+
+/* Enhanced grid layout for seller dashboard */
+@media (min-width: 768px) {
+  .seller-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .seller-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Responsive enhancements for product cards */
+@media (max-width: 767px) {
+  .product-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-status-item {
+    padding: 0.75rem;
+  }
+}
+
+/* Enhanced chart container for better mobile experience */
+@media (max-width: 640px) {
+  .doughnut-chart-container {
+    height: 280px;
+  }
+
+  .bar-chart-container {
+    height: 280px;
+  }
+
+  .doughnut-chart-wrapper {
+    max-width: 240px;
+    max-height: 240px;
+  }
+}
+
+/* Improved focus states for accessibility */
+.product-status-card:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Animation for chart loading */
+@keyframes chartFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+:host ::ng-deep .p-chart {
+  animation: chartFadeIn 0.3s ease-out;
+}
+
+/* Custom scrollbar for mobile */
+@media (max-width: 768px) {
+  .dashboard-scroll::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-track {
+    background: var(--bg-muted);
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 2px;
+  }
+}
