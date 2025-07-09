@@ -66,21 +66,21 @@ export class ChatService {
 
   private handleNewMessage(messageEvent: ProcessedNewMessageEvent): void {
     const message: Message = {
-      id: messageEvent.message.id,
-      conversation_id: messageEvent.conversationId,
-      content: messageEvent.message.content,
-      type: 'text', // Default to text, could be enhanced based on messageEvent structure
-      sent_at: messageEvent.message.created_at,
-      created_at: messageEvent.message.created_at,
-      updated_at: messageEvent.message.updated_at,
-      is_read: false,
-      sender_id: messageEvent.message.user_id,
+      id: messageEvent.id,
+      conversation_id: messageEvent.conversation_id,
+      content: messageEvent.content,
+      type: messageEvent.type as Message['type'], // Cast to Message['type'] to satisfy the type
+      sent_at: messageEvent.sent_at,
+      created_at: messageEvent.created_at,
+      updated_at: messageEvent.updated_at,
+      is_read: false, // Messages are initially unread for the receiver
+      sender_id: messageEvent.sender_id,
       sender: {
-        id: messageEvent.user.id,
-        first_name: '', // This data might not be available from websocket event
-        last_name: '', // This data might not be available from websocket event
-        full_name: messageEvent.user.full_name,
-        email: messageEvent.user.email,
+        id: messageEvent.sender.id,
+        first_name: messageEvent.sender.first_name,
+        last_name: messageEvent.sender.last_name,
+        full_name: `${messageEvent.sender.first_name} ${messageEvent.sender.last_name}`,
+        email: messageEvent.sender.email || '', // Provide a default if email is optional
         phone_number: null,
         is_email_verified: false,
         status: 'active',
@@ -93,7 +93,7 @@ export class ChatService {
     };
 
     this._messages.update(messagesMap => {
-      const currentMessages = messagesMap.get(messageEvent.conversationId) || [];
+      const currentMessages = messagesMap.get(messageEvent.conversation_id) || [];
       const newMap = new Map(messagesMap);
 
       const existingIndex = currentMessages.findIndex(m => m.id === message.id);
@@ -101,7 +101,7 @@ export class ChatService {
         const updatedMessages = [...currentMessages, message].sort(
           (a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime()
         );
-        newMap.set(messageEvent.conversationId, updatedMessages);
+        newMap.set(messageEvent.conversation_id, updatedMessages);
       }
 
       return newMap;
@@ -109,7 +109,7 @@ export class ChatService {
 
     this._conversations.update(conversations =>
       conversations.map(conv => {
-        if (conv.id === messageEvent.conversationId) {
+        if (conv.id === messageEvent.conversation_id) {
           return {
             ...conv,
             last_message: message,
@@ -121,7 +121,7 @@ export class ChatService {
     );
 
     const currentUser = this.authService.user();
-    if (currentUser && messageEvent.message.user_id !== currentUser.id) {
+    if (currentUser && messageEvent.sender_id !== currentUser.id) {
       this._unreadCount.update(count => count + 1);
     }
   }

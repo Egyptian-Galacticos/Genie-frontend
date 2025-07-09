@@ -13,18 +13,21 @@ export interface PresenceUser {
 }
 
 export interface MessageSentEvent {
-  message: {
+  id: number;
+  conversation_id: number;
+  sender_id: number;
+  content: string;
+  type: string;
+  sent_at: string;
+  created_at: string;
+  updated_at: string;
+  sender: {
     id: number;
-    content: string;
-    user_id: number;
-    conversation_id: number;
-    created_at: string;
-    updated_at: string;
-  };
-  user: {
-    id: number;
-    full_name: string;
-    email: string;
+    first_name: string;
+    last_name: string;
+    avatar_url: string | null;
+    full_name?: string; // Optional, as it might be constructed on frontend
+    email?: string; // Optional, if not always sent
   };
 }
 
@@ -58,9 +61,8 @@ export interface ProcessedMessageReadEvent {
   userId: number;
 }
 
-export interface ProcessedNewMessageEvent extends MessageSentEvent {
-  conversationId: number;
-}
+// ProcessedNewMessageEvent now directly extends MessageSentEvent
+export type ProcessedNewMessageEvent = MessageSentEvent;
 
 interface ConnectionError {
   message?: string;
@@ -268,11 +270,14 @@ export class WebSocketService {
       // Listen for new messages
       channel.listen('.message.sent', (event: unknown) => {
         const messageEvent = event as MessageSentEvent;
+        const currentUser = this.authService.user();
+
+        // ✅ Prevent duplication for the sender
+        if (messageEvent.sender_id === currentUser?.id) {
+          return;
+        }
         console.log('New message received:', messageEvent);
-        this.newMessageSubject.next({
-          ...messageEvent,
-          conversationId,
-        });
+        this.newMessageSubject.next(messageEvent);
       });
 
       // Listen for read status updates
