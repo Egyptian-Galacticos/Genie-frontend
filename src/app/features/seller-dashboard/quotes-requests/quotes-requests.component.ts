@@ -129,7 +129,7 @@ export class QuotesRequestsComponent {
     this.creatingQuote = true;
     const quote = event as CreateQuoteDto;
     this.quoteService.createQuote(quote).subscribe({
-      next: () => {
+      next: response => {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
@@ -144,7 +144,7 @@ export class QuotesRequestsComponent {
             this.chatService
               .sendMessage(
                 conversation.id,
-                `Quote for RFQ #${this.beingQuotedQuoteRequest.id} has been sent.`,
+                `Quote #${response.data.id} for RFQ #${this.beingQuotedQuoteRequest.id} has been sent.`,
                 'quote'
               )
               .subscribe({
