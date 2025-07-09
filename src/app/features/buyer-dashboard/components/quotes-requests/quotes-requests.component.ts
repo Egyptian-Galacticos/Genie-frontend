@@ -19,6 +19,8 @@ import { DividerModule } from 'primeng/divider';
 import { StatusUtils } from '../../../shared/utils/status-utils';
 import { QuotesService } from '../../../shared/services/quotes.service';
 import { RfqDetailsDialogComponent } from '../../../shared/rfq-details-dialog/rfq-details-dialog.component';
+import { Router } from '@angular/router';
+import { ChatService } from '../../../chat/services/chat.service';
 
 @Component({
   selector: 'app-buyer-quotes-requests',
@@ -42,6 +44,8 @@ export class BuyerQuotesRequestsComponent implements OnInit {
   @ViewChild('customBodyTemplate', { static: true }) customBodyTemplate!: TemplateRef<unknown>;
   private quotesService = inject(QuotesService);
   private messageService = inject(MessageService);
+  private router = inject(Router);
+  private chatService = inject(ChatService);
   rfqResponse: ApiResponse<IRequestForQuote[]> | null = null;
   rfqData: IRequestForQuote[] = [];
   loading = false;
@@ -148,8 +152,20 @@ export class BuyerQuotesRequestsComponent implements OnInit {
 
   // Handle RFQ dialog actions
   onRfqChat(rfq: IRequestForQuote) {
-    console.log('Opening chat for RFQ:', rfq.id);
-    // Implement chat functionality
+    if (!rfq.seller || !rfq.seller.id) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Seller information is missing for this RFQ.',
+        life: 5000,
+      });
+      return;
+    }
+    this.chatService.startConversation(rfq.seller.id).subscribe({
+      next: conversation => {
+        this.router.navigate(['/dashboard/buyer/chat'], { queryParams: { id: conversation.id } });
+      },
+    });
   }
 
   viewQuotes(): void {}
