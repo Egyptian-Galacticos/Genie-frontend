@@ -16,7 +16,7 @@ export interface Message {
   id: number;
   conversation_id: number;
   content: string;
-  type: 'text' | 'image' | 'file' | 'audio' | 'video';
+  type: 'text' | 'image' | 'file' | 'audio' | 'video' | 'quote' | 'rfq' | 'contract';
   sent_at: string;
   created_at: string;
   updated_at: string;
