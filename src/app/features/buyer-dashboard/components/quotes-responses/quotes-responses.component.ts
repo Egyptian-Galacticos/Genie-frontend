@@ -13,6 +13,8 @@ import { TableModule } from 'primeng/table';
 import { StatusUtils } from '../../../shared/utils/status-utils';
 import { QuotesService } from '../../../shared/services/quotes.service';
 import { QuoteDetailsDialogComponent } from '../../../shared/quote-details-dialog/quote-details-dialog.component';
+import { Router } from '@angular/router';
+import { ChatService } from '../../../chat/services/chat.service';
 
 @Component({
   selector: 'app-buyer-quotes-responses',
@@ -36,7 +38,8 @@ export class BuyerQuotesResponsesComponent implements OnInit {
 
   private readonly quotesService = inject(QuotesService);
   private readonly messageService = inject(MessageService);
-
+  private readonly router = inject(Router);
+  private readonly chatService = inject(ChatService);
   quotesData: IQuote[] = [];
   loading = false;
   selectedStatus = 'all';
@@ -263,11 +266,19 @@ export class BuyerQuotesResponsesComponent implements OnInit {
   }
 
   openChat(quote: IQuote) {
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Chat Feature',
-      detail: `Chat functionality for quote #${quote.id} will be implemented soon.`,
-      life: 3000,
+    if (!quote.seller || !quote.seller.id) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Seller information is missing for this quote.',
+        life: 5000,
+      });
+      return;
+    }
+    this.chatService.startConversation(quote.seller.id).subscribe({
+      next: conversation => {
+        this.router.navigate(['/dashboard/buyer/chat'], { queryParams: { id: conversation.id } });
+      },
     });
   }
 }

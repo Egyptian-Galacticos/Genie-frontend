@@ -161,6 +161,7 @@
       [quote]="selectedQuote"
       [userType]="'buyer'"
       (close)="quoteDetailsVisible.set(false)"
+      (chat)="openChat($event)"
     ></app-quote-details-dialog>
   }
   <p-toast></p-toast>
