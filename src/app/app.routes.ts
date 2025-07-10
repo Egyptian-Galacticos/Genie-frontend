@@ -203,7 +203,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/admin',
-    canActivate: [roleGuard(['admin']), authGuard, emailVerificationGuard],
+    canActivate: [authGuard, roleGuard(['admin']), emailVerificationGuard],
     component: DashboardLayoutComponent,
     children: [
       {
