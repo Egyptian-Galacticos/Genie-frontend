@@ -93,7 +93,7 @@
                         {{ spec.name }}
                       </h4>
                       <p class="text-sm text-surface-600 dark:text-surface-400">
-                        {{ spec.size }}
+                        {{ formatFileSize(spec.size) }}
                       </p>
                       <p-button
                         label="Download"
@@ -125,7 +125,7 @@
                         {{ cert.name }}
                       </h4>
                       <p class="text-sm text-surface-600 dark:text-surface-400">
-                        {{ cert.size }}
+                        {{ formatFileSize(cert.size) }}
                       </p>
                       <p-button
                         label="Download"
@@ -157,7 +157,7 @@
                         {{ doc.name }}
                       </h4>
                       <p class="text-sm text-surface-600 dark:text-surface-400">
-                        {{ doc.size }}
+                        {{ formatFileSize(doc.size) }}
                       </p>
                       <p-button
                         label="Download"

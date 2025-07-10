@@ -160,6 +160,22 @@ export class ProductDetailComponent {
     };
   });
 
+  isProductOwner = computed(() => {
+    const product = this.product();
+    const currentUser = this.authService.user();
+
+    if (!product || !currentUser) return false;
+
+    return product.seller_id === currentUser.id;
+  });
+
+  canPerformBuyerActions = computed(() => {
+    const isAuthenticated = this.authService.isAuthenticated();
+    const isOwner = this.isProductOwner();
+
+    return isAuthenticated && !isOwner;
+  });
+
   countries = signal<CountryOption[]>([]);
 
   constructor() {
@@ -194,6 +210,17 @@ export class ProductDetailComponent {
       return;
     }
 
+    if (this.isProductOwner()) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Action Not Allowed',
+        detail: 'You cannot add your own product to your wishlist',
+        life: 4000,
+        icon: 'pi pi-info-circle',
+      });
+      return;
+    }
+
     this.wishlistLoading.set(true);
 
     if (product.in_wishlist) {
@@ -224,6 +251,7 @@ export class ProductDetailComponent {
             life: 4000,
             icon: 'pi pi-exclamation-triangle',
           });
+          this.wishlistLoading.set(false);
         },
         complete: () => {
           this.wishlistLoading.set(false);
@@ -257,6 +285,7 @@ export class ProductDetailComponent {
             life: 4000,
             icon: 'pi pi-exclamation-triangle',
           });
+          this.wishlistLoading.set(false);
         },
         complete: () => {
           this.wishlistLoading.set(false);
@@ -276,6 +305,17 @@ export class ProductDetailComponent {
         detail: 'Please log in to request a quote',
         life: 4000,
         icon: 'pi pi-exclamation-triangle',
+      });
+      return;
+    }
+
+    if (this.isProductOwner()) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Action Not Allowed',
+        detail: 'You cannot request a quote for your own product',
+        life: 4000,
+        icon: 'pi pi-info-circle',
       });
       return;
     }
@@ -341,6 +381,8 @@ export class ProductDetailComponent {
           life: 4000,
           icon: 'pi pi-exclamation-triangle',
         });
+        this.rfqLoading.set(false);
+        this.showRequestQuoteDialog.set(false);
       },
       complete: () => {
         this.rfqLoading.set(false);

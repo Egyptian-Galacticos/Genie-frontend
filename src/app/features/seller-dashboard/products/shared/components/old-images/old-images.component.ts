@@ -26,7 +26,7 @@ export class OldImagesComponent {
   messageService = inject(MessageService);
   confirmationService = inject(ConfirmationService);
 
-  old_main_image = input.required<MediaResource>();
+  old_main_image = input<MediaResource | undefined>();
   old_images = input.required<MediaResource[]>();
   filesToDelete = model.required<number[]>();
 

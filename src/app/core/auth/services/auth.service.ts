@@ -1,4 +1,13 @@
-import { Injectable, signal, computed, effect, inject, PLATFORM_ID, NgZone } from '@angular/core';
+import {
+  Injectable,
+  signal,
+  computed,
+  effect,
+  inject,
+  PLATFORM_ID,
+  NgZone,
+  OnDestroy,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { Observable, throwError, EMPTY } from 'rxjs';
@@ -18,7 +27,7 @@ import { RegistrationData, RegistrationResponse } from '../interfaces/register.i
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private readonly apiService = inject(ApiService);
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
@@ -42,11 +51,140 @@ export class AuthService {
   private refreshTokenTimer?: ReturnType<typeof setTimeout>;
   private refreshInProgress = signal<boolean>(false);
   private rememberMePreference = signal<boolean>(false);
+  private authChannel: BroadcastChannel | null = null;
 
   constructor() {
     if (this.isBrowser) {
+      this.initializeBroadcastChannel();
       this.initializeAuth();
       this.setupTokenRefresh();
+    }
+  }
+
+  /**
+   * Initialize BroadcastChannel for cross-tab communication
+   */
+  private initializeBroadcastChannel(): void {
+    if (!this.isBrowser) return;
+
+    this.authChannel = new BroadcastChannel('auth-state');
+
+    this.authChannel.onmessage = event => {
+      const { type, data } = event.data;
+      switch (type) {
+        case 'LOGIN':
+          this.handleCrossTabLogin(data);
+          break;
+        case 'LOGOUT':
+          this.handleCrossTabLogout();
+          break;
+        case 'TOKEN_REFRESH':
+          this.handleTokenRefresh(data);
+          break;
+        case 'REQUEST_AUTH_STATE':
+          this.handleAuthStateRequest();
+          break;
+        case 'AUTH_STATE_RESPONSE':
+          this.handleAuthStateResponse(data);
+          break;
+      }
+    };
+  }
+
+  /**
+   * Handle cross-tab login
+   */
+  private handleCrossTabLogin(data: {
+    accessToken: string;
+    refreshToken: string;
+    user: User;
+    rememberMe: boolean;
+  }): void {
+    if (!this._isAuthenticated()) {
+      this._accessToken.set(data.accessToken);
+      this._user.set(data.user);
+      this._isAuthenticated.set(true);
+      this.rememberMePreference.set(data.rememberMe);
+
+      this.storeAccessToken(data.accessToken);
+      this.storeRefreshToken(data.refreshToken);
+
+      this._isInitializing.set(false);
+    }
+  }
+
+  /**
+   * Handle cross-tab logout
+   */
+  private handleCrossTabLogout(): void {
+    if (this._isAuthenticated()) {
+      this._accessToken.set(null);
+      this._user.set(null);
+      this._isAuthenticated.set(false);
+      this.rememberMePreference.set(false);
+
+      this.clearTokens();
+      this.router.navigate(['/auth/login']);
+    }
+  }
+
+  /**
+   * Handle token refresh from other tabs
+   */
+  private handleTokenRefresh(data: { accessToken: string }): void {
+    if (this._isAuthenticated()) {
+      this._accessToken.set(data.accessToken);
+      this.storeAccessToken(data.accessToken);
+    }
+  }
+
+  /**
+   * Handle auth state request from other tabs
+   */
+  private handleAuthStateRequest(): void {
+    if (this._isAuthenticated()) {
+      const refreshToken = this.getStoredRefreshToken();
+      const userData = this._user();
+
+      if (this._accessToken() && refreshToken && userData) {
+        this.broadcastAuthState('AUTH_STATE_RESPONSE', {
+          accessToken: this._accessToken(),
+          refreshToken: refreshToken,
+          user: userData,
+          rememberMe: this.rememberMePreference(),
+        });
+      }
+    }
+  }
+
+  /**
+   * Handle auth state response from other tabs
+   */
+  private handleAuthStateResponse(data: {
+    accessToken: string;
+    refreshToken: string;
+    user: User;
+    rememberMe: boolean;
+  }): void {
+    if (!this._isAuthenticated()) {
+      this._accessToken.set(data.accessToken);
+      this._user.set(data.user);
+      this._isAuthenticated.set(true);
+      this.rememberMePreference.set(data.rememberMe);
+
+      this.storeAccessToken(data.accessToken);
+      this.storeRefreshToken(data.refreshToken);
+
+      this._isInitializing.set(false);
+    }
+  }
+
+  /**
+   * Broadcast auth state to other tabs
+   */
+  private broadcastAuthState(type: string, data?: unknown): void {
+    if (this.authChannel) {
+      this.authChannel.postMessage({ type, data });
     }
   }
 
@@ -55,26 +193,51 @@ export class AuthService {
    */
   private initializeAuth(): void {
     this.guardBrowser(() => {
-      const accessToken = this.getStoredAccessToken();
-      const userData = this.getStoredUserData();
-      const refreshToken = this.getStoredRefreshToken();
-
-      // Determine remember me preference from where tokens are stored
       const accessTokenInLocalStorage = localStorage.getItem(this.ACCESS_TOKEN_KEY);
       const refreshTokenInLocalStorage = localStorage.getItem(this.REFRESH_TOKEN_KEY);
+      const accessTokenInSessionStorage = sessionStorage.getItem(this.ACCESS_TOKEN_KEY);
+      const refreshTokenInSessionStorage = sessionStorage.getItem(this.REFRESH_TOKEN_KEY);
+
       this.rememberMePreference.set(!!(accessTokenInLocalStorage || refreshTokenInLocalStorage));
+
+      const accessToken = accessTokenInLocalStorage || accessTokenInSessionStorage;
+      const refreshToken = refreshTokenInLocalStorage || refreshTokenInSessionStorage;
+      const userData = this.getStoredUserData();
 
       if (accessToken && userData) {
         this._accessToken.set(accessToken);
         this._user.set(userData);
         this._isAuthenticated.set(true);
         this._isInitializing.set(false);
+
+        if (!accessTokenInSessionStorage && !refreshTokenInSessionStorage) {
+          this.storeTokens({
+            access_token: accessToken,
+            refresh_token: refreshToken || '',
+            expires_in: 0,
+          });
+        }
       } else if (refreshToken && userData) {
         this.attemptSilentRefresh();
       } else {
-        this._isInitializing.set(false);
+        this.requestAuthStateFromOtherTabs();
+
+        setTimeout(() => {
+          if (!this._isAuthenticated()) {
+            this._isInitializing.set(false);
+          }
+        }, 500);
       }
     });
+  }
+
+  /**
+   * Request auth state from other tabs
+   */
+  private requestAuthStateFromOtherTabs(): void {
+    if (this.authChannel) {
+      this.authChannel.postMessage({ type: 'REQUEST_AUTH_STATE' });
+    }
   }
 
   /**
@@ -145,6 +308,13 @@ export class AuthService {
     this._user.set(user);
     this._isAuthenticated.set(true);
 
+    this.broadcastAuthState('LOGIN', {
+      accessToken: access_token,
+      refreshToken: refresh_token,
+      user,
+      rememberMe: !!rememberMe,
+    });
+
     if (this.isBrowser) {
       this.scheduleTokenRefresh(expires_in);
     }
@@ -177,6 +347,8 @@ export class AuthService {
     this._user.set(null);
     this._isAuthenticated.set(false);
     this.rememberMePreference.set(false);
+
+    this.broadcastAuthState('LOGOUT');
 
     if (this.isBrowser) {
       this.router.navigate(['/auth/login']);
@@ -286,6 +458,10 @@ export class AuthService {
   private updateAccessToken(token: string): void {
     this._accessToken.set(token);
     this.storeAccessToken(token);
+
+    this.broadcastAuthState('TOKEN_REFRESH', {
+      accessToken: token,
+    });
   }
 
   /**
@@ -338,6 +514,19 @@ export class AuthService {
   }
 
   /**
+   * Store refresh token based on remember me preference
+   */
+  private storeRefreshToken(token: string): void {
+    this.guardBrowser(() => {
+      if (this.rememberMePreference()) {
+        localStorage.setItem(this.REFRESH_TOKEN_KEY, token);
+      } else {
+        sessionStorage.setItem(this.REFRESH_TOKEN_KEY, token);
+      }
+    });
+  }
+
+  /**
    * Store user data
    */
   private storeUserData(user: User): void {
@@ -352,10 +541,14 @@ export class AuthService {
   private getStoredAccessToken(): string | null {
     if (!this.isBrowser) return null;
 
-    return this.rememberMePreference()
-      ? localStorage.getItem(this.ACCESS_TOKEN_KEY)
-      : sessionStorage.getItem(this.ACCESS_TOKEN_KEY) ||
-          localStorage.getItem(this.ACCESS_TOKEN_KEY);
+    const localToken = localStorage.getItem(this.ACCESS_TOKEN_KEY);
+    const sessionToken = sessionStorage.getItem(this.ACCESS_TOKEN_KEY);
+
+    if (this.rememberMePreference()) {
+      return localToken || sessionToken;
+    } else {
+      return sessionToken || localToken;
+    }
   }
 
   /**
@@ -364,10 +557,14 @@ export class AuthService {
   private getStoredRefreshToken(): string | null {
     if (!this.isBrowser) return null;
 
-    return this.rememberMePreference()
-      ? localStorage.getItem(this.REFRESH_TOKEN_KEY)
-      : sessionStorage.getItem(this.REFRESH_TOKEN_KEY) ||
-          localStorage.getItem(this.REFRESH_TOKEN_KEY);
+    const localToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
+    const sessionToken = sessionStorage.getItem(this.REFRESH_TOKEN_KEY);
+
+    if (this.rememberMePreference()) {
+      return localToken || sessionToken;
+    } else {
+      return sessionToken || localToken;
+    }
   }
 
   /**
@@ -531,6 +728,15 @@ export class AuthService {
       };
       this._user.set(updatedUser);
       this.storeUserData(updatedUser);
+    }
+  }
+
+  /**
+   * Cleanup method to close BroadcastChannel
+   */
+  ngOnDestroy(): void {
+    if (this.authChannel) {
+      this.authChannel.close();
     }
   }
 }

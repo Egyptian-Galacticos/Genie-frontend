@@ -45,6 +45,8 @@ export class ProductInfoComponent {
   pricingDisplay = input<PricingDisplay | null>(null);
   companyInfo = input<CompanyInfo | null>(null);
   wishlistLoading = input<boolean>(false);
+  canPerformBuyerActions = input<boolean>(false);
+  isProductOwner = input<boolean>(false);
 
   requestQuote = output<void>();
   wishlistToggle = output<void>();

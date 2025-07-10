@@ -137,10 +137,10 @@
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Product Image -->
             <div class="lg:col-span-1">
-              @if (product.main_image.url || (product.images && product.images.length > 0)) {
+              @if (product.main_image?.url || (product.images && product.images.length > 0)) {
                 <div class="aspect-square rounded-lg overflow-hidden border border-gray-200">
                   <img
-                    [src]="product.main_image.url || product.images[0].url"
+                    [src]="product.main_image?.url || product.images[0].url"
                     [alt]="product.name"
                     class="w-full h-full object-cover"
                     (error)="onImageError($event)"

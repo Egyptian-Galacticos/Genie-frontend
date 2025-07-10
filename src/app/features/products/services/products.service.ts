@@ -74,6 +74,14 @@ export class ProductsService {
   }
 
   /**
+   * AI-powered product search with filters and sorting
+   */
+  searchProductsWithAI(query: ProductQuery): Observable<ProductsResponse> {
+    const apiRequest = this.buildApiRequest(query);
+    return this.apiService.get<ProductsResponse>('products/ai/search', { params: apiRequest });
+  }
+
+  /**
    * Convert frontend query to API request format
    */
   private buildApiRequest(query: ProductQuery): ProductsApiRequest {

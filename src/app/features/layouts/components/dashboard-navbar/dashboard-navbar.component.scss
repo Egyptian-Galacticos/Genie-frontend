@@ -1,1 +1,34 @@
 @use '../../styles/layout.scss';
+
+// Simple styling fixes for navbar components
+:host ::ng-deep {
+  // General alignment for all navbar action buttons
+  .layout-topbar-action {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    // Ensure icons are properly centered
+    i {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+  }
+
+  // Fix for PrimeNG Avatar component
+  .p-avatar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  // Ensure mobile button content is properly aligned
+  .layout-topbar-menu-button {
+    .flex.items-center {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+  }
+}
