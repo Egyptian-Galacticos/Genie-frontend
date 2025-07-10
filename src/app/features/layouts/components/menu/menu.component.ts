@@ -61,17 +61,17 @@ export class MenuComponent implements OnInit {
                   },
                 ],
               },
-              {
-                label: 'Contracts',
-                icon: 'pi pi-fw pi-paperclip',
-                items: [
-                  {
-                    label: 'All Contracts',
-                    icon: 'pi pi-fw pi-paperclip',
-                    routerLink: ['/dashboard/seller/contracts'],
-                  },
-                ],
-              },
+              // {
+              //   label: 'Contracts',
+              //   icon: 'pi pi-fw pi-paperclip',
+              //   items: [
+              //     {
+              //       label: 'All Contracts',
+              //       icon: 'pi pi-fw pi-paperclip',
+              //       routerLink: ['/dashboard/seller/contracts'],
+              //     },
+              //   ],
+              // },
               {
                 label: 'Chat',
                 icon: 'pi pi-fw pi-comments',
