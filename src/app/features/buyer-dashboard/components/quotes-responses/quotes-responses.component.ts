@@ -203,7 +203,7 @@ export class BuyerQuotesResponsesComponent implements OnInit {
   }
 
   acceptQuote(quote: IQuote) {
-    this.quotesService.acceptQuote(quote.id, quote).subscribe({
+    this.quotesService.acceptQuote(quote.id).subscribe({
       next: () => {
         const index = this.quotesData.findIndex(q => q.id === quote.id);
         if (index !== -1) {
@@ -229,7 +229,7 @@ export class BuyerQuotesResponsesComponent implements OnInit {
   }
 
   rejectQuote(quote: IQuote) {
-    this.quotesService.rejectQuote(quote.id, quote).subscribe({
+    this.quotesService.rejectQuote(quote.id).subscribe({
       next: () => {
         const index = this.quotesData.findIndex(q => q.id === quote.id);
         if (index !== -1) {
