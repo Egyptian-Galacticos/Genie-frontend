@@ -263,6 +263,15 @@
               (onClick)="openChat(); closeDialog()"
             />
           }
+          @if (allowContract() && userType() === 'seller' && quote()?.status === 'accepted') {
+            <p-button
+              icon="pi pi-file"
+              [rounded]="true"
+              [raised]="true"
+              [title]="'Create Contract'"
+              (onClick)="createContract(); closeDialog()"
+            />
+          }
         </div>
       }
     </div>

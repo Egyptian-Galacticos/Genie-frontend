@@ -36,12 +36,14 @@ export class QuoteDetailsDialogComponent {
   showActions = input<boolean>(true); // Whether to show action buttons
   allowAcceptReject = input<boolean>(true); // Whether to show accept/reject buttons
   allowChat = input<boolean>(true); // Whether to show chat button
+  allowContract = input<boolean>(false); // Whether to show contract button
 
   // Output signals using output() function
   accept = output<IQuote>();
   reject = output<IQuote>();
   chat = output<IQuote>();
   dialogClose = output<void>();
+  contract = output<IQuote>();
 
   // Computed signals for derived values
   otherParty = computed(() => {
@@ -238,7 +240,15 @@ export class QuoteDetailsDialogComponent {
       this.chat.emit(quote);
     }
   }
-
+  /**
+   * Handles contract action
+   */
+  createContract() {
+    const quote = this.quote();
+    if (quote) {
+      this.contract.emit(quote);
+    }
+  }
   /**
    * Closes the dialog
    */
