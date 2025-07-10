@@ -74,6 +74,15 @@ export class ProductsService {
   }
 
   /**
+   * AI-powered product search
+   */
+  searchProductsWithAI(query: string): Observable<ProductsResponse> {
+    return this.apiService.get<ProductsResponse>(
+      `products/ai/search?search=${encodeURIComponent(query)}`
+    );
+  }
+
+  /**
    * Convert frontend query to API request format
    */
   private buildApiRequest(query: ProductQuery): ProductsApiRequest {
