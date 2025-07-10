@@ -1,7 +1,11 @@
-import { ApiResponse } from './../../../core/interfaces/api.interface';
+import {
+  ApiResponse,
+  PaginatedResponse,
+  RequestOptions,
+} from './../../../core/interfaces/api.interface';
 import { ApiService } from './../../../core/services/api.service';
 import { inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CreateContract, Contract } from '../utils/interfaces';
 
 @Injectable({
@@ -32,14 +36,26 @@ export class ContractService {
     console.log('Approving contract with ID:', id);
     return this.apiService.put<ApiResponse<Contract>>(`contracts/${id}`, { status: 'approved' });
   }
+  /**
+   * Reject a contract
+   * @param id - Contract ID
+   * @returns Observable<ApiResponse<Contract>> - The rejected contract
+   */
+  rejectContract(id: number): Observable<ApiResponse<Contract>> {
+    console.log('Rejecting contract with ID:', id);
+    return this.apiService.put<ApiResponse<Contract>>(`contracts/${id}`, { status: 'rejected' });
+  }
   addBuyerTrxNo(id: number, trxId: string): Observable<ApiResponse<Contract>> {
     return this.apiService.put<ApiResponse<Contract>>(`contracts/${id}`, {
       buyer_transaction_id: trxId,
     });
   }
-  getContracts(): Observable<Contract[]> {
-    console.log('Fetching all contracts');
-    // TODO: Implement actual API call
-    return of([]);
+  /**
+   * Get contracts with pagination
+   * @param requestOptions - Request options for pagination, filtering, and sorting
+   * @returns Observable<PaginatedResponse<Contract>> - Paginated contracts
+   */
+  getContracts(requestOptions: RequestOptions): Observable<PaginatedResponse<Contract>> {
+    return this.apiService.get<PaginatedResponse<Contract>>('admin/contracts', requestOptions);
   }
 }
