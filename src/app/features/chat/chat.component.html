@@ -1,4 +1,7 @@
-<div class="chat-container flex bg-surface-50 rounded-lg overflow-hidden" style="height: calc(100vh - 8rem);">
+<div
+  class="chat-container flex bg-surface-50 rounded-lg overflow-hidden"
+  style="height: calc(100vh - 8rem)"
+>
   <!-- Left Sidebar - Conversations List -->
   <div class="w-80 bg-surface-0 border-r border-surface-200 flex flex-col rounded-l-lg">
     <!-- Header -->
@@ -11,7 +14,7 @@
               {{ getUnreadConversationsCount() }}
             </span>
           }
-          
+
           <p-button
             icon="pi pi-plus"
             [rounded]="true"
@@ -26,7 +29,9 @@
 
       <!-- Search Bar -->
       <div class="relative">
-        <i class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400 text-xs"></i>
+        <i
+          class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400 text-xs"
+        ></i>
         <input
           type="text"
           pInputText
@@ -55,7 +60,10 @@
         </div>
       } @else {
         <!-- Conversations -->
-        @for (conversation of filteredConversations(); track trackConversation(conversation, $index)) {
+        @for (
+          conversation of filteredConversations();
+          track trackConversation(conversation, $index)
+        ) {
           <div
             class="conversation-item flex items-center p-3 cursor-pointer border-b border-surface-100 transition-colors hover:bg-surface-50"
             [class.active]="selectedConversation()?.id === conversation.id"
@@ -63,6 +71,8 @@
             [class.border-l-4]="selectedConversation()?.id === conversation.id"
             [class.border-primary-500]="selectedConversation()?.id === conversation.id"
             (click)="selectConversation(conversation)"
+            (keydown)="selectConversation(conversation)"
+            tabindex="0"
           >
             <!-- Avatar and Name -->
             <div class="flex items-center flex-1 min-w-0">
@@ -80,19 +90,25 @@
               <div class="flex-1 min-w-0 flex items-center justify-between">
                 <div class="flex-1 min-w-0">
                   <p class="font-medium text-sm text-surface-900 truncate leading-tight">
-                    {{ conversation.other_participant.full_name || 'Unknown User' }}
+                    {{
+                      conversation.other_participant.company_name ||
+                        conversation.other_participant.full_name ||
+                        'Unknown User'
+                    }}
                   </p>
                   <p class="text-xs text-surface-600 truncate mt-1">
                     {{ conversation.last_message?.content || 'No messages yet' }}
                   </p>
                 </div>
-                
+
                 <div class="flex flex-col items-end ml-2">
                   <span class="text-xs text-surface-500 mb-1">
                     {{ getTimeAgo(conversation.last_activity_at) }}
                   </span>
                   @if (conversation.unread_count && conversation.unread_count > 0) {
-                    <div class="unread-badge bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-medium min-w-[1.5rem] h-6">
+                    <div
+                      class="unread-badge bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-medium min-w-[1.5rem] h-6"
+                    >
                       {{ conversation.unread_count > 99 ? '99+' : conversation.unread_count }}
                     </div>
                   }
@@ -101,7 +117,7 @@
             </div>
           </div>
         }
-        
+
         @if (filteredConversations().length === 0) {
           <div class="p-8 text-center text-surface-500">
             <i class="pi pi-comments text-4xl mb-4 block"></i>
@@ -150,8 +166,14 @@
       </div>
 
       <!-- Messages Area -->
-      <div class="messages-container flex-1 overflow-y-auto bg-surface-50" #messagesContainer 
-           style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDAsIDAsIDAsIDAuMDUpIi8+PC9zdmc+'); background-repeat: repeat;">
+      <div
+        class="messages-container flex-1 overflow-y-auto bg-surface-50"
+        #messagesContainer
+        style="
+          background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDAsIDAsIDAsIDAuMDUpIi8+PC9zdmc+');
+          background-repeat: repeat;
+        "
+      >
         <div class="p-4 space-y-3">
           @if (loading()) {
             <!-- Loading Messages -->
@@ -168,26 +190,79 @@
           } @else {
             <!-- Messages -->
             @for (message of safeMessages(); track trackMessage(message, $index)) {
-              <div class="flex mb-4" [ngClass]="{ 'justify-end': isOwnMessage(message), 'justify-start': !isOwnMessage(message) }">
+              <div
+                class="flex mb-4"
+                [ngClass]="{
+                  'justify-end': isOwnMessage(message),
+                  'justify-start': !isOwnMessage(message),
+                }"
+              >
                 <div class="message-bubble max-w-xs lg:max-w-md xl:max-w-lg">
                   <!-- Message bubble -->
                   <div
                     class="px-4 py-3 rounded-2xl text-sm break-words shadow-sm"
                     [ngClass]="{
                       'bg-primary-500 text-white': isOwnMessage(message),
-                      'bg-white text-surface-900 border border-surface-200': !isOwnMessage(message)
+                      'bg-white text-surface-900 border border-surface-200': !isOwnMessage(message),
                     }"
-                    [style.border-radius]="isOwnMessage(message) ? '18px 18px 4px 18px' : '18px 18px 18px 4px'"
+                    [style.border-radius]="
+                      isOwnMessage(message) ? '18px 18px 4px 18px' : '18px 18px 18px 4px'
+                    "
                   >
                     {{ message.content }}
+                    @if (message.type === 'quote') {
+                      <div class="mt-2 flex flex-row gap-4">
+                        <p-button
+                          label="Quote"
+                          icon="pi pi-eye"
+                          [rounded]="true"
+                          size="small"
+                          [raised]="true"
+                          [severity]="'success'"
+                          (onClick)="viewQuote(message)"
+                        />
+                        <p-button
+                          label="RFQ"
+                          icon="pi pi-eye"
+                          [rounded]="true"
+                          size="small"
+                          [raised]="true"
+                          [severity]="'success'"
+                          (onClick)="viewRFQ(message)"
+                        />
+                      </div>
+                    } @else if (message.type === 'contract') {
+                      <div class="mt-2 flex flex-row gap-4">
+                        <p-button
+                          label="Contract"
+                          icon="pi pi-eye"
+                          [rounded]="true"
+                          size="small"
+                          [raised]="true"
+                          [severity]="'success'"
+                          (onClick)="viewContract(message)"
+                        />
+                      </div>
+                    }
                   </div>
-                  
+
                   <!-- Message metadata -->
-                  <div class="message-time flex items-center mt-1 text-xs text-surface-500" 
-                       [ngClass]="{ 'justify-end': isOwnMessage(message), 'justify-start': !isOwnMessage(message) }">
+                  <div
+                    class="message-time flex items-center mt-1 text-xs text-surface-500"
+                    [ngClass]="{
+                      'justify-end': isOwnMessage(message),
+                      'justify-start': !isOwnMessage(message),
+                    }"
+                  >
                     <span>{{ getMessageTime(message.sent_at) }}</span>
                     @if (isOwnMessage(message)) {
-                      <span class="message-status ml-2" [ngClass]="{ 'text-green-500': message.is_read, 'text-surface-400': !message.is_read }">
+                      <span
+                        class="message-status ml-2"
+                        [ngClass]="{
+                          'text-green-500': message.is_read,
+                          'text-surface-400': !message.is_read,
+                        }"
+                      >
                         <i class="pi pi-check text-xs"></i>
                         @if (message.is_read) {
                           <i class="pi pi-check text-xs -ml-1"></i>
@@ -198,7 +273,7 @@
                 </div>
               </div>
             }
-            
+
             @if (safeMessages().length === 0) {
               <div class="text-center text-surface-500 py-8">
                 <i class="pi pi-comments text-4xl mb-4 block"></i>
@@ -206,7 +281,7 @@
               </div>
             }
           }
-          
+
           <!-- Typing Indicators -->
           @if (currentConversationTypingUsers().length > 0) {
             <div class="px-4 pb-2">
@@ -214,13 +289,19 @@
                 <div class="bg-surface-200 rounded-2xl px-4 py-2 max-w-xs">
                   <div class="flex items-center space-x-2">
                     <div class="typing-indicator flex space-x-1">
-                      <div class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse"></div>
-                      <div class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
-                      <div class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+                      <div
+                        class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse"
+                      ></div>
+                      <div
+                        class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse"
+                        style="animation-delay: 0.2s"
+                      ></div>
+                      <div
+                        class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse"
+                        style="animation-delay: 0.4s"
+                      ></div>
                     </div>
-                    <span class="text-xs text-surface-600">
-                      Someone is typing...
-                    </span>
+                    <span class="text-xs text-surface-600"> Someone is typing... </span>
                   </div>
                 </div>
               </div>
@@ -274,7 +355,9 @@
       <!-- No Conversation Selected -->
       <div class="flex-1 flex items-center justify-center bg-surface-50">
         <div class="text-center">
-          <div class="w-20 h-20 bg-surface-200 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div
+            class="w-20 h-20 bg-surface-200 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
             <i class="pi pi-comments text-3xl text-surface-500"></i>
           </div>
           <h3 class="text-lg font-semibold text-surface-900 mb-2">Select a conversation</h3>
@@ -285,4 +368,50 @@
   </div>
 </div>
 
+@if (rfqModalVisible()) {
+  <app-rfq-details-dialog
+    [(visible)]="rfqModalVisible"
+    [rfq]="beingViewedRFQ"
+    [userType]="dashboardType()"
+    [showActions]="false"
+    [allowChat]="false"
+    [allowQuote]="false"
+    (dialogClose)="closeRfqModal()"
+  />
+}
+@if (quoteModalVisible()) {
+  <app-quote-details-dialog
+    [(visible)]="quoteModalVisible"
+    [quote]="beingViewedQuote"
+    [allowChat]="false"
+    [userType]="dashboardType()"
+    (close)="closeQuoteModal()"
+    (accept)="acceptQuote($event)"
+    (reject)="rejectQuote($event)"
+    (contract)="createContract($event)"
+    [allowContract]="true"
+  ></app-quote-details-dialog>
+}
+@if (createContractVisible()) {
+  <app-contract-dialog
+    [(visible)]="createContractVisible"
+    [quote]="beingViewedQuote"
+    [userType]="dashboardType()"
+    (dialogClose)="closeCreateContractModal()"
+    (contractCreated)="contractCreated($event)"
+  ></app-contract-dialog>
+}
+@if (contractModalVisible()) {
+  <app-contract-details-dialog
+    [(visible)]="contractModalVisible"
+    [contract]="beingViewedContract"
+    [userType]="dashboardType()"
+    [showActions]="false"
+    [allowEdit]="false"
+    [allowCancel]="false"
+    [allowApprove]="false"
+    (approve)="approveContract($event)"
+    (dialogClose)="closeContractModal()"
+  ></app-contract-details-dialog>
+}
 <p-toast />
