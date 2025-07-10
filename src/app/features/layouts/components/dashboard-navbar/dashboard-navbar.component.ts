@@ -42,8 +42,6 @@ export class DashboardNavbarComponent {
   // Avatar label with debugging
   avatarLabel = computed(() => {
     const currentUser = this.user();
-    console.log('User data for avatar:', currentUser);
-
     if (currentUser?.first_name) {
       return currentUser.first_name[0].toUpperCase();
     }
