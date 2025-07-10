@@ -1,0 +1,367 @@
+<p-dialog
+  header="Contract Details"
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '90vw', maxWidth: '1200px', height: '90vh' }"
+  styleClass="contract-details-dialog"
+  (onHide)="onVisibilityChange(false)"
+>
+  @if (contract(); as currentContract) {
+    <div class="h-full flex flex-col">
+      <div class="flex-1 overflow-y-auto p-4">
+        <!-- Contract Header Section -->
+        <p-fieldset legend="Contract Information" class="mb-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Contract Basic Info -->
+            <div class="space-y-4">
+              <h4 class="text-lg font-semibold text-primary flex items-center">
+                <i class="pi pi-file-text mr-2"></i>
+                Contract Details
+              </h4>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-gray-600 min-w-[140px]"
+                    >Contract Number:</span
+                  >
+                  <span class="text-sm font-bold">{{ currentContract.contract_number }}</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-gray-600 min-w-[140px]">Contract ID:</span>
+                  <span class="text-sm font-bold">#{{ currentContract.id }}</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-gray-600 min-w-[140px]">Status:</span>
+                  <p-badge
+                    [value]="currentContract.status | titlecase"
+                    [severity]="statusSeverity()"
+                    [style]="{ 'background-color': statusColor(), color: 'white' }"
+                  />
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-gray-600 min-w-[140px]">Total Amount:</span>
+                  <span class="text-lg font-bold text-primary">
+                    {{ currentContract.total_amount | currency: currentContract.currency }}
+                  </span>
+                </div>
+                @if (currentContract.contract_date) {
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[140px]"
+                      >Contract Date:</span
+                    >
+                    <span class="text-sm">{{
+                      currentContract.contract_date | date: 'mediumDate'
+                    }}</span>
+                  </div>
+                }
+                @if (currentContract.estimated_delivery) {
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[140px]"
+                      >Estimated Delivery:</span
+                    >
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm">{{
+                        currentContract.estimated_delivery | date: 'mediumDate'
+                      }}</span>
+                      @if (deliveryStatus(); as delivery) {
+                        <p-badge
+                          [value]="delivery.text"
+                          [severity]="getDeliveryStatusSeverity(delivery.status)"
+                        />
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Other Party Information -->
+            @if (otherParty(); as party) {
+              <div class="space-y-4">
+                <h4 class="text-lg font-semibold text-primary flex items-center">
+                  <i class="pi pi-user mr-2"></i>
+                  {{
+                    userType() === 'buyer'
+                      ? 'Seller'
+                      : userType() === 'seller'
+                        ? 'Buyer'
+                        : 'Other Party'
+                  }}
+                  Information
+                </h4>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[120px]">Name:</span>
+                    <span class="text-sm font-bold">{{ party.full_name }}</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[120px]">Email:</span>
+                    <span class="text-sm">{{ party.email }}</span>
+                  </div>
+                  @if (party.phone_number) {
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-medium text-gray-600 min-w-[120px]">Phone:</span>
+                      <span class="text-sm">{{ party.phone_number }}</span>
+                    </div>
+                  }
+                  @if (party.company) {
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-medium text-gray-600 min-w-[120px]">Company:</span>
+                      <span class="text-sm">{{ party.company.name }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </p-fieldset>
+
+        <!-- Contract Items Section -->
+        @if (contractItems().length > 0) {
+          <p-fieldset legend="Contract Items" class="mb-6">
+            <p-table [value]="contractItems()" [tableStyle]="{ 'min-width': '50rem' }">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th class="text-left">Product</th>
+                  <th class="text-center">Quantity</th>
+                  <th class="text-right">Unit Price</th>
+                  <th class="text-right">Total Price</th>
+                  <th class="text-left">Specifications</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                <tr>
+                  <td>
+                    @if (item.product) {
+                      <div>
+                        <div class="font-semibold">{{ item.product.name }}</div>
+                        @if (item.product.brand) {
+                          <div class="text-sm text-gray-500">{{ item.product.brand }}</div>
+                        }
+                        @if (item.product.model_number) {
+                          <div class="text-xs text-gray-400">
+                            Model: {{ item.product.model_number }}
+                          </div>
+                        }
+                      </div>
+                    } @else {
+                      <span class="text-gray-500">Product information not available</span>
+                    }
+                  </td>
+                  <td class="text-center">{{ item.quantity | number }}</td>
+                  <td class="text-right">
+                    {{ item.unit_price | currency: currentContract.currency }}
+                  </td>
+                  <td class="text-right font-semibold">
+                    {{ item.total_price | currency: currentContract.currency }}
+                  </td>
+                  <td>
+                    <span class="text-sm">{{ item.specifications || 'No specifications' }}</span>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="footer">
+                <tr>
+                  <td colspan="3" class="text-right font-bold">Total Amount:</td>
+                  <td class="text-right font-bold text-lg text-primary">
+                    {{ totalAmount() | currency: currentContract.currency }}
+                  </td>
+                  <td></td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-fieldset>
+        }
+
+        <!-- Addresses Section -->
+        @if (hasShippingAddress() || hasBillingAddress()) {
+          <p-fieldset legend="Addresses" class="mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Shipping Address -->
+              @if (hasShippingAddress()) {
+                <div class="space-y-3">
+                  <h4 class="text-md font-semibold text-gray-700 flex items-center">
+                    <i class="pi pi-send mr-2"></i>
+                    Shipping Address
+                  </h4>
+                  <div class="bg-gray-50 p-3 rounded border">
+                    <p class="text-sm">{{ formatAddress(currentContract.shipping_address) }}</p>
+                  </div>
+                </div>
+              }
+
+              <!-- Billing Address -->
+              @if (hasBillingAddress() && !addressesAreSame()) {
+                <div class="space-y-3">
+                  <h4 class="text-md font-semibold text-gray-700 flex items-center">
+                    <i class="pi pi-credit-card mr-2"></i>
+                    Billing Address
+                  </h4>
+                  <div class="bg-gray-50 p-3 rounded border">
+                    <p class="text-sm">{{ formatAddress(currentContract.billing_address) }}</p>
+                  </div>
+                </div>
+              } @else if (addressesAreSame()) {
+                <div class="space-y-3">
+                  <h4 class="text-md font-semibold text-gray-700 flex items-center">
+                    <i class="pi pi-credit-card mr-2"></i>
+                    Billing Address
+                  </h4>
+                  <div class="bg-blue-50 p-3 rounded border border-blue-200">
+                    <p class="text-sm text-blue-700">
+                      <i class="pi pi-info-circle mr-1"></i>
+                      Same as shipping address
+                    </p>
+                  </div>
+                </div>
+              }
+            </div>
+          </p-fieldset>
+        }
+
+        <!-- Terms and Conditions Section -->
+        @if (termsArray().length > 0) {
+          <p-fieldset legend="Terms and Conditions" class="mb-6">
+            <div class="space-y-3">
+              @for (term of termsArray(); track $index) {
+                <div class="flex gap-3">
+                  <span class="text-sm font-medium text-gray-500 min-w-[24px]"
+                    >{{ $index + 1 }}.</span
+                  >
+                  <p class="text-sm text-gray-700 flex-1">{{ term }}</p>
+                </div>
+              }
+            </div>
+          </p-fieldset>
+        }
+
+        <!-- Additional Metadata Section -->
+        @if (metadataEntries().length > 0) {
+          <p-fieldset legend="Additional Information" class="mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              @for (entry of metadataEntries(); track entry.key) {
+                <div class="bg-gray-50 p-3 rounded border">
+                  <div class="text-sm font-medium text-gray-600 mb-1">{{ entry.key }}</div>
+                  <div class="text-sm text-gray-800">{{ entry.value }}</div>
+                </div>
+              }
+            </div>
+          </p-fieldset>
+        }
+
+        <!-- Quote Reference Section -->
+        @if (currentContract.quote) {
+          <p-fieldset legend="Related Quote" class="mb-6">
+            <div class="bg-blue-50 p-4 rounded border border-blue-200">
+              <div class="flex items-center justify-between">
+                <div class="space-y-2">
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-blue-700">Quote ID:</span>
+                    <span class="text-sm font-bold text-blue-800"
+                      >#{{ currentContract.quote.id }}</span
+                    >
+                  </div>
+                  @if (currentContract.quote.seller_message) {
+                    <div class="flex items-start gap-3">
+                      <span class="text-sm font-medium text-blue-700 min-w-[80px]">Message:</span>
+                      <span class="text-sm text-blue-800">{{
+                        currentContract.quote.seller_message
+                      }}</span>
+                    </div>
+                  }
+                </div>
+                <p-badge value="Quote" severity="info" />
+              </div>
+            </div>
+          </p-fieldset>
+        }
+
+        <!-- Timestamps Section -->
+        <p-fieldset legend="Timeline" class="mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @if (currentContract.created_at) {
+              <div class="flex items-center gap-3">
+                <i class="pi pi-calendar text-gray-500"></i>
+                <div>
+                  <div class="text-sm font-medium text-gray-600">Created</div>
+                  <div class="text-sm text-gray-800">
+                    {{ currentContract.created_at | date: 'medium' }}
+                  </div>
+                </div>
+              </div>
+            }
+            @if (currentContract.updated_at) {
+              <div class="flex items-center gap-3">
+                <i class="pi pi-refresh text-gray-500"></i>
+                <div>
+                  <div class="text-sm font-medium text-gray-600">Last Updated</div>
+                  <div class="text-sm text-gray-800">
+                    {{ currentContract.updated_at | date: 'medium' }}
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </p-fieldset>
+      </div>
+
+      <!-- Dialog Footer Actions -->
+      @if (showActions()) {
+        <div class="flex-shrink-0 border-t bg-white p-4">
+          <div class="flex justify-between items-center">
+            <div class="flex gap-3">
+              @if (allowEdit()) {
+                <p-button
+                  label="Edit Contract"
+                  icon="pi pi-pencil"
+                  severity="secondary"
+                  (onClick)="onEdit()"
+                />
+              }
+              <p-button
+                label="Download"
+                icon="pi pi-download"
+                severity="secondary"
+                (onClick)="onDownload()"
+              />
+              <p-button
+                label="Chat"
+                icon="pi pi-comments"
+                severity="secondary"
+                (onClick)="onChat()"
+              />
+            </div>
+
+            <div class="flex gap-3">
+              @if (allowCancel() && currentContract.status !== 'cancelled') {
+                <p-button
+                  label="Cancel Contract"
+                  icon="pi pi-times"
+                  severity="danger"
+                  (onClick)="onCancel()"
+                />
+              }
+              @if (allowApprove() && currentContract.status === 'pending') {
+                <p-button
+                  label="Approve Contract"
+                  icon="pi pi-check"
+                  severity="success"
+                  (onClick)="onApprove()"
+                />
+              }
+              <p-button label="Close" severity="secondary" (onClick)="visible.set(false)" />
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="text-center py-8">
+      <i class="pi pi-exclamation-triangle text-4xl text-orange-500 mb-4"></i>
+      <h3 class="text-lg font-semibold mb-2">No Contract Information</h3>
+      <p class="text-gray-600">Contract information is not available.</p>
+    </div>
+  }
+</p-dialog>
