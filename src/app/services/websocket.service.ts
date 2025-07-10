@@ -292,11 +292,11 @@ export class WebSocketService {
       });
 
       // Listen for typing indicators
-      channel.listen('.user.typing', (event: unknown) => {
-        const typingEvent = event as TypingEvent;
-        console.log('User typing:', typingEvent);
-        this.handleTypingEvent(typingEvent, conversationId);
-      });
+      // channel.listen('.user.typing', (event: unknown) => {
+      //   const typingEvent = event as TypingEvent;
+      //   console.log('User typing:', typingEvent);
+      //   this.handleTypingEvent(typingEvent, conversationId);
+      // });
     }
   }
 
