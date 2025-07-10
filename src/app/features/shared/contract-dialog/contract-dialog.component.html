@@ -1,0 +1,485 @@
+<p-dialog
+  header="Create Contract"
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '90vw', maxWidth: '1200px', height: '90vh' }"
+  styleClass="contract-dialog"
+  (onHide)="onVisibilityChange(false)"
+>
+  @if (quote(); as currentQuote) {
+    <div class="h-full overflow-hidden">
+      <form [formGroup]="contractForm()" (ngSubmit)="onSubmit()" class="h-full flex flex-col">
+        <div class="flex-1 overflow-y-auto px-1">
+          <!-- Quote Summary Section -->
+          <p-fieldset legend="Quote Summary" class="mb-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Quote Information -->
+              <div class="space-y-4">
+                <h4 class="text-lg font-semibold text-primary flex items-center">
+                  <i class="pi pi-file-text mr-2"></i>
+                  Quote Information
+                </h4>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[120px]">Quote ID:</span>
+                    <span class="text-sm font-bold">#{{ currentQuote.id }}</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[120px]"
+                      >Total Amount:</span
+                    >
+                    <span class="text-lg font-bold text-primary">
+                      {{ totalAmount() | currency: currency() }}
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[120px]">Status:</span>
+                    <p-badge [value]="currentQuote.status" severity="info"></p-badge>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Other Party Information -->
+              @if (otherParty(); as party) {
+                <div class="space-y-4">
+                  <h4 class="text-lg font-semibold text-primary flex items-center">
+                    <i class="pi pi-user mr-2"></i>
+                    {{ userType() === 'buyer' ? 'Seller' : 'Buyer' }} Information
+                  </h4>
+                  <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-medium text-gray-600 min-w-[120px]">Name:</span>
+                      <span class="text-sm font-bold">{{ party.full_name }}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-medium text-gray-600 min-w-[120px]">Email:</span>
+                      <span class="text-sm">{{ party.email }}</span>
+                    </div>
+                    @if (party.company) {
+                      <div class="flex items-center gap-3">
+                        <span class="text-sm font-medium text-gray-600 min-w-[120px]"
+                          >Company:</span
+                        >
+                        <span class="text-sm">{{ party.company.name }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </p-fieldset>
+
+          <!-- Contract Items Section -->
+          <p-fieldset legend="Contract Items" class="mb-6">
+            <p-table [value]="contractItems()" [tableStyle]="{ 'min-width': '50rem' }">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th class="text-left">Product</th>
+                  <th class="text-center">Quantity</th>
+                  <th class="text-right">Unit Price</th>
+                  <th class="text-right">Total Price</th>
+                  <th class="text-left">Specifications</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                <tr>
+                  <td>
+                    @if (item.product) {
+                      <div>
+                        <div class="font-semibold">{{ item.product.name }}</div>
+                        @if (item.product.brand) {
+                          <div class="text-sm text-gray-500">{{ item.product.brand }}</div>
+                        }
+                      </div>
+                    } @else {
+                      <span class="text-gray-500">Product information not available</span>
+                    }
+                  </td>
+                  <td class="text-center">{{ item.quantity }}</td>
+                  <td class="text-right">{{ item.unit_price | currency: currency() }}</td>
+                  <td class="text-right font-semibold">
+                    {{ item.total_price | currency: currency() }}
+                  </td>
+                  <td>
+                    <span class="text-sm">{{ item.specifications || 'No specifications' }}</span>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="footer">
+                <tr>
+                  <td colspan="3" class="text-right font-bold">Total Amount:</td>
+                  <td class="text-right font-bold text-lg text-primary">
+                    {{ totalAmount() | currency: currency() }}
+                  </td>
+                  <td></td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-fieldset>
+
+          <!-- Contract Details Section -->
+          <p-fieldset legend="Contract Details" class="mb-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Estimated Delivery -->
+              <div class="space-y-2">
+                <label for="estimated_delivery" class="block text-sm font-medium text-gray-700">
+                  Estimated Delivery Date *
+                </label>
+                <p-calendar
+                  id="estimated_delivery"
+                  formControlName="estimated_delivery"
+                  [showIcon]="true"
+                  dateFormat="yy-mm-dd"
+                  [minDate]="minDate"
+                  placeholder="Select delivery date"
+                  styleClass="w-full"
+                  [class.ng-invalid]="isFieldInvalid('estimated_delivery')"
+                />
+                @if (isFieldInvalid('estimated_delivery')) {
+                  <small class="text-red-500">{{ getFieldError('estimated_delivery') }}</small>
+                }
+              </div>
+            </div>
+          </p-fieldset>
+
+          <!-- Addresses Section -->
+          <p-fieldset legend="Addresses" class="mb-6">
+            <p-accordion [multiple]="true" [activeIndex]="[0]">
+              <!-- Shipping Address -->
+              <p-accordionTab header="Shipping Address" [selected]="true">
+                <div formGroupName="shipping_address" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="space-y-2">
+                    <label for="shipping_street" class="block text-sm font-medium text-gray-700"
+                      >Street Address *</label
+                    >
+                    <input
+                      pInputText
+                      id="shipping_street"
+                      formControlName="street"
+                      placeholder="Enter street address"
+                      class="w-full"
+                      [class.ng-invalid]="isAddressFieldInvalid('shipping_address', 'street')"
+                    />
+                    @if (isAddressFieldInvalid('shipping_address', 'street')) {
+                      <small class="text-red-500">Street address is required</small>
+                    }
+                  </div>
+
+                  <div class="space-y-2">
+                    <label for="shipping_city" class="block text-sm font-medium text-gray-700"
+                      >City *</label
+                    >
+                    <input
+                      pInputText
+                      id="shipping_city"
+                      formControlName="city"
+                      placeholder="Enter city"
+                      class="w-full"
+                      [class.ng-invalid]="isAddressFieldInvalid('shipping_address', 'city')"
+                    />
+                    @if (isAddressFieldInvalid('shipping_address', 'city')) {
+                      <small class="text-red-500">City is required</small>
+                    }
+                  </div>
+
+                  <div class="space-y-2">
+                    <label for="shipping_state" class="block text-sm font-medium text-gray-700"
+                      >State/Province *</label
+                    >
+                    <input
+                      pInputText
+                      id="shipping_state"
+                      formControlName="state"
+                      placeholder="Enter state/province"
+                      class="w-full"
+                      [class.ng-invalid]="isAddressFieldInvalid('shipping_address', 'state')"
+                    />
+                    @if (isAddressFieldInvalid('shipping_address', 'state')) {
+                      <small class="text-red-500">State/Province is required</small>
+                    }
+                  </div>
+
+                  <div class="space-y-2">
+                    <label for="shipping_country" class="block text-sm font-medium text-gray-700"
+                      >Country *</label
+                    >
+                    <input
+                      pInputText
+                      id="shipping_country"
+                      formControlName="country"
+                      placeholder="Enter country"
+                      class="w-full"
+                      [class.ng-invalid]="isAddressFieldInvalid('shipping_address', 'country')"
+                    />
+                    @if (isAddressFieldInvalid('shipping_address', 'country')) {
+                      <small class="text-red-500">Country is required</small>
+                    }
+                  </div>
+
+                  <div class="space-y-2 md:col-span-2">
+                    <label for="shipping_zip" class="block text-sm font-medium text-gray-700"
+                      >ZIP/Postal Code *</label
+                    >
+                    <input
+                      pInputText
+                      id="shipping_zip"
+                      formControlName="zip_code"
+                      placeholder="Enter ZIP/postal code"
+                      class="w-full"
+                      [class.ng-invalid]="isAddressFieldInvalid('shipping_address', 'zip_code')"
+                    />
+                    @if (isAddressFieldInvalid('shipping_address', 'zip_code')) {
+                      <small class="text-red-500">ZIP/Postal code is required</small>
+                    }
+                  </div>
+                </div>
+              </p-accordionTab>
+
+              <!-- Billing Address -->
+              <p-accordionTab header="Billing Address">
+                <div class="mb-4">
+                  <label class="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      formControlName="use_shipping_as_billing"
+                      (change)="onUseShippingAsBillingChange($any($event.target).checked)"
+                      class="rounded"
+                    />
+                    <span class="text-sm">Use shipping address as billing address</span>
+                  </label>
+                </div>
+
+                <div formGroupName="billing_address" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="space-y-2">
+                    <label for="billing_street" class="block text-sm font-medium text-gray-700"
+                      >Street Address</label
+                    >
+                    <input
+                      pInputText
+                      id="billing_street"
+                      formControlName="street"
+                      placeholder="Enter street address"
+                      class="w-full"
+                    />
+                  </div>
+
+                  <div class="space-y-2">
+                    <label for="billing_city" class="block text-sm font-medium text-gray-700"
+                      >City</label
+                    >
+                    <input
+                      pInputText
+                      id="billing_city"
+                      formControlName="city"
+                      placeholder="Enter city"
+                      class="w-full"
+                    />
+                  </div>
+
+                  <div class="space-y-2">
+                    <label for="billing_state" class="block text-sm font-medium text-gray-700"
+                      >State/Province</label
+                    >
+                    <input
+                      pInputText
+                      id="billing_state"
+                      formControlName="state"
+                      placeholder="Enter state/province"
+                      class="w-full"
+                    />
+                  </div>
+
+                  <div class="space-y-2">
+                    <label for="billing_country" class="block text-sm font-medium text-gray-700"
+                      >Country</label
+                    >
+                    <input
+                      pInputText
+                      id="billing_country"
+                      formControlName="country"
+                      placeholder="Enter country"
+                      class="w-full"
+                    />
+                  </div>
+
+                  <div class="space-y-2 md:col-span-2">
+                    <label for="billing_zip" class="block text-sm font-medium text-gray-700"
+                      >ZIP/Postal Code</label
+                    >
+                    <input
+                      pInputText
+                      id="billing_zip"
+                      formControlName="zip_code"
+                      placeholder="Enter ZIP/postal code"
+                      class="w-full"
+                    />
+                  </div>
+                </div>
+              </p-accordionTab>
+            </p-accordion>
+          </p-fieldset>
+
+          <!-- Terms and Conditions Section -->
+          <p-fieldset legend="Terms and Conditions" class="mb-6">
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <h4 class="text-sm font-medium text-gray-700">Contract Terms *</h4>
+                <p-button
+                  type="button"
+                  label="Add Term"
+                  icon="pi pi-plus"
+                  size="small"
+                  severity="secondary"
+                  (onClick)="addTerm()"
+                />
+              </div>
+
+              @for (term of terms(); track term.id) {
+                <div class="border border-gray-200 rounded-lg p-4 space-y-3">
+                  <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700"> Term {{ $index + 1 }} </span>
+                    @if (terms().length > 1) {
+                      <p-button
+                        type="button"
+                        icon="pi pi-trash"
+                        size="small"
+                        severity="danger"
+                        [text]="true"
+                        (onClick)="removeTerm(term.id)"
+                      />
+                    }
+                  </div>
+                  <textarea
+                    pInputTextarea
+                    [(ngModel)]="term.content"
+                    (ngModelChange)="updateTermContent(term.id, $event)"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="Enter term or condition..."
+                    rows="3"
+                    class="w-full resize-y"
+                    maxlength="1000"
+                  ></textarea>
+                  <div class="text-xs text-gray-500 text-right">
+                    {{ term.content.length }}/1000 characters
+                  </div>
+                </div>
+              }
+
+              <div class="text-sm text-gray-500">
+                <i class="pi pi-info-circle mr-1"></i>
+                All terms will be combined into the contract's terms and conditions. Total length
+                must be between 50 and 10,000 characters.
+              </div>
+            </div>
+          </p-fieldset>
+
+          <!-- Additional Metadata Section -->
+          <p-fieldset legend="Additional Information (Optional)" class="mb-6">
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <h4 class="text-sm font-medium text-gray-700">Custom Metadata</h4>
+                <p-button
+                  type="button"
+                  label="Add Field"
+                  icon="pi pi-plus"
+                  size="small"
+                  severity="secondary"
+                  (onClick)="addMetadataField()"
+                />
+              </div>
+
+              <div formArrayName="additional_metadata" class="space-y-3">
+                @for (metadataControl of additionalMetadataArray.controls; track $index) {
+                  <div
+                    [formGroupName]="$index"
+                    class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 border border-gray-200 rounded"
+                  >
+                    <div class="space-y-1">
+                      <label
+                        for="metadata_key_{{ $index }}"
+                        class="text-sm font-medium text-gray-700"
+                        >Key</label
+                      >
+                      <input
+                        pInputText
+                        id="metadata_key_{{ $index }}"
+                        formControlName="key"
+                        placeholder="Enter metadata key"
+                        class="w-full"
+                        maxlength="100"
+                      />
+                    </div>
+                    <div class="space-y-1">
+                      <label
+                        for="metadata_value_{{ $index }}"
+                        class="text-sm font-medium text-gray-700"
+                        >Value</label
+                      >
+                      <div class="flex gap-2">
+                        <input
+                          pInputText
+                          id="metadata_value_{{ $index }}"
+                          formControlName="value"
+                          placeholder="Enter metadata value"
+                          class="flex-1"
+                          maxlength="1000"
+                        />
+                        <p-button
+                          type="button"
+                          icon="pi pi-trash"
+                          size="small"
+                          severity="danger"
+                          [text]="true"
+                          (onClick)="removeMetadataField($index)"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+
+              @if (additionalMetadataArray.length === 0) {
+                <div class="text-center text-gray-500 py-4">
+                  <i class="pi pi-info-circle mr-2"></i>
+                  No additional metadata fields added. Click "Add Field" to include custom
+                  information.
+                </div>
+              }
+            </div>
+          </p-fieldset>
+        </div>
+
+        <!-- Dialog Footer -->
+        <div class="border-t pt-4 mt-6">
+          <div class="flex justify-end gap-3">
+            <p-button
+              type="button"
+              label="Cancel"
+              severity="secondary"
+              (onClick)="visible.set(false)"
+              [disabled]="isSubmitting()"
+            />
+            <p-button
+              type="submit"
+              label="Create Contract"
+              icon="pi pi-file-text"
+              [loading]="isSubmitting()"
+              [disabled]="contractForm().invalid || !hasValidTerms()"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  } @else {
+    <div class="text-center py-8">
+      <i class="pi pi-exclamation-triangle text-4xl text-orange-500 mb-4"></i>
+      <h3 class="text-lg font-semibold mb-2">No Quote Information</h3>
+      <p class="text-gray-600">Quote information is required to create a contract.</p>
+    </div>
+  }
+</p-dialog>
+
+<p-toast />
