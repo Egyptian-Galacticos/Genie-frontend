@@ -39,6 +39,7 @@ interface ProductQueryParams {
 @Component({
   selector: 'app-products-page',
   templateUrl: './products-page.component.html',
+  styleUrl: './products-page.component.css',
   providers: [MessageService],
   imports: [
     CommonModule,
@@ -68,6 +69,8 @@ export class ProductsPageComponent {
   private queryParams = toSignal(this.route.queryParams, { initialValue: {} });
 
   wishlistLoadingStates = signal<Map<number, boolean>>(new Map());
+
+  isAiSearchMode = signal(false);
 
   private getQueryParam = <T>(
     key: keyof ProductQueryParams,
@@ -158,6 +161,10 @@ export class ProductsPageComponent {
     this.store.dispatch(ProductsActions.loadCategories());
 
     effect(() => {
+      if (this.isAiSearchMode()) {
+        return;
+      }
+
       this.store.dispatch(
         ProductsActions.loadProducts({
           filters: this.currentFilters(),
@@ -170,7 +177,77 @@ export class ProductsPageComponent {
   }
 
   onSearchChange(search: string) {
+    this.isAiSearchMode.set(false);
     this.updateRoute({ search, page: 1 });
+  }
+
+  onAiSearchChange(query: string) {
+    if (!query.trim()) {
+      this.isAiSearchMode.set(false);
+      this.updateRoute({ search: '', page: 1 });
+      return;
+    }
+
+    this.isAiSearchMode.set(true);
+
+    this.messageService.add({
+      severity: 'info',
+      summary: '🧠 AI Search Started',
+      detail: 'Analyzing your query with artificial intelligence...',
+      life: 2000,
+      icon: 'pi pi-cog',
+      styleClass:
+        '!bg-gradient-to-r !from-blue-50 !to-indigo-50 !border-l-4 !border-blue-500 dark:!from-blue-900/20 dark:!to-indigo-900/20 dark:!border-blue-400',
+    });
+
+    this.productsService
+      .searchProductsWithAI({
+        filters: { ...this.currentFilters(), search: query },
+        sort: this.currentSort(),
+        page: this.page(),
+        size: 12,
+      })
+      .subscribe({
+        next: response => {
+          this.store.dispatch(
+            ProductsActions.loadProductsSuccess({
+              products: response.data,
+              meta: response.meta,
+              page: 1,
+            })
+          );
+
+          if (response.data.length > 0) {
+            this.messageService.add({
+              severity: 'success',
+              summary: '🤖 AI Search Complete',
+              detail: `Found ${response.data.length} products matching your AI query`,
+              life: 3000,
+              icon: 'pi pi-sparkles',
+              styleClass:
+                '!bg-gradient-to-r !from-green-50 !to-emerald-50 !border-l-4 !border-green-500 dark:!from-green-900/20 dark:!to-emerald-900/20 dark:!border-green-400',
+            });
+          }
+        },
+        error: error => {
+          console.error('AI search failed:', error);
+          this.store.dispatch(
+            ProductsActions.loadProductsFailure({
+              error: error.message || 'AI search failed. Please try again.',
+            })
+          );
+          this.messageService.add({
+            severity: 'error',
+            summary: '🤖 AI Search Error',
+            detail:
+              'AI search failed. Please try again with a different query or switch to regular search.',
+            life: 5000,
+            icon: 'pi pi-sparkles',
+            styleClass:
+              '!bg-gradient-to-r !from-red-50 !to-rose-50 !border-l-4 !border-red-500 dark:!from-red-900/20 dark:!to-rose-900/20 dark:!border-red-400',
+          });
+        },
+      });
   }
 
   onFiltersChange(filters: ProductFilters) {
@@ -200,14 +277,21 @@ export class ProductsPageComponent {
   }
 
   onRetry() {
-    this.store.dispatch(
-      ProductsActions.loadProducts({
-        filters: this.currentFilters(),
-        sort: this.currentSort(),
-        page: this.page(),
-        size: 12,
-      })
-    );
+    if (this.isAiSearchMode()) {
+      const searchTerm = this.search();
+      if (searchTerm) {
+        this.onAiSearchChange(searchTerm);
+      }
+    } else {
+      this.store.dispatch(
+        ProductsActions.loadProducts({
+          filters: this.currentFilters(),
+          sort: this.currentSort(),
+          page: this.page(),
+          size: 12,
+        })
+      );
+    }
   }
 
   onBrandFilter(brand: string) {
@@ -225,7 +309,6 @@ export class ProductsPageComponent {
   onWishlistToggle(event: { productId: number; isCurrentlyInWishlist: boolean }) {
     const { productId, isCurrentlyInWishlist } = event;
 
-    // Check if user is authenticated
     if (!this.authService.isAuthenticated()) {
       this.messageService.add({
         severity: 'warn',

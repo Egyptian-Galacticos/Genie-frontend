@@ -74,12 +74,11 @@ export class ProductsService {
   }
 
   /**
-   * AI-powered product search
+   * AI-powered product search with filters and sorting
    */
-  searchProductsWithAI(query: string): Observable<ProductsResponse> {
-    return this.apiService.get<ProductsResponse>(
-      `products/ai/search?search=${encodeURIComponent(query)}`
-    );
+  searchProductsWithAI(query: ProductQuery): Observable<ProductsResponse> {
+    const apiRequest = this.buildApiRequest(query);
+    return this.apiService.get<ProductsResponse>('products/ai/search', { params: apiRequest });
   }
 
   /**
