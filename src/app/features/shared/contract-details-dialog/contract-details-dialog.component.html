@@ -308,6 +308,51 @@
       </div>
 
       <!-- Dialog Footer Actions -->
+      @if (
+        allowApprove() && currentContract.status === 'pending_approval' && userType() === 'buyer'
+      ) {
+        <div class="my-4 text-sm text-gray-500">
+          <i class="pi pi-info-circle mr-1"></i>
+          Approving this contract will finalize the agreement and notify the other party.
+        </div>
+        <p-button
+          [label]="'Approve'"
+          [icon]="'pi pi-check'"
+          [outlined]="true"
+          (onClick)="onApprove()"
+          rounded="true"
+          severity="success"
+          [raised]="true"
+        />
+      }
+      @if (
+        currentContract.status === 'pending_payment' &&
+        userType() === 'buyer' &&
+        currentContract.seller_transaction_id
+      ) {
+        <div class="px-3">
+          <form>
+            <input
+              pInputText
+              type="text"
+              [value]="paymentReference()"
+              (input)="paymentReference.set($any($event.target).value)"
+              placeholder="Enter Payment Reference"
+              class="w-full mb-4"
+            />
+            <p-button
+              [label]="'Submit Payment'"
+              [icon]="'pi pi-check'"
+              [outlined]="true"
+              [disabled]="!paymentReference().trim()"
+              (onClick)="submitPayment()"
+              rounded="true"
+              severity="success"
+              [raised]="true"
+            />
+          </form>
+        </div>
+      }
       @if (showActions()) {
         <div class="flex-shrink-0 border-t bg-white p-4">
           <div class="flex justify-between items-center">

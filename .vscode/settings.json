@@ -8,5 +8,8 @@
     "styleClass",
     "genie",
     "frontend"
+  ],
+  "cSpell.ignoreWords": [
+    "conv"
   ]
 }

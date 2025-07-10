@@ -1,4 +1,4 @@
-import { Component, input, output, computed, model } from '@angular/core';
+import { Component, input, output, computed, model, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -12,6 +12,8 @@ import { TagModule } from 'primeng/tag';
 import { ChipModule } from 'primeng/chip';
 
 import { Contract, IUser, ContractItem } from '../utils/interfaces';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-contract-details-dialog',
@@ -32,6 +34,8 @@ import { Contract, IUser, ContractItem } from '../utils/interfaces';
     DecimalPipe,
     CurrencyPipe,
     TitleCasePipe,
+    InputTextModule,
+    FormsModule,
   ],
   templateUrl: './contract-details-dialog.component.html',
   styleUrls: ['./contract-details-dialog.component.scss'],
@@ -54,6 +58,7 @@ export class ContractDetailsDialogComponent {
   approve = output<Contract>();
   chat = output<Contract>();
   download = output<Contract>();
+  paymentSubmit = output<{ contract: Contract; paymentReference: string }>();
   dialogClose = output<void>();
 
   // Computed signals for derived values
@@ -254,6 +259,25 @@ export class ContractDetailsDialogComponent {
         return 'info';
       default:
         return 'success';
+    }
+  }
+  // Payment reference signal
+  paymentReference = signal<string>('');
+
+  submitPayment(): void {
+    const currentContract = this.contract();
+    const reference = this.paymentReference();
+
+    if (currentContract && reference.trim()) {
+      this.paymentSubmit.emit({
+        contract: currentContract,
+        paymentReference: reference.trim(),
+      });
+
+      // Reset the payment reference after submission
+      this.paymentReference.set('');
+    } else {
+      console.warn('Payment reference is required');
     }
   }
 }

@@ -409,9 +409,10 @@
     [showActions]="false"
     [allowEdit]="false"
     [allowCancel]="false"
-    [allowApprove]="false"
+    [allowApprove]="true"
     (approve)="approveContract($event)"
     (dialogClose)="closeContractModal()"
+    (paymentSubmit)="paymentSubmit($event.contract, $event.paymentReference)"
   ></app-contract-details-dialog>
 }
 <p-toast />

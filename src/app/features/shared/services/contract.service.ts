@@ -32,7 +32,11 @@ export class ContractService {
     console.log('Approving contract with ID:', id);
     return this.apiService.put<ApiResponse<Contract>>(`contracts/${id}`, { status: 'approved' });
   }
-
+  addBuyerTrxNo(id: number, trxId: string): Observable<ApiResponse<Contract>> {
+    return this.apiService.put<ApiResponse<Contract>>(`contracts/${id}`, {
+      buyer_transaction_id: trxId,
+    });
+  }
   getContracts(): Observable<Contract[]> {
     console.log('Fetching all contracts');
     // TODO: Implement actual API call

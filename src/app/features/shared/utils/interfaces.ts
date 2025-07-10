@@ -458,7 +458,8 @@ export interface Contract {
   billing_address?: Address;
   terms_and_conditions: string;
   metadata?: Record<string, string>;
-
+  seller_transaction_id?: string;
+  buyer_transaction_id?: string;
   created_at?: string; // ISO string
   updated_at?: string; // ISO string
 

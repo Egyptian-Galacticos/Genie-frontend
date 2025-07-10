@@ -179,7 +179,7 @@
             <div class="lg:col-span-1">
               <div class="w-48 h-48 rounded-lg overflow-hidden mx-auto border border-surface-300">
                 <img
-                  [src]="selectedRFQ.initial_product.main_image?.url"
+                  [src]="selectedRFQ.initial_product.main_image.url"
                   [alt]="selectedRFQ.initial_product.name"
                   class="w-full h-full object-cover cursor-pointer"
                   (error)="onImageError($event)"

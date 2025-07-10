@@ -600,4 +600,37 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       },
     });
   }
+  paymentSubmit(contract: Contract, paymentReference: string): void {
+    if (!paymentReference || paymentReference.trim() === '') {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Payment Reference Required',
+        detail: 'Please provide a valid payment reference.',
+        life: 5000,
+      });
+      return;
+    }
+
+    this.contractService.addBuyerTrxNo(contract.id, paymentReference).subscribe({
+      next: response => {
+        this.beingViewedContract = response.data;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Payment Submitted and will be verified',
+          detail: `Payment for contract #${contract.id} has been submitted successfully`,
+          life: 3000,
+        });
+        this.contractModalVisible.set(false);
+        this.beingViewedContract = null;
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to submit payment. Please try again.',
+          life: 5000,
+        });
+      },
+    });
+  }
 }
