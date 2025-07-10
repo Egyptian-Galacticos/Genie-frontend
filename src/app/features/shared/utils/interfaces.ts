@@ -426,3 +426,44 @@ export interface IAdminStatistics {
     total?: number;
   };
 }
+
+//contract interfaces
+export interface CreateContract {
+  quote_id: number;
+  terms_and_conditions: string; // Min 50, Max 10000 characters
+  estimated_delivery?: string; // ISO date string, e.g., '2025-07-15T10:00:00Z'
+
+  shipping_address?: Address;
+  billing_address?: Address;
+
+  metadata?: Record<string, string>; // Each value max 1000 characters
+}
+export interface ContractItem {
+  id: number;
+  quantity: number;
+  unit_price: number;
+  total_price: number;
+  specifications: string;
+  product?: IProduct;
+}
+export interface Contract {
+  id: number;
+  contract_number: string;
+  status: string;
+  total_amount: number;
+  currency: string;
+  contract_date?: string; // ISO string
+  estimated_delivery?: string; // ISO string
+  shipping_address?: Address;
+  billing_address?: Address;
+  terms_and_conditions: string;
+  metadata?: Record<string, string>;
+
+  created_at?: string; // ISO string
+  updated_at?: string; // ISO string
+
+  buyer?: IUser;
+  seller?: IUser;
+  quote?: IQuote;
+  items?: ContractItem[];
+}
