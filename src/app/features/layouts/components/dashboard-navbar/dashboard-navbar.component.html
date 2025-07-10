@@ -47,23 +47,10 @@
           }"
         ></i>
       </button>
-      <div class="relative">
-        <button
-          class="layout-topbar-action layout-topbar-action-highlight"
-          pStyleClass="@next"
-          enterFromClass="hidden"
-          enterActiveClass="animate-scalein"
-          leaveToClass="hidden"
-          leaveActiveClass="animate-fadeout"
-          hideOnOutsideClick="true"
-        >
-          <i class="pi pi-palette"></i>
-        </button>
-      </div>
     </div>
 
     <button
-      class="layout-topbar-menu-button layout-topbar-action"
+      class="layout-topbar-menu-button layout-topbar-action lg:hidden"
       pStyleClass="@next"
       enterFromClass="hidden"
       enterActiveClass="animate-scalein"
@@ -71,23 +58,128 @@
       leaveActiveClass="animate-fadeout"
       hideOnOutsideClick="true"
     >
-      <i class="pi pi-ellipsis-v"></i>
+      @if (isAuthenticated()) {
+        <div class="flex items-center gap-2">
+          <i class="pi pi-user text-lg"></i>
+          <i class="pi pi-chevron-down text-xs"></i>
+        </div>
+      } @else {
+        <i class="pi pi-ellipsis-v"></i>
+      }
     </button>
+
+    <!-- Mobile Menu Dropdown -->
+    <div
+      class="layout-topbar-menu-mobile hidden absolute top-full right-4 z-50 mt-2 w-80 bg-surface-0 dark:bg-surface-900 rounded-xl shadow-2xl border border-surface-200 dark:border-surface-700 lg:hidden"
+    >
+      @if (isAuthenticated()) {
+        <!-- Mobile User Info Header -->
+        <div class="p-4 border-b border-surface-200 dark:border-surface-700">
+          <div class="flex items-center gap-3">
+            <p-avatar
+              [label]="avatarLabel()"
+              class="!bg-primary-500 !text-white"
+              size="large"
+              shape="circle"
+            ></p-avatar>
+            <div class="flex-1">
+              <p class="font-semibold text-surface-900 dark:text-surface-0 text-sm">
+                {{ user()?.first_name }} {{ user()?.last_name }}
+              </p>
+              <p class="text-xs text-surface-600 dark:text-surface-400">{{ user()?.email }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Items -->
+        <div class="p-2">
+          @for (item of userMenuItems(); track item) {
+            @if (item.separator) {
+              <p-divider class="my-2"></p-divider>
+            } @else if (item.visible !== false) {
+              <a
+                [routerLink]="item.routerLink"
+                (click)="item.command ? item.command({}) : null"
+                class="flex items-center gap-3 w-full p-3 rounded-md text-surface-700 dark:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-200 cursor-pointer"
+              >
+                <i [class]="item.icon" class="text-surface-500 dark:text-surface-400"></i>
+                <span class="font-medium">{{ item.label }}</span>
+              </a>
+            }
+          }
+        </div>
+      } @else {
+        <div class="p-4">
+          <button type="button" class="layout-topbar-action w-full text-left">
+            <i class="pi pi-user mr-2"></i>
+            <span>Profile</span>
+          </button>
+        </div>
+      }
+    </div>
 
     <div class="layout-topbar-menu hidden lg:block">
       <div class="layout-topbar-menu-content">
-        <button type="button" class="layout-topbar-action">
-          <i class="pi pi-calendar"></i>
-          <span>Calendar</span>
-        </button>
-        <button type="button" class="layout-topbar-action">
-          <i class="pi pi-inbox"></i>
-          <span>Messages</span>
-        </button>
-        <button type="button" class="layout-topbar-action">
-          <i class="pi pi-user"></i>
-          <span>Profile</span>
-        </button>
+        @if (isAuthenticated()) {
+          <button
+            type="button"
+            class="layout-topbar-action flex items-center gap-3 px-3 py-2"
+            (click)="userPopover.toggle($event)"
+          >
+            <i class="pi pi-user text-lg"></i>
+            <i class="pi pi-chevron-down text-xs" style="color: var(--text-color-secondary)"></i>
+          </button>
+
+          <p-popover
+            #userPopover
+            styleClass="!p-0 !border-2 !shadow-2xl !rounded-xl !overflow-hidden"
+            [dismissable]="true"
+            [focusOnShow]="true"
+          >
+            <!-- User Info Header -->
+            <div
+              class="p-6 bg-surface-0 dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700"
+            >
+              <div class="flex items-center gap-4">
+                <p-avatar
+                  [label]="avatarLabel()"
+                  class="!bg-primary-500 !text-white"
+                  size="large"
+                  shape="circle"
+                ></p-avatar>
+                <div class="flex-1">
+                  <p class="text-surface-900 dark:text-surface-0 font-semibold text-base mb-1">
+                    {{ user()?.first_name }} {{ user()?.last_name }}
+                  </p>
+                  <p class="text-surface-600 dark:text-surface-400 text-sm">{{ user()?.email }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Menu Items -->
+            <div class="p-2 min-w-72 bg-surface-0 dark:bg-surface-900">
+              @for (item of userMenuItems(); track item) {
+                @if (item.separator) {
+                  <p-divider class="my-2 mx-2"></p-divider>
+                } @else if (item.visible !== false) {
+                  <a
+                    [routerLink]="item.routerLink"
+                    (click)="item.command ? item.command({}) : userPopover.hide()"
+                    class="flex items-center gap-3 w-full p-3 mx-2 rounded-md text-surface-700 dark:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-200 cursor-pointer"
+                  >
+                    <i [class]="item.icon" class="text-surface-500 dark:text-surface-400"></i>
+                    <span class="font-medium">{{ item.label }}</span>
+                  </a>
+                }
+              }
+            </div>
+          </p-popover>
+        } @else {
+          <button type="button" class="layout-topbar-action">
+            <i class="pi pi-user"></i>
+            <span>Profile</span>
+          </button>
+        }
       </div>
     </div>
   </div>
