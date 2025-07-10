@@ -1,29 +1,67 @@
-<p-iconfield iconPosition="left" class="w-full">
-  <p-inputicon class="pi pi-search" />
-  <input
-    pInputText
-    type="text"
-    [value]="localSearchValue()"
-    (input)="onSearchInput($event)"
-    placeholder="Search products..."
-    class="w-full"
-  />
-  <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
+<div class="relative w-full">
+  <p-iconfield iconPosition="left" class="w-full">
+    <p-inputicon class="pi pi-search" />
+    <input
+      pInputText
+      type="text"
+      [value]="localSearchValue()"
+      (input)="onSearchInput($event)"
+      (keydown)="onKeyDown($event)"
+      [placeholder]="
+        isAiMode() ? 'Ask AI about products... (Press Enter to search)' : 'Search products...'
+      "
+      [class]="
+        'w-full transition-all duration-300 ' +
+        (isAiMode()
+          ? 'pr-28 border-purple-500 focus:border-purple-600 !bg-gradient-to-r !from-purple-50 !to-indigo-50 placeholder:text-purple-600 dark:border-purple-400 dark:focus:border-purple-300 dark:!from-purple-900/30 dark:!to-indigo-900/30 dark:placeholder:text-purple-300'
+          : 'pr-20')
+      "
+    />
+  </p-iconfield>
+
+  <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
     @if (loading()) {
       <p-progressspinner
         styleClass="!h-5 !w-5 flex items-center"
         strokeWidth="4"
         animationDuration=".5s"
       />
-    } @else if (localSearchValue()) {
+    }
+
+    @if (localSearchValue()) {
       <p-button
         icon="pi pi-times"
         [text]="true"
         [rounded]="true"
         severity="secondary"
         (click)="clearSearch()"
-        styleClass="!h-8 !w-8"
+        styleClass="!h-7 !w-7"
+        pTooltip="Clear search"
       />
     }
+
+    <p-button
+      [icon]="isAiMode() ? 'pi pi-sparkles' : 'pi pi-microchip-ai'"
+      [text]="true"
+      [rounded]="true"
+      [severity]="isAiMode() ? 'help' : 'secondary'"
+      (click)="toggleAiMode()"
+      [styleClass]="
+        '!h-8 !w-8 transition-all duration-300 hover:scale-110 ' +
+        (isAiMode()
+          ? '!bg-gradient-to-r !from-purple-500 !to-indigo-500 !text-white shadow-lg shadow-purple-500/25 animate-pulse dark:!from-purple-400 dark:!to-indigo-400 dark:shadow-purple-400/25'
+          : 'hover:!bg-surface-100 dark:hover:!bg-surface-700')
+      "
+      [pTooltip]="isAiMode() ? 'Switch to regular search' : 'Search with AI'"
+    />
   </div>
-</p-iconfield>
+
+  @if (isAiMode()) {
+    <div
+      class="absolute -bottom-6 left-0 flex items-center gap-1 text-xs font-medium text-purple-600 dark:text-purple-400"
+    >
+      <i class="pi pi-sparkles animate-pulse"></i>
+      <span>AI Search Active</span>
+    </div>
+  }
+</div>
