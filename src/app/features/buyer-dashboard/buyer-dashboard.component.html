@@ -14,7 +14,7 @@
 
   <!-- Dashboard Statistics Cards -->
   <div class="flex flex-row gap-4 justify-between flex-wrap">
-    <div class="w-full sm:w-[48%] lg:w-[24%] shrink-0">
+    <div class="w-full sm:w-[48%] 2xl:w-[23%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'Total RFQs'"
         [cardDescription]="getTotalRfqCount().toString()"
@@ -22,7 +22,7 @@
         [cardFooter]="'$' + (getTotalRfqValue() | number: '1.0-0') + ' total value'"
       />
     </div>
-    <div class="w-full sm:w-[48%] lg:w-[24%] shrink-0">
+    <div class="w-full sm:w-[48%] 2xl:w-[23%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'Total Quotes'"
         [cardDescription]="getTotalQuoteCount().toString()"
@@ -30,7 +30,7 @@
         [cardFooter]="'$' + (getTotalQuoteValue() | number: '1.0-0') + ' total value'"
       />
     </div>
-    <div class="w-full sm:w-[48%] lg:w-[24%] shrink-0">
+    <div class="w-full sm:w-[48%] 2xl:w-[23%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'Total Contracts'"
         [cardDescription]="getTotalContractCount().toString()"
@@ -38,7 +38,7 @@
         [cardFooter]="'$' + (getTotalContractValue() | number: '1.0-0') + ' total value'"
       />
     </div>
-    <div class="w-full sm:w-[48%] lg:w-[24%] shrink-0">
+    <div class="w-full sm:w-[48%] 2xl:w-[23%] shrink-0">
       <app-dashboard-info-card
         [cardTitle]="'Total Value'"
         [cardDescription]="
