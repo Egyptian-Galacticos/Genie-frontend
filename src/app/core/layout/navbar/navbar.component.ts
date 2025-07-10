@@ -38,6 +38,7 @@ export class NavbarComponent {
 
   isBuyer = computed(() => this.authService.hasRole('buyer'));
   isSeller = computed(() => this.authService.hasRole('seller'));
+  isAdmin = computed(() => this.authService.hasRole('admin'));
 
   items: MenuItem[] = [
     { label: 'Home', routerLink: '/' },
@@ -63,6 +64,12 @@ export class NavbarComponent {
       icon: 'pi pi-briefcase',
       routerLink: 'dashboard/seller',
       visible: this.isSeller(),
+    },
+    {
+      label: 'Admin Dashboard',
+      icon: 'pi pi-cog',
+      routerLink: 'dashboard/admin',
+      visible: this.isAdmin(),
     },
     {
       separator: true,

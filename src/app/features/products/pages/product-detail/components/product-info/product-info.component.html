@@ -149,43 +149,69 @@
       </p-card>
     }
 
-    <div class="flex gap-4">
-      <div class="flex-1">
-        <p-button
-          label="Request Quote"
-          icon="pi pi-envelope"
-          severity="primary"
-          (onClick)="requestQuote.emit()"
-          styleClass="w-full h-14 rounded-2xl font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 border-0"
-          size="large"
-        />
-      </div>
+    @if (canPerformBuyerActions()) {
+      <div class="flex gap-4">
+        <div class="flex-1">
+          <p-button
+            label="Request Quote"
+            icon="pi pi-envelope"
+            severity="primary"
+            (onClick)="requestQuote.emit()"
+            styleClass="w-full h-14 rounded-2xl font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 border-0"
+            size="large"
+          />
+        </div>
 
-      <button
-        (click)="wishlistToggle.emit()"
-        [disabled]="wishlistLoading()"
-        [attr.title]="currentProduct.in_wishlist ? 'Remove from wishlist' : 'Add to wishlist'"
-        [class]="
-          'group w-14 h-14 flex-shrink-0 rounded-full border-2 transition-all duration-300 ease-in-out flex items-center justify-center shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-105 active:scale-95' +
-          (currentProduct.in_wishlist
-            ? ' bg-gradient-to-r from-red-500 to-red-600 border-red-500 text-white hover:from-red-600 hover:to-red-700 hover:border-red-600'
-            : ' bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-400 hover:text-red-500 hover:border-red-300 dark:hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-900/10') +
-          (wishlistLoading() ? ' opacity-60 cursor-not-allowed transform-none' : '')
-        "
+        <button
+          (click)="wishlistToggle.emit()"
+          [disabled]="wishlistLoading()"
+          [attr.title]="currentProduct.in_wishlist ? 'Remove from wishlist' : 'Add to wishlist'"
+          [class]="
+            'group w-14 h-14 flex-shrink-0 rounded-full border-2 transition-all duration-300 ease-in-out flex items-center justify-center shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-105 active:scale-95' +
+            (currentProduct.in_wishlist
+              ? ' bg-gradient-to-r from-red-500 to-red-600 border-red-500 text-white hover:from-red-600 hover:to-red-700 hover:border-red-600'
+              : ' bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-400 hover:text-red-500 hover:border-red-300 dark:hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-900/10') +
+            (wishlistLoading() ? ' opacity-60 cursor-not-allowed transform-none' : '')
+          "
+        >
+          @if (wishlistLoading()) {
+            <i class="pi pi-spin pi-spinner text-2xl"></i>
+          } @else if (currentProduct.in_wishlist) {
+            <i
+              class="pi pi-heart-fill text-2xl group-hover:scale-110 transition-transform duration-200"
+            ></i>
+          } @else {
+            <i
+              class="pi pi-heart text-2xl group-hover:scale-110 transition-transform duration-200"
+            ></i>
+          }
+        </button>
+      </div>
+    } @else if (isProductOwner()) {
+      <div
+        class="flex items-center justify-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-2xl border border-blue-200 dark:border-blue-700/50"
       >
-        @if (wishlistLoading()) {
-          <i class="pi pi-spin pi-spinner text-2xl"></i>
-        } @else if (currentProduct.in_wishlist) {
-          <i
-            class="pi pi-heart-fill text-2xl group-hover:scale-110 transition-transform duration-200"
-          ></i>
-        } @else {
-          <i
-            class="pi pi-heart text-2xl group-hover:scale-110 transition-transform duration-200"
-          ></i>
-        }
-      </button>
-    </div>
+        <div class="text-center">
+          <i class="pi pi-user text-3xl text-blue-600 dark:text-blue-400 mb-2"></i>
+          <p class="text-lg font-semibold text-blue-800 dark:text-blue-200">Your Product</p>
+          <p class="text-sm text-blue-600 dark:text-blue-300">
+            You own this product and can manage it from your dashboard
+          </p>
+        </div>
+      </div>
+    } @else {
+      <div
+        class="flex items-center justify-center p-4 bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-2xl border border-amber-200 dark:border-amber-700/50"
+      >
+        <div class="text-center">
+          <i class="pi pi-sign-in text-3xl text-amber-600 dark:text-amber-400 mb-2"></i>
+          <p class="text-lg font-semibold text-amber-800 dark:text-amber-200">Login Required</p>
+          <p class="text-sm text-amber-600 dark:text-amber-300">
+            Please log in to request quotes and add items to your wishlist
+          </p>
+        </div>
+      </div>
+    }
 
     @if (companyInfo(); as company) {
       <p-card

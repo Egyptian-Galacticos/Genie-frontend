@@ -70,4 +70,10 @@ export class RequestQuoteDialogComponent {
   onFieldChange(fieldName: RfqFieldChange['fieldName'], fieldValue: RfqFieldChange['fieldValue']) {
     this.fieldChange.emit({ fieldName, fieldValue } as RfqFieldChange);
   }
+
+  onVisibilityChange(visible: boolean) {
+    if (!visible) {
+      this.dialogClosed.emit();
+    }
+  }
 }

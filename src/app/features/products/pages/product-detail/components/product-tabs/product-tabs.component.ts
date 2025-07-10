@@ -101,4 +101,23 @@ export class ProductTabsComponent {
     }
     this.downloadDocument.emit(url);
   }
+
+  formatFileSize(sizeInBytes: number | string): string {
+    const size = typeof sizeInBytes === 'string' ? parseInt(sizeInBytes) : sizeInBytes;
+
+    if (isNaN(size) || size < 0) {
+      return 'Unknown size';
+    }
+
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    let unitIndex = 0;
+    let fileSize = size;
+
+    while (fileSize >= 1024 && unitIndex < units.length - 1) {
+      fileSize /= 1024;
+      unitIndex++;
+    }
+
+    return `${fileSize.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+  }
 }

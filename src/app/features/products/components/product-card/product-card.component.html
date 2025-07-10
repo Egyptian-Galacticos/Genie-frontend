@@ -72,11 +72,11 @@
           />
         }
 
-        <h3 class="mb-3 line-clamp-2 flex-shrink-0">
+        <h3 class="mb-3 line-clamp-1 flex-shrink-0">
           <a
             [routerLink]="productRoute()"
             class="text-lg font-bold text-black dark:text-white hover:text-[var(--p-primary-700)] transition-all duration-200 focus:outline-none rounded-md px-1 py-0.5 -mx-1 -my-0.5"
-            [attr.title]="'View ' + product().name + ' details'"
+            [attr.title]="product().name"
           >
             {{ product().name }}
           </a>

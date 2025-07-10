@@ -1,6 +1,7 @@
 <p-dialog
   [visible]="visible()"
   (onHide)="onHide()"
+  (visibleChange)="onVisibilityChange($event)"
   [modal]="true"
   [closable]="true"
   [draggable]="false"
