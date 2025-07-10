@@ -39,11 +39,17 @@ export class QuotesService {
     return this.apiService.post('rfqs', rfqData);
   }
 
-  acceptQuote(quoteId: string | number, quote: IQuote) {
-    return this.apiService.put(`quotes/${quoteId}`, { ...quote, status: 'accepted' });
+  acceptQuote(quoteId: string | number) {
+    return this.apiService.put(`quotes/${quoteId}`, { status: 'accepted' });
   }
 
-  rejectQuote(quoteId: string | number, quote: IQuote) {
-    return this.apiService.put(`quotes/${quoteId}`, { ...quote, status: 'rejected' });
+  rejectQuote(quoteId: string | number) {
+    return this.apiService.put(`quotes/${quoteId}`, { status: 'rejected' });
+  }
+  getQuoteById(quoteId: string | number) {
+    return this.apiService.get<ApiResponse<IQuote>>(`quotes/${quoteId}`);
+  }
+  getRFQById(rfqId: string | number) {
+    return this.apiService.get<ApiResponse<IRequestForQuote>>(`rfqs/${rfqId}`);
   }
 }
