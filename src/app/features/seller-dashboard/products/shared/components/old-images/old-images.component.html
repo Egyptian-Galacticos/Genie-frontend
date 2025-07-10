@@ -18,26 +18,28 @@
 
     <div class="grid grid-cols-3 gap-4">
       <!-- Main Image -->
-      <div class="relative group border border-yellow-300 rounded-lg p-1">
-        <p-image
-          [src]="old_main_image().url"
-          [alt]="old_main_image().name"
-          [preview]="true"
-          class="w-full rounded-md shadow-sm hover:shadow-md transition-shadow duration-200"
-        >
-        </p-image>
+      @if (old_main_image(); as mainImage) {
+        <div class="relative group border border-yellow-300 rounded-lg p-1">
+          <p-image
+            [src]="mainImage.url"
+            [alt]="mainImage.name"
+            [preview]="true"
+            class="w-full rounded-md shadow-sm hover:shadow-md transition-shadow duration-200"
+          >
+          </p-image>
 
-        <!-- Main Image Label -->
-        <div
-          class="absolute top-2 left-2 bg-yellow-400 text-xs text-white px-2 py-0.5 rounded shadow"
-        >
-          Main
-        </div>
+          <!-- Main Image Label -->
+          <div
+            class="absolute top-2 left-2 bg-yellow-400 text-xs text-white px-2 py-0.5 rounded shadow"
+          >
+            Main
+          </div>
 
-        <div class="mt-2 text-xs text-gray-600 max-w-[150px] truncate">
-          {{ old_main_image().name }}
+          <div class="mt-2 text-xs text-gray-600 max-w-[150px] truncate">
+            {{ mainImage.name }}
+          </div>
         </div>
-      </div>
+      }
 
       <!-- Other Images -->
       @for (image of old_images(); track image.id) {
