@@ -1,0 +1,79 @@
+.ai-search-banner {
+  animation: ai-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes ai-glow {
+  from {
+    box-shadow: 0 4px 20px rgba(147, 51, 234, 0.1);
+  }
+  to {
+    box-shadow: 0 8px 30px rgba(147, 51, 234, 0.2);
+  }
+}
+
+[data-theme='dark'] .ai-search-banner {
+  animation: ai-glow-dark 2s ease-in-out infinite alternate;
+}
+
+@keyframes ai-glow-dark {
+  from {
+    box-shadow: 0 4px 20px rgba(196, 181, 253, 0.15);
+  }
+  to {
+    box-shadow: 0 8px 30px rgba(196, 181, 253, 0.25);
+  }
+}
+
+.ai-button-pulse {
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-button-pulse::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+}
+
+.ai-button-pulse:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.ai-feature-badge {
+  animation: float 3s ease-in-out infinite;
+}
+
+.ai-feature-badge:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 768px) {
+  .ai-search-banner {
+    animation: none;
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.1);
+  }
+
+  [data-theme='dark'] .ai-search-banner {
+    box-shadow: 0 4px 15px rgba(196, 181, 253, 0.15);
+  }
+}
