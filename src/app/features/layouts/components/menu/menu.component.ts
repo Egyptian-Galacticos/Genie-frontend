@@ -147,6 +147,11 @@ export class MenuComponent implements OnInit {
                 icon: 'pi pi-fw pi-box',
                 items: [
                   {
+                    label: 'All Products',
+                    icon: 'pi pi-fw pi-list',
+                    routerLink: ['/dashboard/admin/all-products'],
+                  },
+                  {
                     label: 'Pending Products',
                     icon: 'pi pi-fw pi-clock',
                     routerLink: ['/dashboard/admin/pending-products'],
