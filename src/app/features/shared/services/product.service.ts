@@ -18,7 +18,7 @@ export class ProductService {
     return this.apiService.get<PaginatedResponse<IProduct>>('seller/products', RequestOptions);
   }
   updateProductActiveStatus(id: number, isActive: boolean) {
-    return this.apiService.patch<ApiResponse>(`products/${id}`, { is_active: isActive });
+    return this.apiService.patch<ApiResponse>(`/products/${id}`, { is_active: isActive });
   }
   updateProductFeaturedStatus(id: number, isFeatured: boolean) {
     return this.apiService.patch<ApiResponse>(`products/${id}`, { is_featured: isFeatured });
@@ -46,9 +46,12 @@ export class ProductService {
     return this.apiService.get<PaginatedResponse<IProduct>>('admin/products', RequestOptions);
   }
   deleteProductForAdmin(id: number) {
-    return this.apiService.delete<ApiResponse>(`products/${id}`);
+    return this.apiService.delete<ApiResponse>(`admin/products/${id}`);
   }
   approveProduct(id: number) {
     return this.apiService.put<ApiResponse>(`admin/products/${id}/status`, { is_approved: true });
+  }
+  disproveProduct(id: number) {
+    return this.apiService.put<ApiResponse>(`admin/products/${id}/status`, { is_approved: false });
   }
 }

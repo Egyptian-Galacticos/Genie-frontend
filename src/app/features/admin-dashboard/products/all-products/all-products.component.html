@@ -1,0 +1,110 @@
+<div class="flex flex-col gap-6 min-h-full w-full">
+  <p-toast></p-toast>
+  <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
+    <div class="px-6 flex flex-col gap-1">
+      <span class="font-bold text-2xl"> All Products </span>
+      <span class="text-sm text-secondary">
+        Manage all products in the marketplace. View, activate/deactivate, or delete products.
+      </span>
+    </div>
+    <div>
+      <app-data-table
+        [(data)]="allProducts"
+        [cols]="cols"
+        [(multiSortMeta)]="SortMeta"
+        [dataLoading]="loading()"
+        [(totalRecords)]="total_records"
+        [rows]="limit() || 10"
+        [bodyTemplate]="allProductsBody"
+        (loadDataEvent)="getAllProducts($event)"
+      >
+      </app-data-table>
+    </div>
+  </div>
+  <p-confirmDialog
+    header="Confirm Action"
+    icon="pi pi-exclamation-triangle"
+    acceptButtonStyleClass="p-button-danger"
+    rejectButtonStyleClass="p-button-secondary"
+  ></p-confirmDialog>
+</div>
+@if (viewVisible()) {
+  <p-drawer
+    header="View Product Details"
+    [(visible)]="viewVisible"
+    styleClass="bg-card w-full lg:w-[80%]"
+  >
+    <app-product-detail [slug]="beingViewedProduct()?.slug || ''"></app-product-detail>
+  </p-drawer>
+}
+
+<ng-template #allProductsBody let-rowData let-rowIndex="rowIndex">
+  <td class="text-center w-[5%] shrink-1">
+    {{ rowData.id }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.name }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.brand || 'N/A' }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.category?.name || 'N/A' }}
+  </td>
+  <td class="text-center w-[8%] text-nowrap">
+    {{ rowData.sku }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.seller?.company?.name || 'N/A' }}
+  </td>
+  <td class="text-center w-[8%] text-nowrap">
+    <p-badge
+      [value]="rowData.is_approved ? 'Approved' : 'Not Approved'"
+      [severity]="rowData.is_approved ? 'success' : 'danger'"
+      class="ml-2"
+    ></p-badge>
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    {{ rowData.created_at | date }}
+  </td>
+  <td class="text-center text-nowrap">
+    <div class="flex gap-2 justify-center">
+      <p-button
+        [label]="'View'"
+        [title]="'View Product Details'"
+        [raised]="true"
+        [icon]="'pi pi-eye'"
+        [outlined]="true"
+        (onClick)="viewProductDetails(rowData)"
+        rounded="true"
+        severity="info"
+        size="small"
+        [disabled]="loading()"
+      />
+      <p-button
+        [label]="rowData.is_active ? 'Deactivate' : 'Activate'"
+        [title]="rowData.is_active ? 'Deactivate Product' : 'Activate Product'"
+        [raised]="true"
+        [icon]="rowData.is_active ? 'pi pi-times-circle' : 'pi pi-check-circle'"
+        [outlined]="true"
+        (onClick)="confirmDeactivateProduct(rowData)"
+        rounded="true"
+        [severity]="rowData.is_active ? 'warn' : 'success'"
+        size="small"
+        [disabled]="loading()"
+      />
+      <p-button
+        [label]="'Delete'"
+        [title]="'Delete Product'"
+        [raised]="true"
+        [icon]="'pi pi-trash'"
+        [outlined]="true"
+        (onClick)="confirmDeleteProduct(rowData)"
+        rounded="true"
+        severity="danger"
+        size="small"
+        [disabled]="loading()"
+      />
+    </div>
+  </td>
+</ng-template>
