@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { TableModule } from 'primeng/table';
 import { IQuote, IUser } from '../utils/interfaces';
-import { IBuyerUser, IBuyerQuoteItem } from '../utils/buyer-interfaces';
+import { IBuyerQuoteItem } from '../utils/buyer-interfaces';
 import { StatusUtils } from '../utils/status-utils';
 
 interface RFQInfo {
@@ -32,7 +32,7 @@ export class QuoteDetailsDialogComponent {
 
   // Input signals using input() function
   quote = input<IQuote | null>(null);
-  userType = input<'buyer' | 'seller'>('buyer'); // Determines which perspective to show
+  userType = input<'buyer' | 'seller' | 'admin'>('buyer'); // Determines which perspective to show
   showActions = input<boolean>(true); // Whether to show action buttons
   allowAcceptReject = input<boolean>(true); // Whether to show accept/reject buttons
   allowChat = input<boolean>(true); // Whether to show chat button
@@ -151,7 +151,7 @@ export class QuoteDetailsDialogComponent {
   /**
    * Gets the other party (seller for buyer, buyer for seller) - using computed signal
    */
-  getOtherParty(): IUser | IBuyerUser | null {
+  getOtherParty(): IUser | null {
     return this.otherParty();
   }
 

@@ -58,7 +58,11 @@
         <div class="shadow-xl p-4 rounded-xl">
           <h3 class="text-lg font-semibold mb-4 text-primary flex items-center">
             <i class="pi pi-user mr-2"></i>
-            {{ getOtherPartyLabel() }} Information
+            @if (userType() !== 'admin') {
+              {{ getOtherPartyLabel() }} Information
+            } @else {
+              Buyer Information
+            }
           </h3>
           @if (getOtherParty(); as otherParty) {
             <div class="space-y-3">
@@ -67,8 +71,6 @@
                 <span class="text-sm font-bold">
                   @if (otherParty.full_name) {
                     {{ otherParty.full_name }}
-                  } @else if (otherParty.first_name && otherParty.last_name) {
-                    {{ otherParty.first_name }} {{ otherParty.last_name }}
                   } @else {
                     <span class="text-surface-400 italic">Unknown {{ getOtherPartyLabel() }}</span>
                   }
@@ -91,6 +93,39 @@
                   <span class="text-sm font-medium text-secondary min-w-[100px]">Company:</span>
                   <span class="text-sm font-bold">{{ otherParty.company?.name }}</span>
                 </div>
+              }
+              @if (userType() === 'admin') {
+                <h3 class="text-md font-semibold text-primary">
+                  <i class="pi pi-user mr-2"></i>Seller Information
+                </h3>
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-medium text-secondary min-w-[100px]">Name:</span>
+                  <span class="text-sm font-bold">
+                    @if (quote()?.seller?.full_name) {
+                      {{ quote()?.seller?.full_name }}
+                    } @else {
+                      <span class="text-surface-400 italic">Unknown Company</span>
+                    }
+                  </span>
+                </div>
+                @if (quote()?.seller?.email) {
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-secondary min-w-[100px]">Email:</span>
+                    <span class="text-sm text-primary">{{ quote()?.seller?.email }}</span>
+                  </div>
+                }
+                @if (quote()?.seller?.phone_number) {
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-secondary min-w-[100px]">Phone:</span>
+                    <span class="text-sm">{{ quote()?.seller?.phone_number }}</span>
+                  </div>
+                }
+                @if (quote()?.seller?.company?.name) {
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-secondary min-w-[100px]">Company:</span>
+                    <span class="text-sm font-bold">{{ quote()?.seller?.company?.name }}</span>
+                  </div>
+                }
               }
             </div>
           } @else {
