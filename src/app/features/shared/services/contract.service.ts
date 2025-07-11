@@ -36,26 +36,30 @@ export class ContractService {
     console.log('Approving contract with ID:', id);
     return this.apiService.put<ApiResponse<Contract>>(`contracts/${id}`, { status: 'approved' });
   }
-  /**
-   * Reject a contract
-   * @param id - Contract ID
-   * @returns Observable<ApiResponse<Contract>> - The rejected contract
-   */
-  rejectContract(id: number): Observable<ApiResponse<Contract>> {
-    console.log('Rejecting contract with ID:', id);
-    return this.apiService.put<ApiResponse<Contract>>(`contracts/${id}`, { status: 'rejected' });
-  }
   addBuyerTrxNo(id: number, trxId: string): Observable<ApiResponse<Contract>> {
     return this.apiService.put<ApiResponse<Contract>>(`contracts/${id}`, {
       buyer_transaction_id: trxId,
     });
   }
-  /**
-   * Get contracts with pagination
-   * @param requestOptions - Request options for pagination, filtering, and sorting
-   * @returns Observable<PaginatedResponse<Contract>> - Paginated contracts
-   */
-  getContracts(requestOptions: RequestOptions): Observable<PaginatedResponse<Contract>> {
+  getContracts(requestOptions: RequestOptions): Observable<Contract[]> {
+    console.log('Fetching all contracts');
+    return this.apiService.get<Contract[]>('contracts', requestOptions);
+  }
+  getContractsForAdmin(requestOptions: RequestOptions): Observable<PaginatedResponse<Contract>> {
+    console.log('Fetching contracts for admin with options:', requestOptions);
     return this.apiService.get<PaginatedResponse<Contract>>('admin/contracts', requestOptions);
+  }
+  rejectBuyerPayment(id: number): Observable<ApiResponse<Contract>> {
+    console.log('Rejecting contract with ID:', id);
+    return this.apiService.put<ApiResponse<Contract>>(`admin/contracts/${id}/status`, {
+      status: 'buyer_payment_rejected',
+    });
+  }
+
+  approveBuyerPayment(id: number): Observable<ApiResponse<Contract>> {
+    console.log('Approving contract with ID:', id);
+    return this.apiService.put<ApiResponse<Contract>>(`admin/contracts/${id}/status`, {
+      status: 'in_progress',
+    });
   }
 }
