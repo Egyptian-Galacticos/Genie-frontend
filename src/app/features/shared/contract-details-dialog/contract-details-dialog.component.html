@@ -78,7 +78,7 @@
             </div>
 
             <!-- Other Party Information -->
-            @if (otherParty(); as party) {
+            @if (userType() !== 'admin' && otherParty(); as party) {
               <div class="space-y-4">
                 <h4 class="text-lg font-semibold text-primary flex items-center">
                   <i class="pi pi-user mr-2"></i>
@@ -112,6 +112,65 @@
                       <span class="text-sm">{{ party.company.name }}</span>
                     </div>
                   }
+                </div>
+              </div>
+            } @else if (userType() === 'admin') {
+              <div class="space-y-4">
+                <h4 class="text-lg font-semibold text-primary flex items-center">
+                  <i class="pi pi-user mr-2"></i>
+                  Buyer Information
+                </h4>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[120px]">Name:</span>
+                    <span class="text-sm font-bold">{{ contract()?.quote?.buyer?.full_name }}</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[120px]">Email:</span>
+                    <span class="text-sm">{{ contract()?.quote?.buyer?.email }}</span>
+                  </div>
+                  @if (contract()?.quote?.buyer?.phone_number) {
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-medium text-gray-600 min-w-[120px]">Phone:</span>
+                      <span class="text-sm">{{ contract()?.quote?.buyer?.phone_number }}</span>
+                    </div>
+                  }
+                  @if (contract()?.quote?.buyer?.company) {
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-medium text-gray-600 min-w-[120px]">Company:</span>
+                      <span class="text-sm">{{ contract()?.quote?.buyer?.company?.name }}</span>
+                    </div>
+                  }
+                  <h4 class="text-lg font-semibold text-primary flex items-center">
+                    <i class="pi pi-user mr-2"></i>
+                    Seller Information
+                  </h4>
+                  <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-medium text-gray-600 min-w-[120px]">Name:</span>
+                      <span class="text-sm font-bold">{{
+                        contract()?.quote?.seller?.full_name
+                      }}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-medium text-gray-600 min-w-[120px]">Email:</span>
+                      <span class="text-sm">{{ contract()?.quote?.seller?.email }}</span>
+                    </div>
+                    @if (contract()?.quote?.seller?.phone_number) {
+                      <div class="flex items-center gap-3">
+                        <span class="text-sm font-medium text-gray-600 min-w-[120px]">Phone:</span>
+                        <span class="text-sm">{{ contract()?.quote?.seller?.phone_number }}</span>
+                      </div>
+                    }
+                    @if (contract()?.quote?.seller?.company) {
+                      <div class="flex items-center gap-3">
+                        <span class="text-sm font-medium text-gray-600 min-w-[120px]"
+                          >Company:</span
+                        >
+                        <span class="text-sm">{{ contract()?.quote?.seller?.company?.name }}</span>
+                      </div>
+                    }
+                  </div>
                 </div>
               </div>
             }
