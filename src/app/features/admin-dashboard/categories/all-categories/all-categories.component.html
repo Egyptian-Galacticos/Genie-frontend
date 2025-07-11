@@ -1,0 +1,94 @@
+<div class="flex flex-col gap-6 min-h-full w-full">
+  <p-toast></p-toast>
+  <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
+    <div class="px-6 flex flex-col gap-1">
+      <span class="font-bold text-2xl"> All Categories </span>
+      <span class="text-sm text-secondary">
+        Manage all categories in the marketplace. Activate, deactivate, or delete categories.
+      </span>
+    </div>
+    <div>
+      <app-data-table
+        [(data)]="allCategories"
+        [cols]="cols"
+        [(multiSortMeta)]="SortMeta"
+        [dataLoading]="loading()"
+        [(totalRecords)]="total_records"
+        [rows]="limit() || 10"
+        [bodyTemplate]="allCategoriesBody"
+        (loadDataEvent)="getAllCategories($event)"
+      >
+      </app-data-table>
+    </div>
+  </div>
+  <p-confirmDialog
+    header="Confirm Action"
+    icon="pi pi-exclamation-triangle"
+    acceptButtonStyleClass="p-button-danger"
+    rejectButtonStyleClass="p-button-secondary"
+  ></p-confirmDialog>
+</div>
+
+<ng-template #allCategoriesBody let-rowData let-rowIndex="rowIndex">
+  <td class="text-center w-[5%] shrink-1">
+    {{ rowData.id }}
+  </td>
+  <td class="text-center w-[20%] text-nowrap">
+    {{ rowData.name }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.slug }}
+  </td>
+  <td class="text-center w-[8%] text-nowrap">
+    {{ rowData.level }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.parent?.name || 'Root Category' }}
+  </td>
+  <td class="text-center w-[8%] text-nowrap">
+    <span
+      class="px-2 py-1 rounded-full text-xs font-medium"
+      [ngClass]="{
+        'bg-green-100 text-green-800': rowData.status === 'active',
+        'bg-yellow-100 text-yellow-800': rowData.status === 'pending',
+        'bg-red-100 text-red-800': rowData.status === 'inactive',
+      }"
+    >
+      {{ rowData.status | titlecase }}
+    </span>
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.creator?.name || 'N/A' }}
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    {{ rowData.created_at | date }}
+  </td>
+  <td class="text-center text-nowrap">
+    <div class="flex gap-2 justify-center">
+      <p-button
+        [label]="rowData.status === 'active' ? 'Deactivate' : 'Activate'"
+        [title]="rowData.status === 'active' ? 'Deactivate Category' : 'Activate Category'"
+        [raised]="true"
+        [icon]="rowData.status === 'active' ? 'pi pi-times-circle' : 'pi pi-check-circle'"
+        [outlined]="true"
+        (onClick)="confirmDeactivateCategory(rowData)"
+        rounded="true"
+        [severity]="rowData.status === 'active' ? 'warn' : 'success'"
+        size="small"
+        [disabled]="loading()"
+      />
+      <p-button
+        [label]="'Delete'"
+        [title]="'Delete Category'"
+        [raised]="true"
+        [icon]="'pi pi-trash'"
+        [outlined]="true"
+        (onClick)="confirmDeleteCategory(rowData)"
+        rounded="true"
+        severity="danger"
+        size="small"
+        [disabled]="loading()"
+      />
+    </div>
+  </td>
+</ng-template>
