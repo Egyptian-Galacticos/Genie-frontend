@@ -83,4 +83,26 @@ export class CategoryService {
   deleteCategoryForAdmin(id: number): Observable<ApiResponse<void>> {
     return this.apiService.delete<ApiResponse<void>>(`admin/categories/${id}`);
   }
+
+  /**
+   * Deactivate a category
+   * @param id Category ID to deactivate
+   * @returns Observable of API response
+   */
+  deactivateCategory(id: number): Observable<ApiResponse<Category>> {
+    return this.apiService.put<ApiResponse<Category>>(`admin/categories/${id}`, {
+      status: 'inactive',
+    });
+  }
+
+  /**
+   * Activate a category
+   * @param id Category ID to activate
+   * @returns Observable of API response
+   */
+  activateCategory(id: number): Observable<ApiResponse<Category>> {
+    return this.apiService.put<ApiResponse<Category>>(`admin/categories/${id}`, {
+      status: 'active',
+    });
+  }
 }
