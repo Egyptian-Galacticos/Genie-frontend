@@ -1,0 +1,96 @@
+<div class="flex flex-col gap-6 min-h-full w-full">
+  <p-toast></p-toast>
+  <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
+    <div class="px-6 flex flex-col gap-1">
+      <span class="font-bold text-2xl"> All Contracts </span>
+      <span class="text-sm text-secondary"> Overview of all contracts in the system. </span>
+    </div>
+    <div>
+      <app-data-table
+        [(data)]="allContracts"
+        [cols]="cols"
+        [(multiSortMeta)]="SortMeta"
+        [dataLoading]="loading()"
+        [(totalRecords)]="total_records"
+        [rows]="limit() || 10"
+        [bodyTemplate]="allContractsBody"
+        (loadDataEvent)="getAllContracts($event)"
+      >
+      </app-data-table>
+    </div>
+  </div>
+  <p-confirmDialog
+    header="Confirm Deletion"
+    icon="pi pi-exclamation-triangle"
+    acceptButtonStyleClass="p-button-danger"
+    rejectButtonStyleClass="p-button-secondary"
+  ></p-confirmDialog>
+</div>
+<ng-template #allContractsBody let-rowData let-rowIndex="rowIndex">
+  <td class="text-center w-[5%] shrink-1">
+    {{ rowData.contract_number }}
+  </td>
+  <td class="text-center w-[20%] text-nowrap">
+    {{ rowData.seller.company.name }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.buyer.company.name }}
+  </td>
+  <td class="text-center w-[8%] text-nowrap">
+    <p-button
+      [label]="rowData.quote.id ? `View Quote #${rowData.quote.id}` : 'N/A'"
+      [icon]="'pi pi-eye'"
+      [outlined]="true"
+      [rounded]="true"
+      severity="info"
+      size="small"
+      [disabled]="!rowData.quote.id"
+      (onClick)="viewQuote(rowData.quote)"
+    />
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    <p-badge [value]="rowData.status" />
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.created_at | date: 'medium' }}
+  </td>
+  <td class="text-center text-nowrap">
+    <div class="flex gap-2 justify-center">
+      <p-button
+        [label]="'view details'"
+        [icon]="'pi pi-eye'"
+        [outlined]="true"
+        [raised]="true"
+        (onClick)="viewContract(rowData)"
+        rounded="true"
+        severity="info"
+        size="small"
+      />
+    </div>
+  </td>
+</ng-template>
+
+@if (contractModalVisible()) {
+  <app-contract-details-dialog
+    [(visible)]="contractModalVisible"
+    [contract]="selectedContract()"
+    [userType]="'admin'"
+    [showActions]="false"
+    [allowEdit]="false"
+    [allowCancel]="false"
+    [allowApprove]="false"
+    (dialogClose)="contractModalVisible.set(false)"
+  ></app-contract-details-dialog>
+}
+@if (quoteModalVisible()) {
+  <app-quote-details-dialog
+    [(visible)]="quoteModalVisible"
+    [quote]="selectedQuote()"
+    [allowChat]="false"
+    [userType]="'admin'"
+    [allowAcceptReject]="false"
+    [showActions]="false"
+    [allowContract]="false"
+    (close)="quoteModalVisible.set(false)"
+  ></app-quote-details-dialog>
+}
