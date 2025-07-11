@@ -136,6 +136,11 @@ export class MenuComponent implements OnInit {
                 icon: 'pi pi-fw pi-users',
                 items: [
                   {
+                    label: 'All Users',
+                    icon: 'pi pi-fw pi-users',
+                    routerLink: ['/dashboard/admin/all-users'],
+                  },
+                  {
                     label: 'Pending Users',
                     icon: 'pi pi-fw pi-user-plus',
                     routerLink: ['/dashboard/admin/pending-users'],
@@ -162,6 +167,11 @@ export class MenuComponent implements OnInit {
                 label: 'Categories',
                 icon: 'pi pi-fw pi-tags',
                 items: [
+                  {
+                    label: 'All Categories',
+                    icon: 'pi pi-fw pi-tags',
+                    routerLink: ['/dashboard/admin/all-categories'],
+                  },
                   {
                     label: 'Pending Categories',
                     icon: 'pi pi-fw pi-tag',

@@ -25,6 +25,12 @@ export const adminDashboardRoutes: Routes = [
         title: 'Pending Users - Genie',
       },
       {
+        path: 'all-users',
+        loadComponent: () =>
+          import('./users/all-users/all-users.component').then(c => c.AllUsersComponent),
+        title: 'All Users - Genie',
+      },
+      {
         path: 'pending-products',
         loadComponent: () =>
           import('./products/pending-products/pending-products.component').then(
@@ -47,6 +53,14 @@ export const adminDashboardRoutes: Routes = [
             c => c.PendingCategoriesComponent
           ),
         title: 'Pending Categories - Genie',
+      },
+      {
+        path: 'all-categories',
+        loadComponent: () =>
+          import('./categories/all-categories/all-categories.component').then(
+            c => c.AllCategoriesComponent
+          ),
+        title: 'All Categories - Genie',
       },
       {
         path: 'pending-contracts',
