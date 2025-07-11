@@ -1,0 +1,129 @@
+<div class="flex flex-col gap-6 min-h-full w-full">
+  <p-toast></p-toast>
+  <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
+    <div class="px-6 flex flex-col gap-1">
+      <span class="font-bold text-2xl"> All Users </span>
+      <span class="text-sm text-secondary">
+        Manage all registered users in the platform. View user details and manage their status.
+      </span>
+    </div>
+    <div>
+      <app-data-table
+        [(data)]="allUsers"
+        [cols]="cols"
+        [(multiSortMeta)]="SortMeta"
+        [dataLoading]="loading()"
+        [(totalRecords)]="total_records"
+        [rows]="limit() || 10"
+        [bodyTemplate]="allUsersBody"
+        (loadDataEvent)="getAllUsers($event)"
+      >
+      </app-data-table>
+    </div>
+  </div>
+  <p-confirmDialog
+    header="Confirm Action"
+    icon="pi pi-exclamation-triangle"
+    acceptButtonStyleClass="p-button-danger"
+    rejectButtonStyleClass="p-button-secondary"
+  ></p-confirmDialog>
+</div>
+
+<ng-template #allUsersBody let-rowData let-rowIndex="rowIndex">
+  <td class="text-center w-[5%] shrink-1">
+    {{ rowData.id }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.full_name }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.email }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.company?.name || 'N/A' }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    {{ rowData.phone_number || 'N/A' }}
+  </td>
+  <td class="text-center w-[8%] text-nowrap">
+    <span class="px-2 py-1 rounded-full text-xs font-medium" [class]="'bg-blue-100 text-blue-800'">
+      {{ formatUserRoles(rowData.roles) }}
+    </span>
+  </td>
+  <td class="text-center w-[8%] text-nowrap">
+    <span
+      class="px-2 py-1 rounded-full text-xs font-medium"
+      [ngClass]="{
+        'bg-green-100 text-green-800': rowData.status === 'active',
+        'bg-yellow-100 text-yellow-800': rowData.status === 'pending',
+        'bg-red-100 text-red-800': rowData.status === 'suspended',
+        'bg-gray-100 text-gray-800': rowData.status === 'inactive',
+      }"
+    >
+      {{ rowData.status | titlecase }}
+    </span>
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    {{ rowData.created_at | date }}
+  </td>
+  <td class="text-center text-nowrap">
+    <div class="flex gap-2 justify-center">
+      @if (isPendingBuyerWithSellerAccess(rowData)) {
+        <p-button
+          [label]="'Activate Seller'"
+          [title]="'Activate Seller Access'"
+          [raised]="true"
+          [icon]="'pi pi-user-plus'"
+          [outlined]="true"
+          (onClick)="confirmActivateSeller(rowData)"
+          rounded="true"
+          severity="success"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+      @if (isUserSeller(rowData) && rowData.status === 'active') {
+        <p-button
+          [label]="'Deactivate Seller'"
+          [title]="'Deactivate Seller Access'"
+          [raised]="true"
+          [icon]="'pi pi-user-minus'"
+          [outlined]="true"
+          (onClick)="confirmDeactivateSeller(rowData)"
+          rounded="true"
+          severity="warn"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+      @if (rowData.status === 'active') {
+        <p-button
+          [label]="'Suspend'"
+          [title]="'Suspend User'"
+          [raised]="true"
+          [icon]="'pi pi-ban'"
+          [outlined]="true"
+          (onClick)="confirmSuspendUser(rowData)"
+          rounded="true"
+          severity="danger"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+      @if (rowData.status === 'suspended') {
+        <p-button
+          [label]="'Activate'"
+          [title]="'Activate User'"
+          [raised]="true"
+          [icon]="'pi pi-check'"
+          [outlined]="true"
+          (onClick)="confirmActivateUser(rowData)"
+          rounded="true"
+          severity="success"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+    </div>
+  </td>
+</ng-template>
