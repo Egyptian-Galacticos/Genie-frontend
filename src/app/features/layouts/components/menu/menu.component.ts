@@ -165,9 +165,20 @@ export class MenuComponent implements OnInit {
                 ],
               },
               {
-                label: 'Orders',
-                icon: 'pi pi-fw pi-shopping-cart',
-                routerLink: ['/dashboard/admin/orders'],
+                label: 'contracts',
+                icon: 'pi pi-fw pi-paperclip',
+                items: [
+                  {
+                    label: 'All Contracts',
+                    icon: 'pi pi-fw pi-clock',
+                    routerLink: ['/dashboard/admin/contracts'],
+                  },
+                  {
+                    label: 'Pending Contracts',
+                    icon: 'pi pi-fw pi-paperclip',
+                    routerLink: ['/dashboard/admin/pending-contracts'],
+                  },
+                ],
               },
             ],
           },

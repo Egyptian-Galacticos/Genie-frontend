@@ -287,6 +287,22 @@ export const routes: Routes = [
           ).then(c => c.PendingCategoriesComponent),
         title: 'Pending Categories - Genie',
       },
+      {
+        path: 'pending-contracts',
+        loadComponent: () =>
+          import(
+            './features/admin-dashboard/contracts/pending-contracts/pending-contracts.component'
+          ).then(c => c.PendingContractsComponent),
+        title: 'Pending Contracts - Genie',
+      },
+      {
+        path: 'contracts',
+        loadComponent: () =>
+          import('./features/admin-dashboard/contracts/all-contracts/all-contracts.component').then(
+            c => c.AllContractsComponent
+          ),
+        title: 'All Contracts - Genie',
+      },
     ],
   },
   {
