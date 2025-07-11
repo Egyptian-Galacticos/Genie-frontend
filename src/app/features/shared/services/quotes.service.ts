@@ -52,4 +52,10 @@ export class QuotesService {
   getRFQById(rfqId: string | number) {
     return this.apiService.get<ApiResponse<IRequestForQuote>>(`rfqs/${rfqId}`);
   }
+  getQuotesForAdmin(requestOptions: RequestOptions) {
+    return this.apiService.get<PaginatedResponse<IQuote>>('admin/quotes', requestOptions);
+  }
+  getQuoteByIdForAdmin(quoteId: string | number) {
+    return this.apiService.get<ApiResponse<IQuote>>(`admin/quotes/${quoteId}`);
+  }
 }
