@@ -90,7 +90,7 @@ export class PendingProductsComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Approval Failed',
-          detail: 'Failed to approve the product. Please try again later.',
+          detail: error.error?.message || 'Failed to approve the product. Please try again later.',
         });
       },
     });

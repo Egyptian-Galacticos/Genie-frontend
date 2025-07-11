@@ -89,9 +89,10 @@
         [outlined]="true"
         (onClick)="confirmDeactivateProduct(rowData)"
         rounded="true"
-        [severity]="rowData.is_active ? 'warn' : 'success'"
+        [severity]="rowData.is_approved ? 'warn' : 'secondary'"
         size="small"
         [disabled]="loading()"
+        [disabled]="!rowData.is_approved"
       />
       <p-button
         [label]="'Delete'"
