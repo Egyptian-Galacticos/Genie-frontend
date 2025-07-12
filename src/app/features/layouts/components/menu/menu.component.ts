@@ -61,17 +61,22 @@ export class MenuComponent implements OnInit {
                   },
                 ],
               },
-              // {
-              //   label: 'Contracts',
-              //   icon: 'pi pi-fw pi-paperclip',
-              //   items: [
-              //     {
-              //       label: 'All Contracts',
-              //       icon: 'pi pi-fw pi-paperclip',
-              //       routerLink: ['/dashboard/seller/contracts'],
-              //     },
-              //   ],
-              // },
+              {
+                label: 'Contracts',
+                icon: 'pi pi-fw pi-paperclip',
+                items: [
+                  {
+                    label: 'All Contracts',
+                    icon: 'pi pi-fw pi-paperclip',
+                    routerLink: ['/dashboard/seller/contracts'],
+                  },
+                  {
+                    label: 'Pending Contracts',
+                    icon: 'pi pi-fw pi-clock',
+                    routerLink: ['/dashboard/seller/contracts/pending'],
+                  },
+                ],
+              },
               {
                 label: 'Chat',
                 icon: 'pi pi-fw pi-comments',
@@ -109,6 +114,22 @@ export class MenuComponent implements OnInit {
                     label: 'Requests',
                     icon: 'pi pi-fw pi-send',
                     routerLink: ['/dashboard/buyer/quotes-requests'],
+                  },
+                ],
+              },
+              {
+                label: 'Contracts',
+                icon: 'pi pi-fw pi-paperclip',
+                items: [
+                  {
+                    label: 'All Contracts',
+                    icon: 'pi pi-fw pi-paperclip',
+                    routerLink: ['/dashboard/buyer/contracts'],
+                  },
+                  {
+                    label: 'Pending Contracts',
+                    icon: 'pi pi-fw pi-clock',
+                    routerLink: ['/dashboard/buyer/contracts/pending'],
                   },
                 ],
               },
