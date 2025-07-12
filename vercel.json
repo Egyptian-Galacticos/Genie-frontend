@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/genie-frontend/server/server.mjs",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dist/genie-frontend/browser/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/assets/(.*)",
+      "dest": "/dist/genie-frontend/browser/assets/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))",
+      "dest": "/dist/genie-frontend/browser/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/genie-frontend/server/server.mjs"
+    }
+  ]
+}
