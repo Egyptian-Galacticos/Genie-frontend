@@ -604,8 +604,20 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (!paymentReference || paymentReference.trim() === '') {
       this.messageService.add({
         severity: 'warn',
-        summary: 'Payment Reference Required',
-        detail: 'Please provide a valid payment reference.',
+        summary: 'Transaction Number Required',
+        detail: 'Please provide a valid transaction number.',
+        life: 5000,
+      });
+      return;
+    }
+
+    // Validate transaction number format (10-25 alphanumeric characters)
+    const transactionRegex = /\b[A-Z0-9]{10,25}\b/;
+    if (!transactionRegex.test(paymentReference.trim())) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Invalid Transaction Number',
+        detail: 'Transaction number must be 10-25 alphanumeric characters (A-Z, 0-9).',
         life: 5000,
       });
       return;
