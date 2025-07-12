@@ -1,0 +1,158 @@
+<div class="flex flex-col gap-6 min-h-full w-full">
+  <p-toast></p-toast>
+  <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
+    <div class="px-6 flex flex-col gap-1">
+      <span class="font-bold text-2xl"> All Contracts </span>
+      <span class="text-sm text-secondary">
+        Manage all your contracts. View details and update contract status.
+      </span>
+    </div>
+    <div>
+      <app-data-table
+        [(data)]="allContracts"
+        [cols]="cols"
+        [(multiSortMeta)]="SortMeta"
+        [dataLoading]="loading()"
+        [(totalRecords)]="total_records"
+        [rows]="limit() || 10"
+        [bodyTemplate]="allContractsBody"
+        (loadDataEvent)="getAllContracts($event)"
+      >
+      </app-data-table>
+    </div>
+  </div>
+
+  <!-- Shipment Modal -->
+  <p-dialog
+    header="Mark Contract as Shipped"
+    [(visible)]="shipmentModalVisible"
+    [modal]="true"
+    [style]="{ width: '450px' }"
+    [closable]="true"
+  >
+    <div class="flex flex-col gap-4">
+      <div>
+        <label for="trackingLink" class="block text-sm font-medium mb-2">Tracking Link</label>
+        <input
+          id="trackingLink"
+          type="url"
+          pInputText
+          [(ngModel)]="trackingLink"
+          (ngModelChange)="validateTrackingLink()"
+          placeholder="Enter shipment tracking URL"
+          class="w-full"
+          [class.ng-invalid]="!isTrackingLinkValid()"
+          [class.ng-valid]="isTrackingLinkValid() && trackingLink().trim().length > 0"
+        />
+        @if (!isTrackingLinkValid() && trackingLinkErrorMessage()) {
+          <small class="text-red-500 mt-1 block">{{ trackingLinkErrorMessage() }}</small>
+        }
+      </div>
+      <div class="flex justify-end gap-2">
+        <p-button
+          label="Cancel"
+          icon="pi pi-times"
+          [outlined]="true"
+          (onClick)="shipmentModalVisible.set(false)"
+          severity="secondary"
+        />
+        <p-button
+          label="Mark as Shipped"
+          icon="pi pi-check"
+          (onClick)="markAsShipped()"
+          severity="success"
+          [disabled]="!isTrackingLinkValid() || !trackingLink().trim()"
+        />
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-confirmDialog
+    header="Confirm Action"
+    icon="pi pi-exclamation-triangle"
+    acceptButtonStyleClass="p-button-success"
+    rejectButtonStyleClass="p-button-secondary"
+  ></p-confirmDialog>
+
+  <!-- Contract Details Modal -->
+  <app-contract-details-dialog
+    [(visible)]="contractDetailsVisible"
+    [contract]="selectedContract()"
+    [userType]="'seller'"
+    [showActions]="false"
+  ></app-contract-details-dialog>
+</div>
+
+<ng-template #allContractsBody let-rowData let-rowIndex="rowIndex">
+  <td class="text-center w-[5%] shrink-1">
+    {{ rowData.id }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.contract_number }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.buyer?.full_name || 'N/A' }}
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    {{ rowData.total_amount | currency: rowData.currency }}
+  </td>
+  <td class="text-center w-[8%] text-nowrap">
+    {{ rowData.currency }}
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    <p-badge
+      [value]="rowData.status | titlecase"
+      [severity]="getStatusSeverity(rowData.status)"
+    ></p-badge>
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    {{ rowData.contract_date | date }}
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    {{ rowData.estimated_delivery | date }}
+  </td>
+  <td class="text-center text-nowrap">
+    <div class="flex gap-2 justify-center">
+      <p-button
+        [label]="'View'"
+        [title]="'View Contract Details'"
+        [raised]="true"
+        [icon]="'pi pi-eye'"
+        [outlined]="true"
+        (onClick)="viewContractDetails(rowData)"
+        rounded="true"
+        severity="secondary"
+        size="small"
+        [disabled]="loading()"
+      />
+      @if (canMarkAsShipped(rowData)) {
+        <p-button
+          [label]="'Mark as Shipped'"
+          [title]="'Mark Contract as Shipped'"
+          [raised]="true"
+          [icon]="'pi pi-send'"
+          [outlined]="true"
+          (onClick)="showShipmentModal(rowData.id)"
+          rounded="true"
+          severity="info"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+      @if (canMarkAsCompleted(rowData)) {
+        <p-button
+          [label]="'Mark as Completed'"
+          [title]="'Mark Contract as Completed'"
+          [raised]="true"
+          [icon]="'pi pi-check'"
+          [outlined]="true"
+          (onClick)="confirmMarkAsCompleted(rowData)"
+          rounded="true"
+          severity="success"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+    </div>
+  </td>
+</ng-template>
