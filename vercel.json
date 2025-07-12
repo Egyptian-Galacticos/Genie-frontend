@@ -1,15 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "dist/genie-frontend/server/server.mjs",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "dist/genie-frontend/browser/**",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
     {
       "src": "/assets/(.*)",
