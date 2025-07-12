@@ -22,7 +22,7 @@ import {
   User,
   AuthTokens,
 } from '../interfaces/login.interface';
-import { RegistrationData, RegistrationResponse } from '../interfaces/register.interface';
+import { RegistrationResponse } from '../interfaces/register.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -629,7 +629,7 @@ export class AuthService implements OnDestroy {
   /**
    * Register new user
    */
-  register(data: RegistrationData): Observable<RegistrationResponse> {
+  register(data: FormData): Observable<RegistrationResponse> {
     return this.apiService.post<RegistrationResponse>('auth/register', data).pipe(
       tap(response => {
         if (response.success) {

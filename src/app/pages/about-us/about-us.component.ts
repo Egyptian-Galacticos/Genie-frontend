@@ -5,11 +5,9 @@ import {
   viewChild,
   viewChildren,
   afterNextRender,
-  inject,
   OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ThemeService } from '../../core/services/theme.service';
 
 interface TeamMember {
   name: string;
@@ -36,65 +34,66 @@ interface Stat {
   imports: [CommonModule],
 })
 export class AboutUsComponent implements OnDestroy {
-  private themeService = inject(ThemeService);
-
   teamMembers = signal<TeamMember[]>([
     {
-      name: 'Ahmed Hassan',
-      position: 'CEO & Founder',
-      image: 'ahmed.jpg',
-      social: {
-        linkedin: 'https://linkedin.com/in/ahmed-hassan',
-        github: 'https://github.com/ahmed-hassan',
-        email: 'ahmed@genie.com',
-      },
-    },
-    {
-      name: 'Mariam El-Sayed',
-      position: 'CTO',
-      image: 'mariam.jpg',
-      social: {
-        linkedin: 'https://linkedin.com/in/mariam-elsayed',
-        github: 'https://github.com/mariam-elsayed',
-        email: 'mariam@genie.com',
-      },
-    },
-    {
-      name: 'Youssef Mahmoud',
-      position: 'Head of Product',
-      image: 'youssef.jpg',
-      social: {
-        linkedin: 'https://linkedin.com/in/youssef-mahmoud',
-        github: 'https://github.com/youssef-mahmoud',
-        email: 'youssef@genie.com',
-      },
-    },
-    {
       name: 'Rawan Ali',
-      position: 'Head of Marketing',
-      image: 'rawan.jpg',
+      position: 'Front End',
+      image: '/rawan.jpg?height=300&width=300',
       social: {
-        linkedin: 'https://linkedin.com/in/rawan-ali',
-        email: 'rawan@genie.com',
+        linkedin: 'https://www.linkedin.com/in/rawan-ali-ezzat',
+        github: 'https://github.com/Rouali',
+        email: 'rewanali82@gmail.com',
       },
     },
     {
-      name: 'Ibrahim Farouk',
-      position: 'Lead Developer',
-      image: 'ibrahim.jpg',
+      name: 'Ahmed Zahran',
+      position: 'Front End',
+      image: '/ahmed.jpg?height=300&width=300',
       social: {
-        linkedin: 'https://linkedin.com/in/ibrahim-farouk',
-        github: 'https://github.com/ibrahim-farouk',
-        email: 'ibrahim@genie.com',
+        linkedin: 'https://www.linkedin.com/in/ahmedzahran1/',
+        github: 'https://github.com/AhmedZahran15',
+        email: 'ahmedzhran876@gmail.com',
       },
     },
     {
-      name: 'Anas Khaled',
-      position: 'UI/UX Designer',
-      image: 'anas.jpg',
+      name: 'Ibrahim Salama',
+      position: 'Front End',
+      image: '/ibrahim.jpg?height=300&width=300',
       social: {
-        linkedin: 'https://linkedin.com/in/anas-khaled',
-        email: 'anas@genie.com',
+        linkedin: 'https://www.linkedin.com/in/ibrahim--salama/',
+        github: 'https://github.com/IbrahimSalama01',
+        email: 'ibrahimsalama100@outlook.com',
+      },
+    },
+    {
+      name: 'Mariam Elzeki',
+      position: 'Back End',
+      image: '/mariam.jpg?height=300&width=300',
+      social: {
+        linkedin: 'https://www.linkedin.com/in/mariam-elzeki-/',
+        github: 'https://github.com/marriaammm',
+        email: 'mariamahmedelzeki@gmail.com',
+      },
+    },
+    {
+      name: 'Youssef Goma',
+      position: 'Back End',
+      image: '/youssef.jpg?height=300&width=300',
+      social: {
+        linkedin: 'https://www.linkedin.com/in/youssefgoma/',
+        github: 'https://github.com/YoussefGoma',
+        email: 'Youssef.goma.k@gmail.com',
+      },
+    },
+    {
+      name: 'Anas nashat',
+      position: 'Back End',
+      image: '/anas.jpg?height=300&width=300',
+      social: {
+        linkedin:
+          'https://www.linkedin.com/in/anasnashat?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
+        github: 'https://github.com/anasnashat',
+        email: 'anas.nashat.ahmed@gmail.com',
       },
     },
   ]);

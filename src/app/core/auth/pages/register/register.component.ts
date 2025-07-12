@@ -18,7 +18,6 @@ import {
   UserRoleOption,
   CompanyFormData,
   AdminFormData,
-  RegistrationData,
 } from '../../interfaces/register.interface';
 
 @Component({
@@ -99,35 +98,49 @@ export class RegisterComponent {
     const roles: UserRole[] =
       companyData.role === 'both' ? ['buyer', 'seller'] : [companyData.role as UserRole];
 
-    const registrationData: RegistrationData = {
-      roles: roles,
-      user: {
-        first_name: adminFormData.first_name,
-        last_name: adminFormData.last_name,
-        email: adminFormData.email,
-        password: adminFormData.password,
-        password_confirmation: adminFormData.password_confirmation,
-        phone_number: adminFormData.phone_number || null,
-      },
-      company: {
-        name: companyData.name,
-        email: companyData.email,
-        company_phone: companyData.company_phone,
-        address: {
-          street: companyData.streetAddress,
-          city: companyData.city,
-          state: companyData.stateProvince,
-          zip_code: companyData.zipPostalCode,
-          country: companyData.country,
-        },
-        ...(this.showSellerFields() && {
-          tax_id: adminFormData.taxId,
-          commercial_registration: adminFormData.commercialRegistration,
-        }),
-      },
-    };
+    const formData = new FormData();
 
-    this.authService.register(registrationData).subscribe({
+    roles.forEach(role => {
+      formData.append('roles[]', role);
+    });
+
+    formData.append('user[first_name]', adminFormData.first_name);
+    formData.append('user[last_name]', adminFormData.last_name);
+    formData.append('user[email]', adminFormData.email);
+    formData.append('user[password]', adminFormData.password);
+    formData.append('user[password_confirmation]', adminFormData.password_confirmation);
+    formData.append('user[phone_number]', adminFormData.phone_number || '');
+
+    formData.append('company[name]', companyData.name);
+    formData.append('company[email]', companyData.email);
+    formData.append('company[company_phone]', companyData.company_phone);
+    formData.append('company[address][street]', companyData.streetAddress);
+    formData.append('company[address][city]', companyData.city);
+    formData.append('company[address][state]', companyData.stateProvince);
+    formData.append('company[address][zip_code]', companyData.zipPostalCode);
+    formData.append('company[address][country]', companyData.country);
+
+    if (this.showSellerFields()) {
+      formData.append('company[tax_id]', adminFormData.taxId || '');
+      formData.append(
+        'company[commercial_registration]',
+        adminFormData.commercialRegistration || ''
+      );
+
+      if (adminFormData.taxIdImages) {
+        adminFormData.taxIdImages.forEach(file => {
+          formData.append('company[tax_id_images][]', file);
+        });
+      }
+
+      if (adminFormData.commercialRegistrationImages) {
+        adminFormData.commercialRegistrationImages.forEach(file => {
+          formData.append('company[commercial_registration_images][]', file);
+        });
+      }
+    }
+
+    this.authService.register(formData).subscribe({
       next: () => {
         this.loading.set(false);
         this.router.navigate(['/auth/register-success']);

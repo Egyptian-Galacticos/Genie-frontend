@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration=production",
+    "vercel-build": "node scripts/set-env.js && ng build --configuration=production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:Genie-frontend": "node dist/genie-frontend/server/server.mjs",
@@ -27,6 +29,7 @@
   "private": true,
   "dependencies": {
     "@angular-eslint/schematics": "^19.6.0",
+    "@angular/animations": "^19.2.0",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",

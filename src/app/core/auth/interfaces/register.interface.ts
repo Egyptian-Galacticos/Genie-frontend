@@ -30,7 +30,9 @@ export interface AdminFormData {
   password_confirmation: string;
   phone_number: string;
   commercialRegistration?: string;
+  commercialRegistrationImages?: File[];
   taxId?: string;
+  taxIdImages?: File[];
 }
 
 export interface Address {
@@ -39,26 +41,6 @@ export interface Address {
   state: string;
   country: string;
   zip_code: string;
-}
-
-export interface RegistrationData {
-  roles: string[];
-  user: {
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-    phone_number: string | null;
-  };
-  company: {
-    name: string;
-    email: string;
-    tax_id?: string;
-    company_phone: string;
-    commercial_registration?: string;
-    address: Address;
-  };
 }
 
 export interface RegistrationResponse {
@@ -83,8 +65,10 @@ export interface RegistrationResponse {
         name: string;
         email: string;
         tax_id: string;
+        tax_id_images: string[] | null;
         company_phone: string;
         commercial_registration: string;
+        commercial_registration_images: string[] | null;
         website?: string | null;
         description?: string | null;
         logo?: string | null;
