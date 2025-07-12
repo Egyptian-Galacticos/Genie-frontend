@@ -37,10 +37,5 @@
       "src": "/(.*)",
       "dest": "/dist/genie-frontend/server/server.mjs"
     }
-  ],
-  "functions": {
-    "dist/genie-frontend/server/server.mjs": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
