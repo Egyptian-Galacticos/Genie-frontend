@@ -528,6 +528,85 @@
                 </div>
               </div>
             }
+
+            <div class="flex flex-col gap-3">
+              <label
+                for="commercialRegUpload"
+                class="block text-sm font-semibold"
+                style="color: var(--p-text-color)"
+              >
+                Upload Commercial Registration Images
+              </label>
+              <p-fileupload
+                #commercialRegUpload
+                mode="basic"
+                [multiple]="true"
+                accept="image/*"
+                maxFileSize="10000000"
+                chooseLabel="Choose Images"
+                [auto]="true"
+                customUpload="true"
+                (uploadHandler)="onCommercialRegistrationUpload($event)"
+                styleClass="w-full"
+                [style]="{ 'border-radius': '12px' }"
+              >
+                <ng-template pTemplate="content">
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-image text-lg" style="color: var(--p-primary-color)"></i>
+                    <span class="text-sm" style="color: var(--p-text-color)">
+                      Upload multiple images (JPG, PNG, max 10MB each)
+                    </span>
+                  </div>
+                </ng-template>
+              </p-fileupload>
+
+              @if (commercialRegistrationPreviews.length > 0) {
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+                  @for (preview of commercialRegistrationPreviews; track $index) {
+                    <div class="relative group">
+                      <img
+                        [src]="preview.url"
+                        [alt]="'Commercial Registration ' + ($index + 1)"
+                        class="w-full h-24 object-cover rounded-lg border-2 border-dashed"
+                        style="border-color: var(--p-primary-200)"
+                      />
+                      <button
+                        type="button"
+                        (click)="removeCommercialRegistrationImage($index)"
+                        class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                      >
+                        <i class="pi pi-times"></i>
+                      </button>
+                    </div>
+                  }
+                </div>
+              }
+
+              @if (showSellerFields() && commercialRegistrationImages.length === 0) {
+                <div
+                  class="p-3 rounded-xl border-l-4"
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                      color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                    );
+                    border-left-color: var(--p-red-500);
+                    border: 1px solid var(--p-red-200);
+                  "
+                >
+                  <div class="flex items-center gap-2">
+                    <i
+                      class="pi pi-exclamation-triangle text-sm"
+                      style="color: var(--p-red-500)"
+                    ></i>
+                    <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                      At least one commercial registration image is required
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
           </div>
 
           <div class="space-y-3">
@@ -574,6 +653,85 @@
                 </div>
               </div>
             }
+
+            <div class="flex flex-col gap-3">
+              <label
+                for="taxIdUpload"
+                class="block text-sm font-semibold"
+                style="color: var(--p-text-color)"
+              >
+                Upload Tax ID Images
+              </label>
+              <p-fileupload
+                #taxIdUpload
+                mode="basic"
+                [multiple]="true"
+                accept="image/*"
+                maxFileSize="10000000"
+                chooseLabel="Choose Images"
+                [auto]="true"
+                customUpload="true"
+                (uploadHandler)="onTaxIdUpload($event)"
+                styleClass="w-full"
+                [style]="{ 'border-radius': '12px' }"
+              >
+                <ng-template pTemplate="content">
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-image text-lg" style="color: var(--p-primary-color)"></i>
+                    <span class="text-sm" style="color: var(--p-text-color)">
+                      Upload multiple images (JPG, PNG, max 10MB each)
+                    </span>
+                  </div>
+                </ng-template>
+              </p-fileupload>
+
+              @if (taxIdPreviews.length > 0) {
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+                  @for (preview of taxIdPreviews; track $index) {
+                    <div class="relative group">
+                      <img
+                        [src]="preview.url"
+                        [alt]="'Tax ID ' + ($index + 1)"
+                        class="w-full h-24 object-cover rounded-lg border-2 border-dashed"
+                        style="border-color: var(--p-primary-200)"
+                      />
+                      <button
+                        type="button"
+                        (click)="removeTaxIdImage($index)"
+                        class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                      >
+                        <i class="pi pi-times"></i>
+                      </button>
+                    </div>
+                  }
+                </div>
+              }
+
+              @if (showSellerFields() && taxIdImages.length === 0) {
+                <div
+                  class="p-3 rounded-xl border-l-4"
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      color-mix(in srgb, var(--p-red-50) 80%, transparent),
+                      color-mix(in srgb, var(--p-red-100) 50%, transparent)
+                    );
+                    border-left-color: var(--p-red-500);
+                    border: 1px solid var(--p-red-200);
+                  "
+                >
+                  <div class="flex items-center gap-2">
+                    <i
+                      class="pi pi-exclamation-triangle text-sm"
+                      style="color: var(--p-red-500)"
+                    ></i>
+                    <span class="text-sm font-medium" style="color: var(--p-red-700)">
+                      At least one tax ID image is required
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
           </div>
         </div>
       </div>
@@ -630,7 +788,7 @@
       icon="pi pi-check"
       iconPos="right"
       [loading]="loading()"
-      [disabled]="adminForm.invalid || loading()"
+      [disabled]="!isValid || loading()"
       (onClick)="onSubmit()"
       size="large"
       styleClass="w-full sm:w-auto transition-all duration-300 hover:scale-105"
