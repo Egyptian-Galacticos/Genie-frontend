@@ -264,20 +264,55 @@ export class ContractDetailsDialogComponent {
   // Payment reference signal
   paymentReference = signal<string>('');
 
+  // Transaction number validation regex
+  private transactionRegex = /\b[A-Z0-9]{10,25}\b/;
+
+  validateTransactionNumber(transactionNumber: string): boolean {
+    return this.transactionRegex.test(transactionNumber.trim());
+  }
+
+  isValidTransaction = computed(() => {
+    const reference = this.paymentReference();
+    return reference.trim() && this.validateTransactionNumber(reference);
+  });
+
+  // Check if current user can approve contract
+  canApproveContract = computed(() => {
+    const contract = this.contract();
+    return contract?.status === 'pending_approval' && this.userType() === 'buyer';
+  });
+
+  // Check if current user can submit payment
+  canSubmitPayment = computed(() => {
+    const contract = this.contract();
+    return (
+      (contract?.status === 'pending_payment' || contract?.status === 'buyer_payment_rejected') &&
+      this.userType() === 'buyer'
+    );
+  });
+
   submitPayment(): void {
     const currentContract = this.contract();
     const reference = this.paymentReference();
 
-    if (currentContract && reference.trim()) {
-      this.paymentSubmit.emit({
-        contract: currentContract,
-        paymentReference: reference.trim(),
-      });
+    if (!currentContract) return;
 
-      // Reset the payment reference after submission
-      this.paymentReference.set('');
-    } else {
+    if (!reference.trim()) {
       console.warn('Payment reference is required');
+      return;
     }
+
+    if (!this.validateTransactionNumber(reference)) {
+      console.warn('Invalid transaction number format. Must be 10-25 alphanumeric characters.');
+      return;
+    }
+
+    this.paymentSubmit.emit({
+      contract: currentContract,
+      paymentReference: reference.trim(),
+    });
+
+    // Reset the payment reference after submission
+    this.paymentReference.set('');
   }
 }

@@ -74,6 +74,26 @@
                     </div>
                   </div>
                 }
+                @if (currentContract.seller_transaction_id) {
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[140px]"
+                      >Seller Transaction ID:</span
+                    >
+                    <span class="text-sm font-mono bg-gray-100 px-2 py-1 rounded">{{
+                      currentContract.seller_transaction_id
+                    }}</span>
+                  </div>
+                }
+                @if (currentContract.buyer_transaction_id) {
+                  <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-600 min-w-[140px]"
+                      >Buyer Transaction ID:</span
+                    >
+                    <span class="text-sm font-mono bg-gray-100 px-2 py-1 rounded">{{
+                      currentContract.buyer_transaction_id
+                    }}</span>
+                  </div>
+                }
               </div>
             </div>
 
@@ -366,96 +386,116 @@
         </p-fieldset>
       </div>
 
-      <!-- Dialog Footer Actions -->
-      @if (
-        allowApprove() && currentContract.status === 'pending_approval' && userType() === 'buyer'
-      ) {
-        <div class="my-4 text-sm text-gray-500">
-          <i class="pi pi-info-circle mr-1"></i>
-          Approving this contract will finalize the agreement and notify the other party.
+      @if (canApproveContract()) {
+        <div class="px-4 py-3 bg-green-50 border-b border-green-200 rounded-lg">
+          <div class="mb-3 text-sm text-green-700">
+            <i class="pi pi-info-circle mr-1"></i>
+            Approving this contract will finalize the agreement and notify the seller.
+          </div>
+          <p-button
+            [label]="'Approve Contract'"
+            [icon]="'pi pi-check'"
+            [outlined]="true"
+            (onClick)="onApprove()"
+            rounded="true"
+            severity="success"
+            [raised]="true"
+            styleClass="w-full"
+          />
         </div>
-        <p-button
-          [label]="'Approve'"
-          [icon]="'pi pi-check'"
-          [outlined]="true"
-          (onClick)="onApprove()"
-          rounded="true"
-          severity="success"
-          [raised]="true"
-        />
       }
-      @if (
-        currentContract.status === 'pending_payment' &&
-        userType() === 'buyer' &&
-        currentContract.seller_transaction_id
-      ) {
-        <div class="px-3">
-          <form>
+
+      <!-- Payment Submission Action -->
+      @if (canSubmitPayment()) {
+        <div class="px-4 py-3 bg-blue-50 border-b border-blue-200 rounded-lg">
+          <div class="mb-3 text-sm text-blue-700">
+            <i class="pi pi-info-circle mr-1"></i>
+            Enter your transaction number (10-25 alphanumeric characters) to confirm payment.
+            @if (currentContract.status === 'buyer_payment_rejected') {
+              <br /><strong
+                >Previous payment was rejected. Please provide a new transaction number.</strong
+              >
+            }
+          </div>
+          <div class="space-y-3">
             <input
               pInputText
               type="text"
               [value]="paymentReference()"
               (input)="paymentReference.set($any($event.target).value)"
-              placeholder="Enter Payment Reference"
-              class="w-full mb-4"
+              placeholder="Enter Transaction Number (e.g., ABC123XYZ789)"
+              class="w-full"
+              [class.p-invalid]="paymentReference() && !isValidTransaction()"
             />
+            @if (paymentReference() && !isValidTransaction()) {
+              <small class="text-red-600">
+                <i class="pi pi-exclamation-triangle mr-1"></i>
+                Transaction number must be 10-25 alphanumeric characters (A-Z, 0-9)
+              </small>
+            }
             <p-button
               [label]="'Submit Payment'"
-              [icon]="'pi pi-check'"
+              [icon]="'pi pi-credit-card'"
               [outlined]="true"
-              [disabled]="!paymentReference().trim()"
+              [disabled]="!isValidTransaction()"
               (onClick)="submitPayment()"
               rounded="true"
               severity="success"
               [raised]="true"
+              styleClass="w-full"
             />
-          </form>
+          </div>
         </div>
       }
       @if (showActions()) {
-        <div class="flex-shrink-0 border-t bg-white p-4">
-          <div class="flex justify-between items-center">
-            <div class="flex gap-3">
-              @if (allowEdit()) {
-                <p-button
-                  label="Edit Contract"
-                  icon="pi pi-pencil"
-                  severity="secondary"
-                  (onClick)="onEdit()"
-                />
-              }
-              <p-button
-                label="Download"
-                icon="pi pi-download"
-                severity="secondary"
-                (onClick)="onDownload()"
-              />
-              <p-button
-                label="Chat"
-                icon="pi pi-comments"
-                severity="secondary"
-                (onClick)="onChat()"
-              />
-            </div>
+        <div class="flex-shrink-0 border-t bg-white">
+          <!-- Contract Approval Action -->
 
-            <div class="flex gap-3">
-              @if (allowCancel() && currentContract.status !== 'cancelled') {
+          <!-- Default Footer Actions -->
+          <div class="p-4">
+            <div class="flex justify-between items-center">
+              <div class="flex gap-3">
+                @if (allowEdit()) {
+                  <p-button
+                    label="Edit Contract"
+                    icon="pi pi-pencil"
+                    severity="secondary"
+                    (onClick)="onEdit()"
+                  />
+                }
                 <p-button
-                  label="Cancel Contract"
-                  icon="pi pi-times"
-                  severity="danger"
-                  (onClick)="onCancel()"
+                  label="Download"
+                  icon="pi pi-download"
+                  severity="secondary"
+                  (onClick)="onDownload()"
                 />
-              }
-              @if (allowApprove() && currentContract.status === 'pending') {
                 <p-button
-                  label="Approve Contract"
-                  icon="pi pi-check"
-                  severity="success"
-                  (onClick)="onApprove()"
+                  label="Chat"
+                  icon="pi pi-comments"
+                  severity="secondary"
+                  (onClick)="onChat()"
                 />
-              }
-              <p-button label="Close" severity="secondary" (onClick)="visible.set(false)" />
+              </div>
+
+              <div class="flex gap-3">
+                @if (allowCancel() && currentContract.status !== 'cancelled') {
+                  <p-button
+                    label="Cancel Contract"
+                    icon="pi pi-times"
+                    severity="danger"
+                    (onClick)="onCancel()"
+                  />
+                }
+                @if (allowApprove() && currentContract.status === 'pending') {
+                  <p-button
+                    label="Approve Contract"
+                    icon="pi pi-check"
+                    severity="success"
+                    (onClick)="onApprove()"
+                  />
+                }
+                <p-button label="Close" severity="secondary" (onClick)="visible.set(false)" />
+              </div>
             </div>
           </div>
         </div>
