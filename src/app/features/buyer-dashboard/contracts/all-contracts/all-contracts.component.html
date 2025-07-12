@@ -1,0 +1,128 @@
+<div class="flex flex-col gap-6 min-h-full w-full">
+  <p-toast></p-toast>
+  <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
+    <div class="px-6 flex flex-col gap-1">
+      <span class="font-bold text-2xl"> All Contracts </span>
+      <span class="text-sm text-secondary">
+        View all your contracts and manage deliveries and payments.
+      </span>
+    </div>
+    <div>
+      <app-data-table
+        [(data)]="allContracts"
+        [cols]="cols"
+        [(multiSortMeta)]="SortMeta"
+        [dataLoading]="loading()"
+        [(totalRecords)]="total_records"
+        [rows]="limit() || 10"
+        [bodyTemplate]="allContractsBody"
+        (loadDataEvent)="getAllContracts($event)"
+      >
+      </app-data-table>
+    </div>
+  </div>
+
+  <p-confirmDialog
+    header="Confirm Action"
+    icon="pi pi-exclamation-triangle"
+    acceptButtonStyleClass="p-button-success"
+    rejectButtonStyleClass="p-button-secondary"
+  ></p-confirmDialog>
+</div>
+
+<ng-template #allContractsBody let-rowData let-rowIndex="rowIndex">
+  <td class="text-center w-[5%] shrink-1">
+    {{ rowData.id }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.contract_number }}
+  </td>
+  <td class="text-center w-[15%] text-nowrap">
+    {{ rowData.seller?.full_name || 'N/A' }}
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    {{ rowData.total_amount | currency: rowData.currency }}
+  </td>
+  <td class="text-center w-[8%] text-nowrap">
+    {{ rowData.currency }}
+  </td>
+  <td class="text-center w-[12%] text-nowrap">
+    <p-badge
+      [value]="rowData.status | titlecase"
+      [severity]="getStatusSeverity(rowData.status)"
+    ></p-badge>
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    {{ rowData.contract_date | date }}
+  </td>
+  <td class="text-center w-[10%] text-nowrap">
+    {{ rowData.estimated_delivery | date }}
+  </td>
+  <td class="text-center text-nowrap">
+    <div class="flex gap-2 justify-center">
+      <p-button
+        [label]="'View'"
+        [title]="'View Contract Details'"
+        [raised]="true"
+        [icon]="'pi pi-eye'"
+        [outlined]="true"
+        (onClick)="viewContractDetails(rowData)"
+        rounded="true"
+        severity="secondary"
+        size="small"
+        [disabled]="loading()"
+      />
+      @if (canApproveContract(rowData)) {
+        <p-button
+          [label]="'Approve'"
+          [title]="'Approve Contract'"
+          [raised]="true"
+          [icon]="'pi pi-check'"
+          [outlined]="true"
+          (onClick)="approveContract(rowData)"
+          rounded="true"
+          severity="success"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+      @if (canMarkAsDelivered(rowData)) {
+        <p-button
+          [label]="'Mark Delivered'"
+          [title]="'Mark as Delivered'"
+          [raised]="true"
+          [icon]="'pi pi-check'"
+          [outlined]="true"
+          (onClick)="confirmMarkAsDelivered(rowData)"
+          rounded="true"
+          severity="success"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+      @if (canMarkAsPendingPayment(rowData)) {
+        <p-button
+          [label]="'Submit Payment'"
+          [title]="'Submit Payment Reference'"
+          [raised]="true"
+          [icon]="'pi pi-credit-card'"
+          [outlined]="true"
+          (onClick)="viewContractDetails(rowData)"
+          rounded="true"
+          severity="warn"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+    </div>
+  </td>
+</ng-template>
+
+<!-- Contract Details Modal -->
+<app-contract-details-dialog
+  [(visible)]="contractDetailsVisible"
+  [contract]="selectedContract()"
+  [userType]="'buyer'"
+  [showActions]="false"
+  (paymentSubmit)="onPaymentSubmit($event)"
+></app-contract-details-dialog>

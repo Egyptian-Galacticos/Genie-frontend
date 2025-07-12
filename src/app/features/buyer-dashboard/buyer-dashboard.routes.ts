@@ -43,6 +43,27 @@ export const buyerDashboardRoutes: Routes = [
         loadComponent: () => import('../chat/chat.component').then(c => c.ChatComponent),
         title: 'Messages - Genie',
       },
+      {
+        path: 'contracts',
+        children: [
+          {
+            path: '',
+            title: 'All Contracts - Genie',
+            loadComponent: () =>
+              import('./contracts/all-contracts/all-contracts.component').then(
+                c => c.BuyerAllContractsComponent
+              ),
+          },
+          {
+            path: 'pending',
+            title: 'Pending Contracts - Genie',
+            loadComponent: () =>
+              import('./contracts/pending-contracts/pending-contracts.component').then(
+                c => c.BuyerPendingContractsComponent
+              ),
+          },
+        ],
+      },
     ],
   },
 ];
