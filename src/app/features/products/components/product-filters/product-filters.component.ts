@@ -75,7 +75,7 @@ export class ProductFiltersComponent {
     if (checked) {
       currentFilters.category_id = categoryId;
     } else {
-      delete currentFilters.category_id;
+      currentFilters.category_id = undefined;
     }
 
     this.filtersChange.emit(currentFilters);
