@@ -153,6 +153,10 @@
     [allowApprove]="false"
     (dialogClose)="contractModalVisible.set(false)"
     (sellerPaymentSubmit)="onSellerPaymentSubmit($event)"
+    (adminApprovePayment)="approvePayment($event.id); contractModalVisible.set(false)"
+    (adminRejectPayment)="rejectPayment($event); contractModalVisible.set(false)"
+    (adminApproveShipment)="approveShipment($event.id); contractModalVisible.set(false)"
+    (adminRejectShipment)="rejectShipment($event); contractModalVisible.set(false)"
   ></app-contract-details-dialog>
 }
 @if (quoteModalVisible()) {

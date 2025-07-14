@@ -233,6 +233,62 @@ export class SellerAllContractsComponent {
     this.contractDetailsVisible.set(true);
   }
 
+  onShipOrder(event: { contract: Contract; trackingUrl: string }): void {
+    this.contractService.markAsShipped(event.contract.id, event.trackingUrl).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Order Shipped',
+          detail: `Contract #${event.contract.contract_number} has been marked as shipped successfully`,
+          life: 3000,
+        });
+        this.getAllContracts(this.currentRequestOptions);
+        this.contractDetailsVisible.set(false);
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to ship order. Please try again.',
+          life: 5000,
+        });
+      },
+    });
+  }
+
+  onCompleteContract(contract: Contract): void {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to mark contract #${contract.id} as completed?`,
+      header: 'Complete Contract',
+      icon: 'pi pi-check-circle',
+      acceptButtonStyleClass: 'p-button-success',
+      rejectButtonStyleClass: 'p-button-secondary',
+      accept: () => {
+        this.contractService.markAsCompleted(contract.id).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Contract Completed',
+              detail: `Contract #${contract.id} has been marked as completed successfully.`,
+              life: 3000,
+            });
+            this.getAllContracts(this.currentRequestOptions);
+            this.contractDetailsVisible.set(false);
+          },
+          error: error => {
+            console.error('Error completing contract:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to complete contract. Please try again.',
+              life: 5000,
+            });
+          },
+        });
+      },
+    });
+  }
+
   cols = [
     { field: 'id', header: 'ID' },
     { field: 'contract_number', header: 'Contract Number', sortable: true, filterable: true },

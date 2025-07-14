@@ -59,6 +59,14 @@ export class ContractDetailsDialogComponent {
   chat = output<Contract>();
   download = output<Contract>();
   paymentSubmit = output<{ contract: Contract; paymentReference: string }>();
+  sellerPaymentSubmit = output<{ contract: Contract; transactionId: string }>();
+  adminApprovePayment = output<Contract>();
+  adminRejectPayment = output<Contract>();
+  adminApproveShipment = output<Contract>();
+  adminRejectShipment = output<Contract>();
+  shipOrder = output<{ contract: Contract; trackingUrl: string }>();
+  confirmDelivery = output<Contract>();
+  completeContract = output<Contract>();
   dialogClose = output<void>();
 
   // Computed signals for derived values
@@ -141,6 +149,13 @@ export class ContractDetailsDialogComponent {
   hasShippingAddress = computed(() => {
     const address = this.contract()?.shipping_address;
     return address && (address.street || address.city || address.country);
+  });
+
+  hasShippingInfo = computed(() => {
+    const contract = this.contract();
+    const address = contract?.shipping_address;
+    const shipment_url = contract?.shipment_url;
+    return (address && (address.street || address.city || address.country)) || shipment_url;
   });
 
   hasBillingAddress = computed(() => {
@@ -264,6 +279,12 @@ export class ContractDetailsDialogComponent {
   // Payment reference signal
   paymentReference = signal<string>('');
 
+  // Seller transaction ID signal for admin
+  sellerTransactionId = signal<string>('');
+
+  // Shipping URL signal for seller
+  shippingUrl = signal<string>('');
+
   // Transaction number validation regex
   private transactionRegex = /\b[A-Z0-9]{10,25}\b/;
 
@@ -275,6 +296,25 @@ export class ContractDetailsDialogComponent {
     const reference = this.paymentReference();
     return reference.trim() && this.validateTransactionNumber(reference);
   });
+
+  isValidSellerTransaction = computed(() => {
+    const transactionId = this.sellerTransactionId();
+    return transactionId.trim() && this.validateTransactionNumber(transactionId);
+  });
+
+  isValidShippingUrl = computed(() => {
+    const url = this.shippingUrl();
+    return url.trim() && this.validateUrl(url);
+  });
+
+  validateUrl(url: string): boolean {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
   // Check if current user can approve contract
   canApproveContract = computed(() => {
@@ -288,6 +328,45 @@ export class ContractDetailsDialogComponent {
     return (
       (contract?.status === 'pending_payment' || contract?.status === 'buyer_payment_rejected') &&
       this.userType() === 'buyer'
+    );
+  });
+
+  // Check if admin can submit seller payment
+  canSubmitSellerPayment = computed(() => {
+    const contract = this.contract();
+    return contract?.status === 'delivered' && this.userType() === 'admin';
+  });
+
+  // Check if admin can approve/reject buyer payment
+  canApproveRejectPayment = computed(() => {
+    const contract = this.contract();
+    return contract?.status === 'pending_payment_confirmation' && this.userType() === 'admin';
+  });
+
+  // Check if seller can ship the order
+  canShipOrder = computed(() => {
+    const contract = this.contract();
+    return contract?.status === 'in_progress' && this.userType() === 'seller';
+  });
+
+  // Check if admin can approve/reject shipment
+  canApproveRejectShipment = computed(() => {
+    const contract = this.contract();
+    return contract?.status === 'verify_shipment_url' && this.userType() === 'admin';
+  });
+
+  // Check if buyer can confirm delivery
+  canConfirmDelivery = computed(() => {
+    const contract = this.contract();
+    return contract?.status === 'shipped' && this.userType() === 'buyer';
+  });
+
+  // Check if seller can complete the contract
+  canCompleteContract = computed(() => {
+    const contract = this.contract();
+    return (
+      (contract?.status === 'delivered_and_paid' || contract?.status === 'paid') &&
+      this.userType() === 'seller'
     );
   });
 
@@ -314,5 +393,97 @@ export class ContractDetailsDialogComponent {
 
     // Reset the payment reference after submission
     this.paymentReference.set('');
+  }
+
+  submitSellerPayment(): void {
+    const currentContract = this.contract();
+    const transactionId = this.sellerTransactionId();
+
+    if (!currentContract) return;
+
+    if (!transactionId.trim()) {
+      console.warn('Seller transaction ID is required');
+      return;
+    }
+
+    if (!this.validateTransactionNumber(transactionId)) {
+      console.warn('Invalid transaction number format. Must be 10-25 alphanumeric characters.');
+      return;
+    }
+
+    this.sellerPaymentSubmit.emit({
+      contract: currentContract,
+      transactionId: transactionId.trim(),
+    });
+
+    // Reset the seller transaction ID after submission
+    this.sellerTransactionId.set('');
+  }
+
+  onAdminApprovePayment(): void {
+    const currentContract = this.contract();
+    if (currentContract) {
+      this.adminApprovePayment.emit(currentContract);
+    }
+  }
+
+  onAdminRejectPayment(): void {
+    const currentContract = this.contract();
+    if (currentContract) {
+      this.adminRejectPayment.emit(currentContract);
+    }
+  }
+
+  onShipOrder(): void {
+    const currentContract = this.contract();
+    const trackingUrl = this.shippingUrl();
+
+    if (!currentContract) return;
+
+    if (!trackingUrl.trim()) {
+      console.warn('Shipping URL is required');
+      return;
+    }
+
+    if (!this.validateUrl(trackingUrl)) {
+      console.warn('Invalid URL format');
+      return;
+    }
+
+    this.shipOrder.emit({
+      contract: currentContract,
+      trackingUrl: trackingUrl.trim(),
+    });
+
+    // Reset the shipping URL after submission
+    this.shippingUrl.set('');
+  }
+
+  onAdminApproveShipment(): void {
+    const currentContract = this.contract();
+    if (currentContract) {
+      this.adminApproveShipment.emit(currentContract);
+    }
+  }
+
+  onAdminRejectShipment(): void {
+    const currentContract = this.contract();
+    if (currentContract) {
+      this.adminRejectShipment.emit(currentContract);
+    }
+  }
+
+  onConfirmDelivery(): void {
+    const currentContract = this.contract();
+    if (currentContract) {
+      this.confirmDelivery.emit(currentContract);
+    }
+  }
+
+  onCompleteContract(): void {
+    const currentContract = this.contract();
+    if (currentContract) {
+      this.completeContract.emit(currentContract);
+    }
   }
 }

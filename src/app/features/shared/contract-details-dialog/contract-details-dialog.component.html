@@ -255,18 +255,37 @@
         }
 
         <!-- Addresses Section -->
-        @if (hasShippingAddress() || hasBillingAddress()) {
-          <p-fieldset legend="Addresses" class="mb-6">
+        @if (hasShippingInfo() || hasBillingAddress()) {
+          <p-fieldset legend="Addresses & Shipping" class="mb-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <!-- Shipping Address -->
-              @if (hasShippingAddress()) {
+              <!-- Shipping Information -->
+              @if (hasShippingInfo()) {
                 <div class="space-y-3">
                   <h4 class="text-md font-semibold text-gray-700 flex items-center">
                     <i class="pi pi-send mr-2"></i>
-                    Shipping Address
+                    Shipping Information
                   </h4>
-                  <div class="bg-gray-50 p-3 rounded border">
-                    <p class="text-sm">{{ formatAddress(currentContract.shipping_address) }}</p>
+                  <div class="bg-gray-50 p-3 rounded border space-y-3">
+                    @if (hasShippingAddress()) {
+                      <div>
+                        <div class="text-xs font-medium text-gray-500 mb-1">Address:</div>
+                        <p class="text-sm">{{ formatAddress(currentContract.shipping_address) }}</p>
+                      </div>
+                    }
+                    @if (currentContract.shipment_url) {
+                      <div>
+                        <div class="text-xs font-medium text-gray-500 mb-1">Tracking Link:</div>
+                        <a
+                          [href]="currentContract.shipment_url"
+                          target="_blank"
+                          class="text-sm text-blue-600 hover:text-blue-800 underline break-all"
+                          rel="noopener noreferrer"
+                        >
+                          <i class="pi pi-external-link mr-1"></i>
+                          {{ currentContract.shipment_url }}
+                        </a>
+                      </div>
+                    }
                   </div>
                 </div>
               }
@@ -384,6 +403,57 @@
             }
           </div>
         </p-fieldset>
+
+        <!-- Transaction Information Section (Admin Only) -->
+        @if (
+          userType() === 'admin' &&
+          (currentContract.seller_transaction_id || currentContract.buyer_transaction_id)
+        ) {
+          <p-fieldset legend="Transaction Information" class="mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              @if (currentContract.seller_transaction_id) {
+                <div class="bg-blue-50 p-4 rounded border border-blue-200">
+                  <div class="flex items-center gap-3 mb-2">
+                    <i class="pi pi-send text-blue-600"></i>
+                    <h4 class="text-md font-semibold text-blue-700">Seller Transaction ID</h4>
+                  </div>
+                  <div
+                    class="text-sm font-mono bg-white px-3 py-2 rounded border border-blue-300 text-blue-800"
+                  >
+                    {{ currentContract.seller_transaction_id }}
+                  </div>
+                  <div class="text-xs text-blue-600 mt-2">
+                    <i class="pi pi-info-circle mr-1"></i>
+                    Payment reference provided by seller
+                  </div>
+                </div>
+              }
+              @if (currentContract.buyer_transaction_id) {
+                <div class="bg-green-50 p-4 rounded border border-green-200">
+                  <div class="flex items-center gap-3 mb-2">
+                    <i class="pi pi-shopping-cart text-green-600"></i>
+                    <h4 class="text-md font-semibold text-green-700">Buyer Transaction ID</h4>
+                  </div>
+                  <div
+                    class="text-sm font-mono bg-white px-3 py-2 rounded border border-green-300 text-green-800"
+                  >
+                    {{ currentContract.buyer_transaction_id }}
+                  </div>
+                  <div class="text-xs text-green-600 mt-2">
+                    <i class="pi pi-info-circle mr-1"></i>
+                    Payment reference provided by buyer
+                  </div>
+                </div>
+              }
+            </div>
+            @if (!currentContract.seller_transaction_id && !currentContract.buyer_transaction_id) {
+              <div class="text-center py-6 text-gray-500">
+                <i class="pi pi-info-circle text-2xl mb-2"></i>
+                <p class="text-sm">No transaction information available yet</p>
+              </div>
+            }
+          </p-fieldset>
+        }
       </div>
 
       @if (canApproveContract()) {
@@ -445,6 +515,216 @@
               styleClass="w-full"
             />
           </div>
+        </div>
+      }
+
+      <!-- Seller Payment Submission Action (Admin Only) -->
+      @if (canSubmitSellerPayment()) {
+        <div class="px-4 py-3 bg-green-50 border-b border-green-200 rounded-lg">
+          <div class="mb-3 text-sm text-green-700">
+            <i class="pi pi-info-circle mr-1"></i>
+            Enter the seller transaction number (10-25 alphanumeric characters) to confirm payment
+            to seller.
+          </div>
+          <div class="space-y-3">
+            <input
+              pInputText
+              type="text"
+              [value]="sellerTransactionId()"
+              (input)="sellerTransactionId.set($any($event.target).value)"
+              placeholder="Enter Seller Transaction Number (e.g., PAY123XYZ789)"
+              class="w-full"
+              [class.p-invalid]="sellerTransactionId() && !isValidSellerTransaction()"
+            />
+            @if (sellerTransactionId() && !isValidSellerTransaction()) {
+              <small class="text-red-600">
+                <i class="pi pi-exclamation-triangle mr-1"></i>
+                Transaction number must be 10-25 alphanumeric characters (A-Z, 0-9)
+              </small>
+            }
+            <p-button
+              [label]="'Submit Seller Payment'"
+              [icon]="'pi pi-credit-card'"
+              [outlined]="true"
+              [disabled]="!isValidSellerTransaction()"
+              (onClick)="submitSellerPayment()"
+              rounded="true"
+              severity="success"
+              [raised]="true"
+              styleClass="w-full"
+            />
+          </div>
+        </div>
+      }
+
+      <!-- Admin Payment Approval/Rejection Actions -->
+      @if (canApproveRejectPayment()) {
+        <div class="px-4 py-3 bg-orange-50 border-b border-orange-200 rounded-lg">
+          <div class="mb-3 text-sm text-orange-700">
+            <i class="pi pi-info-circle mr-1"></i>
+            Review and approve or reject the buyer's payment confirmation.
+            @if (currentContract.buyer_transaction_id) {
+              <br /><strong>Buyer Transaction ID:</strong>
+              {{ currentContract.buyer_transaction_id }}
+            }
+          </div>
+          <div class="flex gap-3">
+            <p-button
+              [label]="'Approve Payment'"
+              [icon]="'pi pi-check'"
+              [outlined]="true"
+              (onClick)="onAdminApprovePayment()"
+              rounded="true"
+              severity="success"
+              [raised]="true"
+              styleClass="flex-1"
+            />
+            <p-button
+              [label]="'Reject Payment'"
+              [icon]="'pi pi-times'"
+              [outlined]="true"
+              (onClick)="onAdminRejectPayment()"
+              rounded="true"
+              severity="danger"
+              [raised]="true"
+              styleClass="flex-1"
+            />
+          </div>
+        </div>
+      }
+
+      <!-- Ship Order Action (Seller Only) -->
+      @if (canShipOrder()) {
+        <div class="px-4 py-3 bg-purple-50 border-b border-purple-200 rounded-lg">
+          <div class="mb-3 text-sm text-purple-700">
+            <i class="pi pi-info-circle mr-1"></i>
+            Enter the shipment tracking URL to mark the order as shipped and notify the buyer.
+          </div>
+          <div class="space-y-3">
+            <input
+              pInputText
+              type="url"
+              [value]="shippingUrl()"
+              (input)="shippingUrl.set($any($event.target).value)"
+              placeholder="Enter Tracking URL (e.g., https://tracking.example.com/ABC123)"
+              class="w-full"
+              [class.p-invalid]="shippingUrl() && !isValidShippingUrl()"
+            />
+            @if (shippingUrl() && !isValidShippingUrl()) {
+              <small class="text-red-600">
+                <i class="pi pi-exclamation-triangle mr-1"></i>
+                Please enter a valid URL (must start with http:// or https://)
+              </small>
+            }
+            <p-button
+              [label]="'Ship Order'"
+              [icon]="'pi pi-send'"
+              [outlined]="true"
+              [disabled]="!isValidShippingUrl()"
+              (onClick)="onShipOrder()"
+              rounded="true"
+              severity="info"
+              [raised]="true"
+              styleClass="w-full"
+            />
+          </div>
+        </div>
+      }
+
+      <!-- Admin Shipment Approval/Rejection Actions -->
+      @if (canApproveRejectShipment()) {
+        <div class="px-4 py-3 bg-cyan-50 border-b border-cyan-200 rounded-lg">
+          <div class="mb-3 text-sm text-cyan-700">
+            <i class="pi pi-info-circle mr-1"></i>
+            Review and approve or reject the seller's shipment tracking URL.
+            @if (currentContract.shipment_url) {
+              <br /><strong>Tracking URL:</strong>
+              <a
+                [href]="currentContract.shipment_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-cyan-600 hover:text-cyan-800 underline break-all ml-1"
+              >
+                <i class="pi pi-external-link mr-1"></i>
+                {{ currentContract.shipment_url }}
+              </a>
+            }
+          </div>
+          <div class="flex gap-3">
+            <p-button
+              [label]="'Approve Shipment'"
+              [icon]="'pi pi-check'"
+              [outlined]="true"
+              (onClick)="onAdminApproveShipment()"
+              rounded="true"
+              severity="success"
+              [raised]="true"
+              styleClass="flex-1"
+            />
+            <p-button
+              [label]="'Reject Shipment'"
+              [icon]="'pi pi-times'"
+              [outlined]="true"
+              (onClick)="onAdminRejectShipment()"
+              rounded="true"
+              severity="danger"
+              [raised]="true"
+              styleClass="flex-1"
+            />
+          </div>
+        </div>
+      }
+
+      <!-- Confirm Delivery Action (Buyer Only) -->
+      @if (canConfirmDelivery()) {
+        <div class="px-4 py-3 bg-green-50 border-b border-green-200 rounded-lg">
+          <div class="mb-3 text-sm text-green-700">
+            <i class="pi pi-info-circle mr-1"></i>
+            Confirm that you have received the order and are satisfied with the delivery.
+            @if (currentContract.shipment_url) {
+              <br /><strong>Tracking URL:</strong>
+              <a
+                [href]="currentContract.shipment_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-green-600 hover:text-green-800 underline break-all ml-1"
+              >
+                <i class="pi pi-external-link mr-1"></i>
+                {{ currentContract.shipment_url }}
+              </a>
+            }
+          </div>
+          <p-button
+            [label]="'Confirm Delivery'"
+            [icon]="'pi pi-check-circle'"
+            [outlined]="true"
+            (onClick)="onConfirmDelivery()"
+            rounded="true"
+            severity="success"
+            [raised]="true"
+            styleClass="w-full"
+          />
+        </div>
+      }
+
+      <!-- Complete Contract Action (Seller Only) -->
+      @if (canCompleteContract()) {
+        <div class="px-4 py-3 bg-indigo-50 border-b border-indigo-200 rounded-lg">
+          <div class="mb-3 text-sm text-indigo-700">
+            <i class="pi pi-info-circle mr-1"></i>
+            Mark this contract as completed. This indicates that all obligations have been fulfilled
+            and the transaction is finalized.
+          </div>
+          <p-button
+            [label]="'Complete Contract'"
+            [icon]="'pi pi-check-circle'"
+            [outlined]="true"
+            (onClick)="onCompleteContract()"
+            rounded="true"
+            severity="success"
+            [raised]="true"
+            styleClass="w-full"
+          />
         </div>
       }
       @if (showActions()) {

@@ -140,6 +140,39 @@ export class BuyerAllContractsComponent {
     this.submitPayment(event.contract, event.paymentReference);
   }
 
+  onConfirmDelivery(contract: Contract): void {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to confirm delivery for contract #${contract.id}?`,
+      header: 'Confirm Delivery',
+      icon: 'pi pi-check-circle',
+      acceptButtonStyleClass: 'p-button-success',
+      rejectButtonStyleClass: 'p-button-secondary',
+      accept: () => {
+        this.contractService.markAsDelivered(contract.id).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Delivery Confirmed',
+              detail: `Contract #${contract.id} has been marked as delivered successfully.`,
+              life: 3000,
+            });
+            this.getAllContracts(this.currentRequestOptions);
+            this.contractDetailsVisible.set(false);
+          },
+          error: error => {
+            console.error('Error confirming delivery:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to confirm delivery. Please try again.',
+              life: 5000,
+            });
+          },
+        });
+      },
+    });
+  }
+
   confirmMarkAsDelivered(contract: Contract): void {
     this.confirmationService.confirm({
       message: `Are you sure you want to mark contract "${contract.contract_number}" as delivered?`,

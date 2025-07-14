@@ -80,6 +80,8 @@
     [contract]="selectedContract()"
     [userType]="'seller'"
     [showActions]="false"
+    (shipOrder)="onShipOrder($event)"
+    (completeContract)="onCompleteContract($event)"
   ></app-contract-details-dialog>
 </div>
 
