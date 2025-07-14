@@ -67,7 +67,7 @@ export class SellerPendingContractsComponent {
     // Filter for seller pending statuses: in_progress, delivered, paid
     requestOptions.params = {
       ...requestOptions.params,
-      filter_status_0: 'in_progress,delivered,paid',
+      filter_status_0: 'in_progress,delivered_and_paid,',
       filter_status_0_mode: 'in',
     };
 
@@ -190,7 +190,7 @@ export class SellerPendingContractsComponent {
   }
 
   canMarkAsCompleted(contract: Contract): boolean {
-    return contract.status === 'delivered' || contract.status === 'paid';
+    return contract.status === 'delivered_and_paid' || contract.status === 'paid';
   }
 
   getStatusSeverity(
@@ -201,7 +201,7 @@ export class SellerPendingContractsComponent {
         return 'info';
       case 'shipped':
         return 'warn';
-      case 'delivered':
+      case 'delivered_and_paid':
         return 'success';
       case 'paid':
         return 'success';
