@@ -460,6 +460,7 @@ export interface Contract {
   metadata?: Record<string, string>;
   seller_transaction_id?: string;
   buyer_transaction_id?: string;
+  shipment_url?: string; // Shipment tracking URL
   created_at?: string; // ISO string
   updated_at?: string; // ISO string
 
