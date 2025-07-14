@@ -1,12 +1,9 @@
-import { IUser } from '../../features/shared/utils/interfaces';
-
 export interface User {
   id: number;
   first_name: string;
   last_name: string;
   full_name: string;
   email: string;
-  avatar_url: string | null;
   company_name: string;
   is_online?: boolean;
   last_seen?: string;
@@ -16,21 +13,32 @@ export interface Message {
   id: number;
   conversation_id: number;
   content: string;
-  type: 'text' | 'image' | 'file' | 'audio' | 'video' | 'quote' | 'rfq' | 'contract';
+  type: 'text' | 'image' | 'file' | 'quote' | 'rfq' | 'contract';
   sent_at: string;
   created_at: string;
-  updated_at: string;
   is_read: boolean;
   sender_id: number;
-  sender: IUser;
-  is_from_current_user?: boolean;
-  time_ago?: string;
+  sender: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    logo: string | null;
+  };
+  attachments?: {
+    id: number;
+    name: string;
+    file_name: string;
+    url: string;
+    size: number;
+    mime_type: string;
+    thumbnail_url?: string;
+  }[];
 }
 
 export interface Conversation {
   id: number;
-  type: 'direct' | 'group';
-  title: string;
+  type: 'direct';
+  title: string | null;
   is_active: boolean;
   last_activity_at: string;
   created_at: string;
@@ -38,7 +46,7 @@ export interface Conversation {
   seller: User;
   buyer: User;
   last_message: Message | null;
-  other_participant: User;
+  other_participant: User | null;
   unread_count: number;
 }
 
@@ -63,14 +71,14 @@ export interface MessageResponse extends ApiResponse<Message[]> {}
 
 export interface ConversationListParams {
   page?: number;
-  per_page?: number;
-  type?: 'direct' | 'group';
+  size?: number;
+  type?: 'direct';
   is_active?: boolean;
 }
 
-export interface SendMessageRequest {
-  conversation_id: number;
-  content: string;
-  type?: 'text' | 'image' | 'file' | 'audio' | 'video';
-  attachments?: File[] | string[];
+// Backend specific interfaces
+export interface StartConversationRequest {
+  user_id: number;
+  type?: 'direct';
+  title?: string;
 }
