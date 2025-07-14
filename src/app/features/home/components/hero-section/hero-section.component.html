@@ -42,12 +42,16 @@
             </div>
             <input
               type="text"
+              [value]="searchQuery()"
+              (input)="onSearchInput($event)"
+              (keydown.enter)="onSearch()"
               placeholder="Search for products, suppliers, or categories..."
               class="w-full pl-14 pr-6 py-5 bg-surface-0/95 dark:bg-surface-dark-800/95 backdrop-blur-sm border-0 rounded-2xl text-surface-900 dark:text-surface-dark-900 placeholder-surface-500 dark:placeholder-surface-dark-400 text-lg focus:ring-4 focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:outline-none shadow-2xl"
             />
           </div>
 
           <button
+            (click)="onSearch()"
             class="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 dark:from-primary-400 dark:to-primary-500 dark:hover:from-primary-500 dark:hover:to-primary-600 text-surface-0 dark:text-surface-dark-0 px-10 py-5 rounded-2xl font-semibold text-lg shadow-2xl hover:shadow-primary-500/25 dark:hover:shadow-primary-400/25 transition-all duration-300 hover:scale-105 flex items-center gap-3"
           >
             <i class="pi pi-search"></i>
@@ -56,26 +60,24 @@
         </div>
 
         <div class="flex flex-wrap justify-center gap-4 mb-16 animate-item">
-          <button
-            class="bg-surface-0/10 hover:bg-surface-0/20 dark:bg-surface-dark-900/10 dark:hover:bg-surface-dark-900/20 backdrop-blur-sm border border-surface-0/20 dark:border-surface-dark-900/20 text-surface-0 dark:text-surface-dark-900 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
-          >
-            Electronics
-          </button>
-          <button
-            class="bg-surface-0/10 hover:bg-surface-0/20 dark:bg-surface-dark-900/10 dark:hover:bg-surface-dark-900/20 backdrop-blur-sm border border-surface-0/20 dark:border-surface-dark-900/20 text-surface-0 dark:text-surface-dark-900 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
-          >
-            Industrial Equipment
-          </button>
-          <button
-            class="bg-surface-0/10 hover:bg-surface-0/20 dark:bg-surface-dark-900/10 dark:hover:bg-surface-dark-900/20 backdrop-blur-sm border border-surface-0/20 dark:border-surface-dark-900/20 text-surface-0 dark:text-surface-dark-900 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
-          >
-            Healthcare
-          </button>
-          <button
-            class="bg-surface-0/10 hover:bg-surface-0/20 dark:bg-surface-dark-900/10 dark:hover:bg-surface-dark-900/20 backdrop-blur-sm border border-surface-0/20 dark:border-surface-dark-900/20 text-surface-0 dark:text-surface-dark-900 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
-          >
-            Automotive
-          </button>
+          @if (loading()) {
+            @for (i of [1, 2, 3, 4]; track i) {
+              <div
+                class="bg-surface-0/10 dark:bg-surface-dark-900/10 backdrop-blur-sm border border-surface-0/20 dark:border-surface-dark-900/20 text-surface-0 dark:text-surface-dark-900 px-6 py-3 rounded-full animate-pulse"
+              >
+                <div class="w-16 h-4 bg-surface-0/20 dark:bg-surface-dark-900/20 rounded"></div>
+              </div>
+            }
+          } @else {
+            @for (category of categories().slice(0, 4); track category.id) {
+              <button
+                (click)="onCategoryClick(category)"
+                class="bg-surface-0/10 cursor-pointer hover:bg-surface-0/20 dark:bg-surface-dark-900/10 dark:hover:bg-surface-dark-900/20 backdrop-blur-sm border border-surface-0/20 dark:border-surface-dark-900/20 text-surface-0 dark:text-surface-dark-900 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
+              >
+                {{ category.name }}
+              </button>
+            }
+          }
         </div>
       </div>
 
