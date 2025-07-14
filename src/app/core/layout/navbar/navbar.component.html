@@ -203,6 +203,11 @@
         </div>
       }
 
+      <!-- Notifications Component -->
+      @if (isAuthenticated()) {
+        <app-notifications></app-notifications>
+      }
+
       <!-- Enhanced Theme Toggle -->
       <p-button
         (click)="toggleTheme()"
@@ -318,6 +323,22 @@
           }
         </ul>
       </div>
+
+      <!-- Mobile Notifications -->
+      @if (isAuthenticated()) {
+        <div>
+          <h3
+            class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wider mb-3"
+          >
+            Notifications
+          </h3>
+          <div
+            class="p-3 rounded-md bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700"
+          >
+            <app-notifications></app-notifications>
+          </div>
+        </div>
+      }
 
       <!-- Mobile User Menu -->
       @if (isAuthenticated()) {
