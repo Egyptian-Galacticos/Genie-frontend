@@ -42,6 +42,12 @@ export class ContractService {
       status: 'pending_payment_confirmation',
     });
   }
+  addSellerTrxNo(id: number, trxId: string): Observable<ApiResponse<Contract>> {
+    return this.apiService.put<ApiResponse<Contract>>(`admin/contracts/${id}/status`, {
+      seller_transaction_id: trxId,
+      status: 'delivered_and_paid',
+    });
+  }
   getContracts(requestOptions: RequestOptions): Observable<Contract[]> {
     console.log('Fetching all contracts');
     return this.apiService.get<Contract[]>('contracts', requestOptions);
@@ -63,7 +69,18 @@ export class ContractService {
       status: 'in_progress',
     });
   }
-
+  approveShipmentUrl(id: number): Observable<ApiResponse<Contract>> {
+    console.log('Approving shipment URL for contract ID:', id);
+    return this.apiService.put<ApiResponse<Contract>>(`admin/contracts/${id}/status`, {
+      status: 'shipped',
+    });
+  }
+  rejectShipmentUrl(id: number): Observable<ApiResponse<Contract>> {
+    console.log('Rejecting shipment URL for contract ID:', id);
+    return this.apiService.put<ApiResponse<Contract>>(`admin/contracts/${id}/status`, {
+      status: 'verify_shipment_url',
+    });
+  }
   /**
    * Get contracts for seller
    * @param requestOptions Request options with pagination and filters
@@ -97,9 +114,8 @@ export class ContractService {
    * @returns Observable of API response
    */
   markAsShipped(id: number, trackingLink: string): Observable<ApiResponse<Contract>> {
-    return this.apiService.put<ApiResponse<Contract>>(`contracts/${id}/ship`, {
-      status: 'shipped',
-      tracking_link: trackingLink,
+    return this.apiService.put<ApiResponse<Contract>>(`contracts/${id}`, {
+      shipment_url: trackingLink,
     });
   }
 
