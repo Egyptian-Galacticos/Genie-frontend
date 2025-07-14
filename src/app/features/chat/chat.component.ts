@@ -23,6 +23,7 @@ import { DividerModule } from 'primeng/divider';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { ProgressBarModule } from 'primeng/progressbar';
 import { MessageService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import type { Message } from '../../core/interfaces/conversation.interface';
@@ -53,6 +54,7 @@ import { ContractDetailsDialogComponent } from '../shared/contract-details-dialo
     SkeletonModule,
     ToastModule,
     TooltipModule,
+    ProgressBarModule,
     FormsModule,
     RfqDetailsDialogComponent,
     QuoteDetailsDialogComponent,
@@ -73,14 +75,18 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   private authService = inject(AuthService);
   private destroy$ = new Subject<void>();
   private shouldScrollToBottom = false;
-  private typingTimer?: ReturnType<typeof setTimeout>;
+  private isUserViewingChat = signal<boolean>(false);
+  private lastReadMessageId = signal<number | null>(null);
+  private attemptedReadMessages = new Set<number>();
+  private lastMarkReadTime = 0;
+
   dashboardType = signal<'seller' | 'buyer'>('buyer');
 
   selectedConversation = signal<Conversation | null>(null);
   newMessage = signal<string>('');
   searchQuery = signal<string>('');
   sendingMessage = signal<boolean>(false);
-  quickEmojis = ['👍', '❤️', '😊', '😂', '😮', '😢', '🔥', '👏'];
+  selectedFiles = signal<File[]>([]);
 
   get newMessageValue(): string {
     return this.newMessage();
@@ -100,7 +106,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   conversations = this.chatService.conversations;
   loading = this.chatService.loading;
-  unreadCount = this.chatService.unreadCount;
 
   isConversationSelected = computed(() => this.selectedConversation() !== null);
   otherParticipant = computed(() => this.selectedConversation()?.other_participant || null);
@@ -126,12 +131,14 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (!conversation) return [];
 
     const messages = this.chatService.getMessagesForConversation(conversation.id);
-    return Array.isArray(messages) ? messages : [];
-  });
+    const safeMessages = Array.isArray(messages) ? messages : [];
 
-  currentConversationTypingUsers = computed(() => {
-    const conversation = this.selectedConversation();
-    return conversation ? this.chatService.getTypingUsersForConversation(conversation.id) : [];
+    // Auto-mark messages as read when user is viewing the chat
+    if (this.isUserViewingChat() && safeMessages.length > 0) {
+      this.markUnreadMessagesAsRead(safeMessages);
+    }
+
+    return safeMessages;
   });
 
   getConversationsArray(): Conversation[] {
@@ -152,7 +159,12 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit() {
     this.loadConversations();
-    this.loadUnreadCount();
+
+    // Listen for new messages to handle auto-scroll and read events
+    this.chatService.newMessage$.pipe(takeUntil(this.destroy$)).subscribe(message => {
+      this.handleNewMessage(message);
+    });
+
     this.route.queryParams.subscribe(params => {
       const conversationId = params['id'];
       if (conversationId) {
@@ -170,6 +182,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    this.chatService.setActiveConversationId(null); // Clear active conversation on destroy
     // this.chatService.disconnect();
   }
 
@@ -182,7 +195,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   loadConversations() {
     this.chatService
-      .loadConversations({ per_page: 50 })
+      .loadConversations({ size: 50 })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {},
@@ -194,10 +207,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
         },
       });
-  }
-
-  loadUnreadCount() {
-    this.chatService.getUnreadCount().pipe(takeUntil(this.destroy$)).subscribe();
   }
 
   loadMessages(conversationId: number) {
@@ -221,20 +230,33 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   sendMessage() {
     const messageText = this.newMessage().trim();
     const conversation = this.selectedConversation();
+    const files = this.selectedFiles();
 
-    if (!messageText || this.sendingMessage() || !conversation) return;
+    if ((!messageText && files.length === 0) || this.sendingMessage() || !conversation) return;
 
     this.sendingMessage.set(true);
     this.newMessage.set('');
 
+    // Determine message type based on content and files
+    let messageType: 'text' | 'file' = 'text';
+    if (files.length > 0 && !messageText) {
+      messageType = 'file';
+    } else if (files.length > 0 && messageText) {
+      messageType = 'text'; // Mixed content, treat as text with attachments
+    }
+
+    // Always send content, even if empty string for file-only messages
+    const content = messageText || '';
+
     this.chatService
-      .sendMessage(conversation.id, messageText)
+      .sendMessage(conversation.id, content, messageType, files)
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => this.sendingMessage.set(false))
       )
       .subscribe({
         next: () => {
+          this.selectedFiles.set([]);
           this.shouldScrollToBottom = true;
         },
         error: () => {
@@ -328,32 +350,19 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.chatService
       .markConversationAsRead(conversationId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe();
-  }
-
-  onMessageInputChange(): void {
-    const conversation = this.selectedConversation();
-    if (!conversation) return;
-
-    this.chatService.sendTypingIndicator(conversation.id);
-
-    if (this.typingTimer) clearTimeout(this.typingTimer);
-
-    this.typingTimer = setTimeout(() => {
-      this.chatService.sendStopTypingIndicator(conversation.id);
-    }, 1000);
-  }
-
-  onMessageInputBlur(): void {
-    const conversation = this.selectedConversation();
-    if (!conversation) return;
-
-    this.chatService.sendStopTypingIndicator(conversation.id);
-
-    if (this.typingTimer) {
-      clearTimeout(this.typingTimer);
-      this.typingTimer = undefined;
-    }
+      .subscribe({
+        next: () => {
+          // Clear attempted messages since all messages in conversation are now read
+          this.attemptedReadMessages.clear();
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to mark conversation as read',
+          });
+        },
+      });
   }
 
   private scrollToBottom(): void {
@@ -363,16 +372,66 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  getTypingIndicatorText(): string {
-    const typingUsers = this.currentConversationTypingUsers();
-    if (typingUsers.length === 0) return '';
+  private markUnreadMessagesAsRead(messages: Message[]): void {
+    const currentUser = this.currentUser();
+    if (!currentUser) return;
 
-    if (typingUsers.length === 1) {
-      return `${typingUsers[0].full_name} is typing...`;
-    } else if (typingUsers.length === 2) {
-      return `${typingUsers[0].full_name} and ${typingUsers[1].full_name} are typing...`;
-    } else {
-      return `${typingUsers.length} people are typing...`;
+    // Debounce: don't mark as read more frequently than every 2 seconds
+    const now = Date.now();
+    if (now - this.lastMarkReadTime < 2000) {
+      return;
+    }
+    this.lastMarkReadTime = now;
+
+    // Find unread messages from other users
+    const unreadMessages = messages.filter(
+      message => !message.is_read && message.sender_id !== currentUser.id
+    );
+
+    // Mark each unread message as read
+    unreadMessages.forEach(message => {
+      if (!this.attemptedReadMessages.has(message.id)) {
+        this.chatService.markMessageAsRead(message.id).subscribe({
+          next: () => {
+            this.lastReadMessageId.set(message.id);
+            this.attemptedReadMessages.add(message.id);
+          },
+          error: error => {
+            console.error('Error marking message as read:', error);
+            // If we get a 500 error, it might mean the message is already read
+            // Add it to attempted set to prevent retries
+            if (error.status === 500) {
+              this.attemptedReadMessages.add(message.id);
+            }
+          },
+        });
+      }
+    });
+  }
+
+  // Auto-scroll when new messages arrive
+  private handleNewMessage(message: Message): void {
+    const conversation = this.selectedConversation();
+    if (conversation && message.conversation_id === conversation.id) {
+      // Auto-scroll to bottom for new messages
+      this.shouldScrollToBottom = true;
+
+      // Auto-mark as read if user is viewing the chat
+      if (
+        this.isUserViewingChat() &&
+        !this.isOwnMessage(message) &&
+        !this.attemptedReadMessages.has(message.id)
+      ) {
+        this.chatService.markMessageAsRead(message.id).subscribe({
+          next: () => {
+            this.attemptedReadMessages.add(message.id);
+          },
+          error: error => {
+            console.error('Error marking new message as read:', error);
+            // Don't add to attempted set on error to allow retry
+          },
+        });
+      }
     }
   }
 
@@ -387,15 +446,11 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     textarea.style.height = newHeight + 'px';
   }
 
-  toggleEmojiPicker(): void {
-    console.log('Toggle emoji picker');
-  }
-
   openFileSelector(): void {
     const input = document.createElement('input');
     input.type = 'file';
     input.multiple = true;
-    input.accept = 'image/*,application/pdf,.doc,.docx';
+    input.accept = 'image/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx';
     input.onchange = (event: Event) => {
       const target = event.target as HTMLInputElement;
       const files = target.files;
@@ -406,27 +461,111 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     input.click();
   }
 
-  addQuickEmoji(emoji: string): void {
-    const currentMessage = this.newMessage();
-    this.newMessage.set(currentMessage + emoji);
+  private handleFileUpload(files: FileList): void {
+    const fileArray = Array.from(files);
+
+    // Validate files
+    const validFiles: File[] = [];
+    fileArray.forEach(file => {
+      const validation = this.validateFile(file);
+      if (validation.valid) {
+        validFiles.push(file);
+      } else {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'File Upload Error',
+          detail: validation.error,
+        });
+      }
+    });
+
+    // Add valid files to selected files
+    if (validFiles.length > 0) {
+      this.selectedFiles.update(currentFiles => [...currentFiles, ...validFiles]);
+    }
   }
 
-  private handleFileUpload(files: FileList): void {
-    console.log('Files selected:', files);
-    this.messageService.add({
-      severity: 'info',
-      summary: 'File Upload',
-      detail: `${files.length} file(s) selected. Upload functionality coming soon!`,
-    });
+  private validateFile(file: File): { valid: boolean; error?: string } {
+    const maxFileSize = 10 * 1024 * 1024; // 10MB (matching backend)
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/gif',
+      'image/webp',
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    ];
+
+    if (file.size > maxFileSize) {
+      return {
+        valid: false,
+        error: `File size must be less than ${this.formatFileSize(maxFileSize)}`,
+      };
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      return {
+        valid: false,
+        error: 'File type not supported. Please upload images, PDFs, or Office documents.',
+      };
+    }
+
+    return { valid: true };
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  removeSelectedFile(file: File): void {
+    this.selectedFiles.update(files => files.filter(f => f !== file));
+  }
+
+  getFileIcon(file: File): string {
+    const type = file.type;
+    if (type.startsWith('image/')) return 'pi pi-image';
+    if (type === 'application/pdf') return 'pi pi-file-pdf';
+    if (type.includes('word')) return 'pi pi-file-word';
+    if (type.includes('excel') || type.includes('spreadsheet')) return 'pi pi-file-excel';
+    if (type.includes('powerpoint') || type.includes('presentation'))
+      return 'pi pi-file-powerpoint';
+    return 'pi pi-file';
+  }
+
+  getFileIconForAttachment(attachment: { type?: string; mime_type?: string }): string {
+    const type = attachment.type || attachment.mime_type || '';
+    if (type.startsWith('image/')) return 'pi pi-image';
+    if (type === 'application/pdf') return 'pi pi-file-pdf';
+    if (type.includes('word')) return 'pi pi-file-word';
+    if (type.includes('excel') || type.includes('spreadsheet')) return 'pi pi-file-excel';
+    if (type.includes('powerpoint') || type.includes('presentation'))
+      return 'pi pi-file-powerpoint';
+    return 'pi pi-file';
   }
 
   selectConversation(conversation: Conversation) {
     this.selectedConversation.set(conversation);
     this.loadMessages(conversation.id);
-
+    this.chatService.setActiveConversationId(conversation.id); // Track active conversation
+    // Mark conversation as read when selected
     if (conversation.unread_count > 0) {
       this.markConversationAsRead(conversation.id);
     }
+
+    // Set user as viewing the chat
+    this.isUserViewingChat.set(true);
+    this.lastReadMessageId.set(null);
+    this.attemptedReadMessages.clear(); // Clear attempted messages when switching conversations
+    this.lastMarkReadTime = 0; // Reset debounce timer when switching conversations
   }
 
   // handle messages of different types
@@ -644,5 +783,27 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       },
     });
+  }
+
+  // Handle scroll events to mark messages as read when they become visible
+  onMessagesScroll(event: Event): void {
+    const element = event.target as HTMLElement;
+    const isNearBottom = element.scrollHeight - element.scrollTop <= element.clientHeight + 100;
+
+    // If user is near bottom, mark all messages as read
+    if (isNearBottom && this.isUserViewingChat()) {
+      const messages = this.safeMessages();
+      this.markUnreadMessagesAsRead(messages);
+    }
+  }
+
+  // Handle when user leaves the chat view
+  onChatBlur(): void {
+    this.isUserViewingChat.set(false);
+  }
+
+  // Handle when user focuses on the chat view
+  onChatFocus(): void {
+    this.isUserViewingChat.set(true);
   }
 }
