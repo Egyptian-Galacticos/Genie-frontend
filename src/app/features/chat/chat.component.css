@@ -1,1 +1,203 @@
-/*CSS File*/
+/* Chat Component Styles */
+
+/* Dark mode improvements for file attachments */
+.dark .file-attachment {
+  background-color: rgb(55 65 81); /* bg-gray-700 */
+  border-color: rgb(75 85 99); /* border-gray-600 */
+}
+
+.dark .file-attachment:hover {
+  background-color: rgb(75 85 99); /* bg-gray-600 */
+}
+
+/* Message bubble improvements */
+.message-bubble {
+  max-width: 70%;
+}
+
+@media (max-width: 768px) {
+  .message-bubble {
+    max-width: 85%;
+  }
+}
+
+/* File attachment hover effects */
+.file-attachment {
+  transition: all 0.2s ease-in-out;
+}
+
+.file-attachment:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Dark mode file attachment hover */
+.dark .file-attachment:hover {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollbar styling for dark mode */
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: rgb(156 163 175); /* gray-400 */
+  border-radius: 3px;
+}
+
+.dark .messages-container::-webkit-scrollbar-thumb {
+  background: rgb(75 85 99); /* gray-600 */
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+  background: rgb(107 114 128); /* gray-500 */
+}
+
+.dark .messages-container::-webkit-scrollbar-thumb:hover {
+  background: rgb(107 114 128); /* gray-500 */
+}
+
+/* Conversation list scrollbar */
+.conversation-item:hover {
+  transform: translateX(2px);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Input focus improvements */
+.message-input:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dark .message-input:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Unread badge animation */
+.unread-badge {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* File icon colors for different file types */
+.file-icon-pdf {
+  color: #ef4444; /* red-500 */
+}
+
+.file-icon-image {
+  color: #10b981; /* emerald-500 */
+}
+
+.file-icon-document {
+  color: #3b82f6; /* blue-500 */
+}
+
+.file-icon-archive {
+  color: #f59e0b; /* amber-500 */
+}
+
+.file-icon-video {
+  color: #8b5cf6; /* violet-500 */
+}
+
+.file-icon-audio {
+  color: #06b6d4; /* cyan-500 */
+}
+
+/* Dark mode file icon colors */
+.dark .file-icon-pdf {
+  color: #f87171; /* red-400 */
+}
+
+.dark .file-icon-image {
+  color: #34d399; /* emerald-400 */
+}
+
+.dark .file-icon-document {
+  color: #60a5fa; /* blue-400 */
+}
+
+.dark .file-icon-archive {
+  color: #fbbf24; /* amber-400 */
+}
+
+.dark .file-icon-video {
+  color: #a78bfa; /* violet-400 */
+}
+
+.dark .file-icon-audio {
+  color: #22d3ee; /* cyan-400 */
+}
+
+/* Message status indicators */
+.message-status {
+  transition: color 0.2s ease-in-out;
+}
+
+/* Loading skeleton improvements */
+.p-skeleton {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+.dark .p-skeleton {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Responsive improvements */
+@media (max-width: 1024px) {
+  .chat-container {
+    flex-direction: column;
+  }
+
+  .w-80 {
+    width: 100%;
+    max-height: 40vh;
+  }
+}
+
+/* Accessibility improvements */
+.conversation-item:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+}
+
+.dark .conversation-item:focus {
+  outline-color: #60a5fa;
+}
+
+/* Smooth transitions for theme switching */
+* {
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+}

@@ -1,36 +1,28 @@
 <div
-  class="chat-container flex bg-surface-50 rounded-lg overflow-hidden"
+  class="chat-container flex bg-surface-50 dark:bg-surface-900 rounded-lg overflow-hidden"
   style="height: calc(100vh - 8rem)"
 >
   <!-- Left Sidebar - Conversations List -->
-  <div class="w-80 bg-surface-0 border-r border-surface-200 flex flex-col rounded-l-lg">
+  <div
+    class="w-80 bg-surface-0 dark:bg-surface-800 border-r border-surface-200 dark:border-surface-700 flex flex-col rounded-l-lg"
+  >
     <!-- Header -->
     <div class="p-3 rounded-tl-lg">
       <div class="flex items-center justify-between mb-3">
-        <h2 class="text-lg font-bold text-surface-900">Conversations</h2>
+        <h2 class="text-lg font-bold text-surface-900 dark:text-surface-100">Conversations</h2>
         <div class="flex items-center space-x-2">
           @if (getConversationsArray().length > 0) {
             <span class="unread-badge bg-red-500 text-white rounded-full text-xs px-2 py-1">
               {{ getUnreadConversationsCount() }}
             </span>
           }
-
-          <p-button
-            icon="pi pi-plus"
-            [rounded]="true"
-            [text]="true"
-            size="small"
-            pTooltip="Start new conversation"
-            tooltipPosition="bottom"
-            (onClick)="startNewConversation()"
-          />
         </div>
       </div>
 
       <!-- Search Bar -->
       <div class="relative">
         <i
-          class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400 text-xs"
+          class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400 dark:text-surface-500 text-xs"
         ></i>
         <input
           type="text"
@@ -38,7 +30,7 @@
           [(ngModel)]="searchQueryValue"
           (input)="searchConversations()"
           placeholder="Search conversations..."
-          class="w-full pl-10 pr-4 py-2 text-xs border border-surface-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-500"
+          class="w-full pl-10 pr-4 py-2 text-xs border border-surface-300 dark:border-surface-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-500 bg-surface-0 dark:bg-surface-700 text-surface-900 dark:text-surface-100 placeholder-surface-500 dark:placeholder-surface-400"
         />
       </div>
     </div>
@@ -65,11 +57,11 @@
           track trackConversation(conversation, $index)
         ) {
           <div
-            class="conversation-item flex items-center p-3 cursor-pointer border-b border-surface-100 transition-colors hover:bg-surface-50"
-            [class.active]="selectedConversation()?.id === conversation.id"
-            [class.bg-primary-50]="selectedConversation()?.id === conversation.id"
-            [class.border-l-4]="selectedConversation()?.id === conversation.id"
-            [class.border-primary-500]="selectedConversation()?.id === conversation.id"
+            class="conversation-item flex items-center p-3 cursor-pointer border-b border-surface-100 dark:border-surface-700 transition-colors hover:bg-surface-50 dark:hover:bg-surface-700 {{
+              selectedConversation()?.id === conversation.id
+                ? 'active bg-primary-50 dark:bg-primary-900/20 border-l-4 border-primary-500'
+                : ''
+            }}"
             (click)="selectConversation(conversation)"
             (keydown)="selectConversation(conversation)"
             tabindex="0"
@@ -78,31 +70,32 @@
             <div class="flex items-center flex-1 min-w-0">
               <div class="relative mr-3">
                 <p-avatar
-                  [image]="conversation.other_participant.avatar_url || undefined"
-                  [label]="conversation.other_participant.full_name.charAt(0) || 'U'"
+                  [label]="conversation.other_participant?.full_name?.charAt(0) || 'U'"
                   size="normal"
                   shape="circle"
-                  styleClass="bg-primary-100 text-primary-800"
+                  styleClass="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200"
                 />
               </div>
 
               <!-- Conversation Info -->
               <div class="flex-1 min-w-0 flex items-center justify-between">
                 <div class="flex-1 min-w-0">
-                  <p class="font-medium text-sm text-surface-900 truncate leading-tight">
+                  <p
+                    class="font-medium text-sm text-surface-900 dark:text-surface-100 truncate leading-tight"
+                  >
                     {{
-                      conversation.other_participant.company_name ||
-                        conversation.other_participant.full_name ||
+                      conversation.other_participant?.company_name ||
+                        conversation.other_participant?.full_name ||
                         'Unknown User'
                     }}
                   </p>
-                  <p class="text-xs text-surface-600 truncate mt-1">
+                  <p class="text-xs text-surface-600 dark:text-surface-400 truncate mt-1">
                     {{ conversation.last_message?.content || 'No messages yet' }}
                   </p>
                 </div>
 
                 <div class="flex flex-col items-end ml-2">
-                  <span class="text-xs text-surface-500 mb-1">
+                  <span class="text-xs text-surface-500 dark:text-surface-400 mb-1">
                     {{ getTimeAgo(conversation.last_activity_at) }}
                   </span>
                   @if (conversation.unread_count && conversation.unread_count > 0) {
@@ -119,7 +112,7 @@
         }
 
         @if (filteredConversations().length === 0) {
-          <div class="p-8 text-center text-surface-500">
+          <div class="p-8 text-center text-surface-500 dark:text-surface-400">
             <i class="pi pi-comments text-4xl mb-4 block"></i>
             <p class="text-sm">No conversations found</p>
           </div>
@@ -129,24 +122,25 @@
   </div>
 
   <!-- Right Side - Chat Area -->
-  <div class="flex-1 flex flex-col rounded-r-lg bg-surface-0">
+  <div class="flex-1 flex flex-col rounded-r-lg bg-surface-0 dark:bg-surface-800">
     @if (isConversationSelected()) {
       <!-- Chat Header -->
-      <div class="p-3 bg-surface-0 rounded-tr-lg shadow-sm border-b border-surface-200">
+      <div
+        class="p-3 bg-surface-0 dark:bg-surface-800 rounded-tr-lg shadow-sm border-b border-surface-200 dark:border-surface-700"
+      >
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <p-avatar
-              [image]="otherParticipant()?.avatar_url || undefined"
               [label]="otherParticipant()?.full_name?.charAt(0) || 'U'"
               size="normal"
               shape="circle"
-              styleClass="bg-primary-100 text-primary-800"
+              styleClass="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200"
             />
             <div>
-              <h2 class="text-lg font-semibold text-surface-900">
+              <h2 class="text-lg font-semibold text-surface-900 dark:text-surface-100">
                 {{ otherParticipant()?.full_name || 'Unknown User' }}
               </h2>
-              <p class="text-xs text-surface-600">
+              <p class="text-xs text-surface-600 dark:text-surface-400">
                 {{ otherParticipant()?.company_name || 'Company' }}
               </p>
             </div>
@@ -167,8 +161,12 @@
 
       <!-- Messages Area -->
       <div
-        class="messages-container flex-1 overflow-y-auto bg-surface-50"
+        class="messages-container flex-1 overflow-y-auto bg-surface-50 dark:bg-surface-900"
         #messagesContainer
+        (scroll)="onMessagesScroll($event)"
+        (focus)="onChatFocus()"
+        (blur)="onChatBlur()"
+        tabindex="0"
         style="
           background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDAsIDAsIDAsIDAuMDUpIi8+PC9zdmc+');
           background-repeat: repeat;
@@ -203,13 +201,54 @@
                     class="px-4 py-3 rounded-2xl text-sm break-words shadow-sm"
                     [ngClass]="{
                       'bg-primary-500 text-white': isOwnMessage(message),
-                      'bg-white text-surface-900 border border-surface-200': !isOwnMessage(message),
+                      'bg-white dark:bg-surface-700 text-surface-900 dark:text-surface-100 border border-surface-200 dark:border-surface-600':
+                        !isOwnMessage(message),
                     }"
                     [style.border-radius]="
                       isOwnMessage(message) ? '18px 18px 4px 18px' : '18px 18px 18px 4px'
                     "
                   >
                     {{ message.content }}
+
+                    <!-- File Attachments -->
+                    @if (message.attachments && message.attachments.length > 0) {
+                      <div class="mt-3 space-y-2">
+                        @for (attachment of message.attachments; track attachment.url) {
+                          <div
+                            class="flex items-center p-3 rounded-lg border border-surface-200 dark:border-surface-600 file-attachment"
+                            [ngClass]="{
+                              'bg-surface-100 dark:bg-surface-600': isOwnMessage(message),
+                              'bg-surface-50 dark:bg-surface-800': !isOwnMessage(message),
+                            }"
+                          >
+                            <i
+                              [class]="getFileIconForAttachment(attachment)"
+                              class="text-lg mr-3 text-primary-500 dark:text-primary-400"
+                            ></i>
+                            <div class="flex-1 min-w-0">
+                              <p
+                                class="text-sm font-medium truncate text-surface-900 dark:text-surface-100 max-w-[200px]"
+                                [title]="attachment.file_name"
+                              >
+                                {{ attachment.file_name }}
+                              </p>
+                              <p class="text-xs text-surface-600 dark:text-surface-400">
+                                {{ formatFileSize(attachment.size) }}
+                              </p>
+                            </div>
+                            <a
+                              [href]="attachment.url"
+                              target="_blank"
+                              class="ml-2 p-2 rounded-lg transition-colors text-primary-500 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20"
+                              pTooltip="Download file"
+                            >
+                              <i class="pi pi-download"></i>
+                            </a>
+                          </div>
+                        }
+                      </div>
+                    }
+
                     @if (message.type === 'quote') {
                       <div class="mt-2 flex flex-row gap-4">
                         <p-button
@@ -248,7 +287,7 @@
 
                   <!-- Message metadata -->
                   <div
-                    class="message-time flex items-center mt-1 text-xs text-surface-500"
+                    class="message-time flex items-center mt-1 text-xs text-surface-500 dark:text-surface-400"
                     [ngClass]="{
                       'justify-end': isOwnMessage(message),
                       'justify-start': !isOwnMessage(message),
@@ -260,7 +299,7 @@
                         class="message-status ml-2"
                         [ngClass]="{
                           'text-green-500': message.is_read,
-                          'text-surface-400': !message.is_read,
+                          'text-surface-400 dark:text-surface-500': !message.is_read,
                         }"
                       >
                         <i class="pi pi-check text-xs"></i>
@@ -275,43 +314,19 @@
             }
 
             @if (safeMessages().length === 0) {
-              <div class="text-center text-surface-500 py-8">
+              <div class="text-center text-surface-500 dark:text-surface-400 py-8">
                 <i class="pi pi-comments text-4xl mb-4 block"></i>
                 <p class="text-sm">No messages yet. Start the conversation!</p>
               </div>
             }
           }
-
-          <!-- Typing Indicators -->
-          @if (currentConversationTypingUsers().length > 0) {
-            <div class="px-4 pb-2">
-              <div class="flex justify-start">
-                <div class="bg-surface-200 rounded-2xl px-4 py-2 max-w-xs">
-                  <div class="flex items-center space-x-2">
-                    <div class="typing-indicator flex space-x-1">
-                      <div
-                        class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse"
-                      ></div>
-                      <div
-                        class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse"
-                        style="animation-delay: 0.2s"
-                      ></div>
-                      <div
-                        class="typing-dot w-2 h-2 bg-surface-500 rounded-full animate-pulse"
-                        style="animation-delay: 0.4s"
-                      ></div>
-                    </div>
-                    <span class="text-xs text-surface-600"> Someone is typing... </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          }
         </div>
       </div>
 
       <!-- Message Input -->
-      <div class="p-4 bg-surface-0 border-t border-surface-200 rounded-br-lg">
+      <div
+        class="p-4 bg-surface-0 dark:bg-surface-800 border-t border-surface-200 dark:border-surface-700 rounded-br-lg"
+      >
         <div class="flex items-end space-x-3">
           <div class="flex-1">
             <div class="relative">
@@ -319,31 +334,66 @@
                 type="text"
                 pInputText
                 [(ngModel)]="newMessageValue"
-                (input)="onMessageInputChange()"
-                (blur)="onMessageInputBlur()"
                 (keydown)="onEnterKey($event)"
                 placeholder="Type a message..."
-                class="message-input w-full px-4 py-3 pr-12 rounded-full border border-surface-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                class="message-input w-full px-4 py-3 pr-12 rounded-full border border-surface-300 dark:border-surface-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-surface-0 dark:bg-surface-700 text-surface-900 dark:text-surface-100 placeholder-surface-500 dark:placeholder-surface-400"
                 [disabled]="sendingMessage()"
                 #messageTextarea
               />
-              <p-button
-                icon="pi pi-paperclip"
-                [rounded]="true"
-                [text]="true"
-                size="small"
-                styleClass="absolute right-2 top-1/2 transform -translate-y-1/2"
+              <button
+                type="button"
+                (click)="openFileSelector()"
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-surface-500 dark:text-surface-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
                 pTooltip="Attach file"
                 tooltipPosition="top"
-              />
+                [disabled]="sendingMessage()"
+              >
+                <i class="pi pi-paperclip text-lg"></i>
+              </button>
             </div>
+
+            <!-- Selected Files -->
+            @if (selectedFiles().length > 0) {
+              <div class="mt-3 space-y-2">
+                @for (file of selectedFiles(); track file.name) {
+                  <div
+                    class="flex items-center p-3 bg-primary-50 dark:bg-primary-900/20 rounded-lg border border-primary-200 dark:border-primary-700"
+                  >
+                    <i
+                      [class]="getFileIcon(file)"
+                      class="text-lg mr-3 text-primary-500 dark:text-primary-400"
+                    ></i>
+                    <div class="flex-1 min-w-0">
+                      <p
+                        class="text-sm font-medium truncate text-primary-900 dark:text-primary-100"
+                      >
+                        {{ file.name }}
+                      </p>
+                      <p class="text-xs text-primary-600 dark:text-primary-300">
+                        {{ formatFileSize(file.size) }}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      (click)="removeSelectedFile(file)"
+                      class="ml-2 p-2 text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                      pTooltip="Remove file"
+                    >
+                      <i class="pi pi-times"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+            }
           </div>
 
           <p-button
             icon="pi pi-send"
             [rounded]="true"
             [loading]="sendingMessage()"
-            [disabled]="!newMessageValue.trim() || sendingMessage()"
+            [disabled]="
+              (!newMessageValue.trim() && selectedFiles().length === 0) || sendingMessage()
+            "
             (onClick)="sendMessage()"
             styleClass="send-button w-12 h-12 bg-primary-500 hover:bg-primary-600"
             pTooltip="Send message"
@@ -353,15 +403,19 @@
       </div>
     } @else {
       <!-- No Conversation Selected -->
-      <div class="flex-1 flex items-center justify-center bg-surface-50">
+      <div class="flex-1 flex items-center justify-center bg-surface-50 dark:bg-surface-900">
         <div class="text-center">
           <div
-            class="w-20 h-20 bg-surface-200 rounded-full flex items-center justify-center mx-auto mb-4"
+            class="w-20 h-20 bg-surface-200 dark:bg-surface-700 rounded-full flex items-center justify-center mx-auto mb-4"
           >
-            <i class="pi pi-comments text-3xl text-surface-500"></i>
+            <i class="pi pi-comments text-3xl text-surface-500 dark:text-surface-400"></i>
           </div>
-          <h3 class="text-lg font-semibold text-surface-900 mb-2">Select a conversation</h3>
-          <p class="text-surface-600">Choose a conversation from the sidebar to start messaging</p>
+          <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-2">
+            Select a conversation
+          </h3>
+          <p class="text-surface-600 dark:text-surface-400">
+            Choose a conversation from the sidebar to start messaging
+          </p>
         </div>
       </div>
     }
