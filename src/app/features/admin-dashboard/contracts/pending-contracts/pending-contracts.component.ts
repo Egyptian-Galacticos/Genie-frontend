@@ -56,8 +56,8 @@ export class PendingContractsComponent {
     this.currentRequestOptions = requestOptions;
     requestOptions.params = {
       ...requestOptions.params,
-      filter_status_0: 'pending_payment_confirmation',
-      filter_status_0_mode: 'equals',
+      filter_status_0: 'pending_payment_confirmation,verify_shipment_url,delivered',
+      filter_status_0_mode: 'in',
     };
     this.loading.set(true);
 
@@ -135,6 +135,60 @@ export class PendingContractsComponent {
       },
     });
   }
+
+  approveShipment(contractId: number) {
+    this.contractService.approveShipmentUrl(contractId).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Shipment Approved',
+          detail: 'The shipment URL has been successfully approved.',
+        });
+        // Refresh the pending contracts list after approval
+        this.getPendingContracts(this.currentRequestOptions);
+      },
+      error: (error: Error) => {
+        console.error('Error approving shipment:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Shipment Approval Failed',
+          detail: 'Failed to approve the shipment. Please try again later.',
+        });
+      },
+    });
+  }
+
+  rejectShipment(contract: Contract): void {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to reject the shipment URL for contract "${contract.contract_number}"?`,
+      header: 'Reject Shipment Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.contractService.rejectShipmentUrl(contract.id).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Shipment Rejected',
+              detail: 'The shipment URL has been rejected and sent back for revision.',
+            });
+            // Refresh the pending contracts list after rejection
+            this.getPendingContracts(this.currentRequestOptions);
+          },
+          error: (error: Error) => {
+            console.error('Error rejecting shipment:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Shipment Rejection Failed',
+              detail: 'Failed to reject the shipment. Please try again later.',
+            });
+          },
+        });
+      },
+      reject: () => {
+        // User cancelled - no action needed
+      },
+    });
+  }
   viewQuote(quote: IQuote) {
     this.quoteService.getQuoteByIdForAdmin(quote.id).subscribe({
       next: (response: ApiResponse<IQuote>) => {
@@ -154,6 +208,95 @@ export class PendingContractsComponent {
   viewContract(contract: Contract) {
     this.selectedContract.set(contract);
     this.contractModalVisible.set(true);
+  }
+
+  submitSellerPayment(contract: Contract, transactionId: string): void {
+    if (!transactionId || transactionId.trim() === '') {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Transaction Number Required',
+        detail: 'Please provide a valid transaction number.',
+        life: 5000,
+      });
+      return;
+    }
+
+    // Validate transaction number format (10-25 alphanumeric characters)
+    const transactionRegex = /\b[A-Z0-9]{10,25}\b/;
+    if (!transactionRegex.test(transactionId.trim())) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Invalid Transaction Number',
+        detail: 'Transaction number must be 10-25 alphanumeric characters (A-Z, 0-9).',
+        life: 5000,
+      });
+      return;
+    }
+
+    this.contractService.addSellerTrxNo(contract.id, transactionId).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Payment Submitted',
+          detail: `Seller payment for contract #${contract.contract_number} has been submitted successfully`,
+          life: 3000,
+        });
+        this.getPendingContracts(this.currentRequestOptions);
+        this.contractModalVisible.set(false);
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to submit payment. Please try again.',
+          life: 5000,
+        });
+      },
+    });
+  }
+
+  onSellerPaymentSubmit(event: { contract: Contract; transactionId: string }): void {
+    this.submitSellerPayment(event.contract, event.transactionId);
+  }
+
+  getStatusSeverity(
+    status: string
+  ): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
+    switch (status?.toLowerCase()) {
+      case 'pending_payment_confirmation':
+        return 'warn';
+      case 'verify_shipment_url':
+        return 'info';
+      case 'delivered':
+        return 'success';
+      case 'approved':
+        return 'success';
+      case 'rejected':
+        return 'danger';
+      case 'cancelled':
+        return 'danger';
+      default:
+        return 'secondary';
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'pending_payment_confirmation':
+        return 'Payment Verification';
+      case 'verify_shipment_url':
+        return 'Shipment Verification';
+      case 'shipped':
+        return 'Shipped';
+      case 'approved':
+        return 'Approved';
+      case 'rejected':
+        return 'Rejected';
+      case 'cancelled':
+        return 'Cancelled';
+      default:
+        return status || 'Unknown';
+    }
   }
   cols = [
     { field: 'contract_number', header: 'Contract' },

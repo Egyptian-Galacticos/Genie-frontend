@@ -51,7 +51,10 @@
     />
   </td>
   <td class="text-center w-[15%] text-nowrap">
-    <p-badge [value]="rowData.status" />
+    <p-badge
+      [value]="getStatusLabel(rowData.status)"
+      [severity]="getStatusSeverity(rowData.status)"
+    />
   </td>
   <td class="text-center w-[12%] text-nowrap">
     {{ rowData.created_at | date }}
@@ -68,28 +71,73 @@
         severity="info"
         size="small"
       />
-      <p-button
-        [label]="'Approve'"
-        [icon]="'pi pi-check'"
-        [outlined]="true"
-        (onClick)="approvePayment(rowData.id)"
-        rounded="true"
-        severity="success"
-        size="small"
-        [disabled]="loading()"
-        [raised]="true"
-      />
-      <p-button
-        [label]="'Reject'"
-        [raised]="true"
-        [icon]="'pi pi-times'"
-        [outlined]="true"
-        (onClick)="rejectPayment(rowData)"
-        rounded="true"
-        severity="danger"
-        size="small"
-        [disabled]="loading()"
-      />
+
+      @if (rowData.status === 'pending_payment_confirmation') {
+        <!-- Payment Verification Actions -->
+        <p-button
+          [label]="'Approve Payment'"
+          [icon]="'pi pi-check'"
+          [outlined]="true"
+          (onClick)="approvePayment(rowData.id)"
+          rounded="true"
+          severity="success"
+          size="small"
+          [disabled]="loading()"
+          [raised]="true"
+        />
+        <p-button
+          [label]="'Reject Payment'"
+          [raised]="true"
+          [icon]="'pi pi-times'"
+          [outlined]="true"
+          (onClick)="rejectPayment(rowData)"
+          rounded="true"
+          severity="danger"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+
+      @if (rowData.status === 'verify_shipment_url') {
+        <!-- Shipment URL Verification Actions -->
+        <p-button
+          [label]="'Approve Shipment'"
+          [icon]="'pi pi-check'"
+          [outlined]="true"
+          (onClick)="approveShipment(rowData.id)"
+          rounded="true"
+          severity="success"
+          size="small"
+          [disabled]="loading()"
+          [raised]="true"
+        />
+        <p-button
+          [label]="'Reject Shipment'"
+          [raised]="true"
+          [icon]="'pi pi-times'"
+          [outlined]="true"
+          (onClick)="rejectShipment(rowData)"
+          rounded="true"
+          severity="danger"
+          size="small"
+          [disabled]="loading()"
+        />
+      }
+
+      @if (rowData.status === 'delivered') {
+        <!-- Submit Seller Payment Action -->
+        <p-button
+          [label]="'Submit Payment'"
+          [icon]="'pi pi-credit-card'"
+          [outlined]="true"
+          (onClick)="viewContract(rowData)"
+          rounded="true"
+          severity="info"
+          size="small"
+          [disabled]="loading()"
+          [raised]="true"
+        />
+      }
     </div>
   </td>
 </ng-template>
@@ -104,6 +152,7 @@
     [allowCancel]="false"
     [allowApprove]="false"
     (dialogClose)="contractModalVisible.set(false)"
+    (sellerPaymentSubmit)="onSellerPaymentSubmit($event)"
   ></app-contract-details-dialog>
 }
 @if (quoteModalVisible()) {
