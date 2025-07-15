@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CarouselModule, CarouselResponsiveOptions } from 'primeng/carousel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { CategoryService } from '../../../shared/services/category.service';
 import { Category } from '../../../shared/utils/interfaces';
@@ -15,6 +16,7 @@ import { Category } from '../../../shared/utils/interfaces';
 })
 export class CategoriesComponent implements OnInit, OnDestroy {
   private categoryService = inject(CategoryService);
+  private router = inject(Router);
   private destroy$ = new Subject<void>();
 
   animationConfig = {
@@ -111,5 +113,9 @@ export class CategoriesComponent implements OnInit, OnDestroy {
    */
   retryLoading(): void {
     this.loadCategories();
+  }
+
+  onCategoryClick(category: Category): void {
+    this.router.navigate(['/products'], { queryParams: { category_id: category.id } });
   }
 }

@@ -10,6 +10,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { RouterModule } from '@angular/router';
 import type { MenuItem } from 'primeng/api';
 import { AuthService } from '../../../../core/auth/services/auth.service';
+import { NotificationsComponent } from '../../../../shared/components/notifications/notifications.component';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -22,6 +23,7 @@ import { AuthService } from '../../../../core/auth/services/auth.service';
     DividerModule,
     StyleClassModule,
     RouterModule,
+    NotificationsComponent,
   ],
   templateUrl: './dashboard-navbar.component.html',
   // styleUrl: '../../styles/_topbar.scss',

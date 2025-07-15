@@ -1,8 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { AnimateOnScrollDirective } from '../../../../shared/directives/animate-on-scroll.directive';
+import { CategoryService } from '../../../shared/services/category.service';
+import { Category } from '../../../shared/utils/interfaces';
 
 @Component({
   selector: 'app-hero-section',
@@ -10,7 +14,31 @@ import { AnimateOnScrollDirective } from '../../../../shared/directives/animate-
   templateUrl: './hero-section.component.html',
   styleUrl: './hero-section.component.css',
 })
-export class HeroSectionComponent {
+export class HeroSectionComponent implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private categoryService = inject(CategoryService);
+  private destroy$ = new Subject<void>();
+
+  searchQuery = signal('');
+  categories = signal<Category[]>([]);
+  loading = signal(true);
+
+  onSearchInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchQuery.set(value);
+  }
+
+  onSearch(): void {
+    const query = this.searchQuery().trim();
+    if (query) {
+      this.router.navigate(['/products'], { queryParams: { search: query } });
+    }
+  }
+
+  onCategoryClick(category: Category): void {
+    this.router.navigate(['/products'], { queryParams: { category_id: category.id } });
+  }
+
   heroAnimationConfig = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px',
@@ -56,4 +84,25 @@ export class HeroSectionComponent {
     { number: '100+', label: 'Countries' },
     { number: '99.9%', label: 'Uptime' },
   ]);
+
+  ngOnInit(): void {
+    this.categoryService
+      .getCategories()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: categories => {
+          this.categories.set(categories);
+          this.loading.set(false);
+        },
+        error: error => {
+          console.error('Error fetching categories:', error);
+          this.loading.set(false);
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

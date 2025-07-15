@@ -22,8 +22,10 @@ export interface ICompany {
   name: string;
   email: string;
   tax_id: string | null;
+  tax_id_images: MediaResource[] | null;
   company_phone: string | null;
   commercial_registration: string | null;
+  commercial_registration_images: MediaResource[] | null;
   website: string | null;
   description: string | null;
   logo: MediaResource | null;

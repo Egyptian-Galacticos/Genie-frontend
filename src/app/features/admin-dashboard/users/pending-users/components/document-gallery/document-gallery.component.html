@@ -1,0 +1,31 @@
+<p-galleria
+  [value]="images()"
+  [visible]="fullScreenVisible()"
+  (visibleChange)="onFullScreenVisibilityChange($event)"
+  (onHide)="closeFullScreen()"
+  [responsiveOptions]="responsiveOptions"
+  [numVisible]="5"
+  [circular]="true"
+  [fullScreen]="true"
+  [showItemNavigators]="images().length > 1"
+  [showThumbnails]="true"
+  [showItemNavigatorsOnHover]="true"
+  [containerStyle]="{ 'max-width': '80vw', 'max-height': '80vh' }"
+  [verticalThumbnailViewPortHeight]="'120px'"
+  class="fullscreen-gallery"
+>
+  <ng-template pTemplate="item" let-item>
+    <img
+      [src]="item.url"
+      [alt]="item.name || title()"
+      style="width: 100%; height: auto; max-height: 60vh; object-fit: contain; display: block"
+    />
+  </ng-template>
+  <ng-template pTemplate="thumbnail" let-item>
+    <img
+      [src]="item.thumbnail_url || item.url"
+      [alt]="item.name || title()"
+      style="width: 60px; height: 60px; object-fit: cover; display: block"
+    />
+  </ng-template>
+</p-galleria>

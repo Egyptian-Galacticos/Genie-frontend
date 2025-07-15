@@ -10,6 +10,7 @@ import { DividerModule } from 'primeng/divider';
 import type { MenuItem } from 'primeng/api';
 import { ThemeService } from '../../services/theme.service';
 import { AuthService } from '../../../core/auth/services/auth.service';
+import { NotificationsComponent } from '../../../shared/components/notifications/notifications.component';
 
 @Component({
   selector: 'app-navbar',
@@ -23,6 +24,7 @@ import { AuthService } from '../../../core/auth/services/auth.service';
     MenuModule,
     PopoverModule,
     DividerModule,
+    NotificationsComponent,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
