@@ -5,6 +5,21 @@ import { ApiService } from './../../../core/services/api.service';
 import { inject, Injectable } from '@angular/core';
 import { RequestOptions } from '../../../core/interfaces/api.interface';
 
+interface PaginatedResponseWithStatistics extends PaginatedResponse<IProduct> {
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    total_products?: number;
+    featured?: number;
+    approved?: number;
+    pending_approval?: number;
+    active?: number;
+    inactive?: number;
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -15,7 +30,7 @@ export class ProductService {
     return this.apiService.post<ApiResponse<IProduct>>('products', dto);
   }
   getMyProducts(RequestOptions: RequestOptions) {
-    return this.apiService.get<PaginatedResponse<IProduct>>('seller/products', RequestOptions);
+    return this.apiService.get<PaginatedResponseWithStatistics>('seller/products', RequestOptions);
   }
   updateProductActiveStatus(id: number, isActive: boolean) {
     return this.apiService.patch<ApiResponse>(`/products/${id}`, { is_active: isActive });

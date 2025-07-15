@@ -2,32 +2,31 @@
   <div class="flex flex-row gap-y-4 gap-xl-2 justify-between flex-wrap">
     <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
-        [cardTitle]="'New Quotes'"
-        [cardDescription]="'5'"
-        [cardIconClass]="'pi pi-envelope'"
+        [cardTitle]="'Total Products'"
+        [cardDescription]="totalProducts().toString()"
+        [cardIconClass]="'pi pi-box'"
       />
     </div>
     <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
-        [cardTitle]="'In Progress Quotes'"
-        [cardDescription]="'3'"
-        [cardIconClass]="'pi pi-spinner-dotted'"
+        [cardTitle]="'Featured Products'"
+        [cardDescription]="featuredProducts().toString()"
+        [cardIconClass]="'pi pi-star'"
       />
     </div>
     <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
-        [cardTitle]="'Completed'"
-        [cardDescription]="'1'"
+        [cardTitle]="'Approved Products'"
+        [cardDescription]="approvedProducts().toString()"
         [cardIconClass]="'pi pi-check-circle'"
       />
     </div>
     <div class="w-full sm:w-[48%] lg:xl:w-[24%] shrink-0">
       <app-dashboard-info-card
-        [cardTitle]="'Unopened Quotes'"
-        [cardDescription]="'0'"
-        [cardIconClass]="'pi pi-info-circle'"
+        [cardTitle]="'Pending Approval'"
+        [cardDescription]="pendingApprovalProducts().toString()"
+        [cardIconClass]="'pi pi-clock'"
       />
-      <div class="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4"></div>
     </div>
   </div>
   <div class="flex flex-col pb-2 pt-6 border-0 bg-card rounded-xl shadow flex-grow min-h-100">
@@ -42,7 +41,7 @@
         [cols]="cols"
         [rows]="limit || 10"
         [totalRecords]="total_records || 0"
-        [dataLoading]="ProductsLoading"
+        [dataLoading]="ProductsLoading()"
         [data]="productsResponse?.data || []"
         (loadDataEvent)="loadMyProducts($event)"
         [(multiSortMeta)]="multiSortMeta"
@@ -123,7 +122,7 @@
 </ng-template>
 
 <p-toast />
-@if (updateVisible) {
+@if (updateVisible()) {
   <p-drawer
     header="Update Product"
     [(visible)]="updateVisible"

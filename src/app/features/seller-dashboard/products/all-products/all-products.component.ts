@@ -1,7 +1,7 @@
 import { RequestOptions } from './../../../../core/interfaces/api.interface';
 import { ProductService } from './../../../shared/services/product.service';
 import { BadgeModule } from 'primeng/badge';
-import { Component, inject, model } from '@angular/core';
+import { Component, inject, model, signal } from '@angular/core';
 import { DataTableComponent } from '../../../shared/data-table/data-table.component';
 import { ButtonModule } from 'primeng/button';
 import { DashboardInfoCardComponent } from '../../../shared/dashboard-info-card/dashboard-info-card.component';
@@ -43,7 +43,7 @@ export class AllProductsComponent {
   private router = inject(Router);
 
   productsResponse: PaginatedResponse<IProduct> | null = null;
-  ProductsLoading = true;
+  ProductsLoading = signal(true);
   limit!: number;
   total_records!: number;
   total_pages!: number;
@@ -53,8 +53,16 @@ export class AllProductsComponent {
   ];
   currentRequestOptions!: RequestOptions;
   selectedItems = model<IProduct[]>([]);
-  updateVisible = false;
+  updateVisible = signal(false);
   beingUpdatedProduct!: IProduct;
+
+  // Card data properties
+  totalProducts = signal(0);
+  featuredProducts = signal(0);
+  approvedProducts = signal(0);
+  pendingApprovalProducts = signal(0);
+  activeProducts = signal(0);
+  inactiveProducts = signal(0);
   // table columns definition
   cols = [
     {
@@ -113,25 +121,33 @@ export class AllProductsComponent {
     },
     { field: 'actions', header: 'Actions', filterableColumn: false, filterType: 'clear' },
   ];
-
   loadMyProducts(requestOptions: RequestOptions) {
     this.currentRequestOptions = requestOptions;
     if (requestOptions.params) {
       requestOptions.params['sortFields'] += ',created_at';
       requestOptions.params['sortOrders'] += ',desc';
     }
-    this.ProductsLoading = true;
+    this.ProductsLoading.set(true);
     this.productService.getMyProducts(requestOptions).subscribe({
       next: response => {
         this.productsResponse = response;
         this.total_pages = response.meta.totalPages;
         this.total_records = response.meta.total;
         this.limit = response.meta.limit;
-        this.ProductsLoading = false;
+
+        // Update card data from meta
+        this.totalProducts.set(response.meta.total_products || response.meta.total);
+        this.featuredProducts.set(response.meta.featured || 0);
+        this.approvedProducts.set(response.meta.approved || 0);
+        this.pendingApprovalProducts.set(response.meta.pending_approval || 0);
+        this.activeProducts.set(response.meta.active || 0);
+        this.inactiveProducts.set(response.meta.inactive || 0);
+
+        this.ProductsLoading.set(false);
       },
       error: error => {
         this.showError(error.message);
-        this.ProductsLoading = false;
+        this.ProductsLoading.set(false);
       },
     });
   }
@@ -163,7 +179,7 @@ export class AllProductsComponent {
     this.productService.getProduct(product.slug).subscribe({
       next: response => {
         this.beingUpdatedProduct = response.data;
-        this.updateVisible = true;
+        this.updateVisible.set(true);
       },
       error: error => {
         this.showError(error.message);
@@ -171,7 +187,7 @@ export class AllProductsComponent {
     });
   }
   productUpdated() {
-    this.updateVisible = false;
+    this.updateVisible.set(false);
     this.loadMyProducts(this.currentRequestOptions);
   }
   viewProductDetails(product: IProduct) {
