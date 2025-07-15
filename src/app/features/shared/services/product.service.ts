@@ -33,7 +33,7 @@ export class ProductService {
     return this.apiService.get<PaginatedResponseWithStatistics>('seller/products', RequestOptions);
   }
   updateProductActiveStatus(id: number, isActive: boolean) {
-    return this.apiService.patch<ApiResponse>(`/products/${id}`, { is_active: isActive });
+    return this.apiService.patch<ApiResponse>(`products/${id}`, { is_active: isActive });
   }
   updateProductFeaturedStatus(id: number, isFeatured: boolean) {
     return this.apiService.patch<ApiResponse>(`products/${id}`, { is_featured: isFeatured });
