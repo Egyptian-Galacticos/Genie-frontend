@@ -1,0 +1,111 @@
+/* Custom line clamping for notification text */
+.line-clamp-1 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 1 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.line-clamp-2 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+/* Smooth animations for notification items */
+.notification-item {
+  transition: all 0.2s ease-in-out !important;
+}
+
+.notification-item:hover {
+  transform: translateY(-1px) !important;
+}
+
+/* Custom scrollbar for notifications panel */
+.notifications-panel ::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.notifications-panel ::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.notifications-panel ::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3) !important;
+  border-radius: 3px !important;
+}
+
+.notifications-panel ::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5) !important;
+}
+
+/* Dark mode scrollbar */
+.dark .notifications-panel ::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.3) !important;
+}
+
+.dark .notifications-panel ::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.5) !important;
+}
+
+/* Pulse animation for unread indicator */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1 !important;
+  }
+  50% {
+    opacity: 0.5 !important;
+  }
+}
+
+.unread-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+}
+
+/* Smooth badge animation */
+.notification-badge {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.notification-badge:hover {
+  transform: scale(1.1) !important;
+}
+
+/* Skeleton loading animations */
+.skeleton-loading {
+  animation: skeleton-pulse 1.5s ease-in-out infinite !important;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1 !important;
+  }
+  50% {
+    opacity: 0.5 !important;
+  }
+}
+
+/* Skeleton spacing and styling */
+.skeleton-item {
+  border-bottom: 1px solid rgba(156, 163, 175, 0.1) !important;
+}
+
+.dark .skeleton-item {
+  border-bottom-color: rgba(75, 85, 99, 0.2) !important;
+}
+
+/* Skeleton content spacing */
+.skeleton-content {
+  gap: 0.5rem !important;
+}
+
+.skeleton-content > * {
+  margin-bottom: 0.5rem !important;
+}
+
+.skeleton-content > *:last-child {
+  margin-bottom: 0 !important;
+}
