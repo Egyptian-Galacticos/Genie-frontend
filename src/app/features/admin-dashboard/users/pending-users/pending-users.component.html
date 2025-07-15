@@ -21,6 +21,7 @@
     </div>
   </div>
 </div>
+
 <ng-template #pendingUsersBody let-rowData let-rowIndex="rowIndex">
   <td class="text-center w-[5%] shrink-1">
     {{ rowData.id }}
@@ -38,10 +39,39 @@
     {{ rowData.email }}
   </td>
   <td class="text-center w-[12%] text-nowrap">
-    {{ rowData.company?.tax_id || 'N/A' }}
+    <div class="flex items-center justify-center gap-2">
+      <span>{{ rowData.company?.tax_id || 'N/A' }}</span>
+      @if (rowData.company?.tax_id_images && rowData.company.tax_id_images.length > 0) {
+        <button
+          type="button"
+          class="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all duration-200"
+          (click)="openTaxIdGallery(rowData.company.tax_id_images)"
+          title="View Tax ID Images ({{ rowData.company.tax_id_images.length }} images)"
+        >
+          <i class="pi pi-image text-sm"></i>
+        </button>
+      }
+    </div>
   </td>
   <td class="text-center w-[12%] text-nowrap">
-    {{ rowData.company?.commercial_registration || 'N/A' }}
+    <div class="flex items-center justify-center gap-2">
+      <span>{{ rowData.company?.commercial_registration || 'N/A' }}</span>
+      @if (
+        rowData.company?.commercial_regestration_images &&
+        rowData.company.commercial_regestration_images.length > 0
+      ) {
+        <button
+          type="button"
+          class="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-full transition-all duration-200"
+          (click)="openCommercialRegGallery(rowData.company.commercial_regestration_images)"
+          title="View Commercial Registration Images ({{
+            rowData.company.commercial_regestration_images.length
+          }} images)"
+        >
+          <i class="pi pi-image text-sm"></i>
+        </button>
+      }
+    </div>
   </td>
   <td class="text-center text-nowrap">
     <p-button
@@ -56,3 +86,17 @@
     />
   </td>
 </ng-template>
+
+<app-document-gallery
+  [images]="currentTaxIdImages()"
+  [title]="'Tax ID Images'"
+  [visible]="taxIdGalleryVisible()"
+  (visibleChange)="taxIdGalleryVisible.set($event)"
+/>
+
+<app-document-gallery
+  [images]="currentCommercialRegImages()"
+  [title]="'Commercial Registration Images'"
+  [visible]="commercialRegGalleryVisible()"
+  (visibleChange)="commercialRegGalleryVisible.set($event)"
+/>

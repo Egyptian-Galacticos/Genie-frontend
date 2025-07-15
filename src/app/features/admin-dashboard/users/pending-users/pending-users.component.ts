@@ -1,15 +1,16 @@
 import { UserService } from './../../../shared/services/user.service';
 import { Component, inject, model, signal } from '@angular/core';
 import { DataTableComponent } from '../../../shared/data-table/data-table.component';
-import { IUser } from '../../../shared/utils/interfaces';
+import { IUser, MediaResource } from '../../../shared/utils/interfaces';
 import { MessageService, SortMeta } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { RequestOptions } from '../../../../core/interfaces/api.interface';
+import { DocumentGalleryComponent } from './components/document-gallery/document-gallery.component';
 
 @Component({
   selector: 'app-pending-users',
   templateUrl: './pending-users.component.html',
-  imports: [DataTableComponent, ButtonModule],
+  imports: [DataTableComponent, ButtonModule, DocumentGalleryComponent],
   providers: [MessageService],
 })
 export class PendingUsersComponent {
@@ -24,6 +25,11 @@ export class PendingUsersComponent {
   SortMeta = model<SortMeta[]>([{ field: 'created_at', order: -1 }]);
   currentRequestOptions!: RequestOptions;
 
+  taxIdGalleryVisible = signal<boolean>(false);
+  commercialRegGalleryVisible = signal<boolean>(false);
+  currentTaxIdImages = signal<MediaResource[]>([]);
+  currentCommercialRegImages = signal<MediaResource[]>([]);
+
   // Fetch pending users from the service
   getPendingUsers(requestOptions: RequestOptions) {
     console.log('Fetching pending users with options:', requestOptions);
@@ -37,6 +43,7 @@ export class PendingUsersComponent {
     this.userService.getUsers(requestOptions).subscribe({
       next: response => {
         this.pendingUsers.set(response.data);
+        console.log(this.pendingUsers());
         this.total_pages.set(response.meta.totalPages);
         this.total_records.set(response.meta.total);
         this.limit.set(response.meta.limit);
@@ -49,6 +56,7 @@ export class PendingUsersComponent {
       },
     });
   }
+
   approveUser(userId: number) {
     this.userService.approveUser(userId).subscribe({
       next: () => {
@@ -69,6 +77,26 @@ export class PendingUsersComponent {
         });
       },
     });
+  }
+
+  openTaxIdGallery(images: MediaResource[]) {
+    if (images && images.length > 0) {
+      console.log('Opening Tax ID gallery with', images.length, 'images:', images);
+      this.currentTaxIdImages.set(images);
+      this.taxIdGalleryVisible.set(true);
+    } else {
+      console.log('No Tax ID images available');
+    }
+  }
+
+  openCommercialRegGallery(images: MediaResource[]) {
+    if (images && images.length > 0) {
+      console.log('Opening Commercial Registration gallery with', images.length, 'images:', images);
+      this.currentCommercialRegImages.set(images);
+      this.commercialRegGalleryVisible.set(true);
+    } else {
+      console.log('No Commercial Registration images available');
+    }
   }
 
   cols = [
