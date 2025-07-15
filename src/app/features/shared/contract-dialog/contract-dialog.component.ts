@@ -23,6 +23,7 @@ import { MessageService } from 'primeng/api';
 
 import { IQuote, CreateContract, ContractItem, IUser } from '../utils/interfaces';
 import { ContractService } from '../services/contract.service';
+import { TextareaModule } from 'primeng/textarea';
 
 interface Term {
   id: string;
@@ -47,6 +48,7 @@ interface Term {
     AccordionModule,
     FieldsetModule,
     ToastModule,
+    TextareaModule,
   ],
   providers: [MessageService],
   templateUrl: './contract-dialog.component.html',

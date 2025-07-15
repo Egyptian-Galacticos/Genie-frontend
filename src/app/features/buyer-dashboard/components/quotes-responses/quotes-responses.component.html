@@ -162,6 +162,8 @@
       [userType]="'buyer'"
       (close)="quoteDetailsVisible.set(false)"
       (chat)="openChat($event)"
+      (accept)="acceptQuote($event)"
+      (reject)="rejectQuote($event)"
     ></app-quote-details-dialog>
   }
   <p-toast></p-toast>

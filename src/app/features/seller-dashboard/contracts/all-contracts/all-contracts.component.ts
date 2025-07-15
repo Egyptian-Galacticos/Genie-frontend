@@ -185,6 +185,7 @@ export class SellerAllContractsComponent {
       case 'shipped':
         return 'warning';
       case 'delivered':
+      case 'delivered_and_paid':
         return 'primary';
       case 'paid':
         return 'success';
@@ -200,7 +201,7 @@ export class SellerAllContractsComponent {
   }
 
   canMarkAsCompleted(contract: Contract): boolean {
-    return contract.status === 'delivered' || contract.status === 'paid';
+    return contract.status === 'delivered_and_paid' || contract.status === 'paid';
   }
 
   getStatusSeverity(
@@ -211,6 +212,7 @@ export class SellerAllContractsComponent {
         return 'info';
       case 'shipped':
         return 'warn';
+      case 'delivered_and_paid':
       case 'delivered':
         return 'success';
       case 'paid':

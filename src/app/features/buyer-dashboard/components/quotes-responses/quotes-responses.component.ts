@@ -15,6 +15,7 @@ import { QuotesService } from '../../../shared/services/quotes.service';
 import { QuoteDetailsDialogComponent } from '../../../shared/quote-details-dialog/quote-details-dialog.component';
 import { Router } from '@angular/router';
 import { ChatService } from '../../../chat/services/chat.service';
+import { ContractDialogComponent } from '../../../shared/contract-dialog/contract-dialog.component';
 
 @Component({
   selector: 'app-buyer-quotes-responses',
@@ -28,6 +29,7 @@ import { ChatService } from '../../../chat/services/chat.service';
     DialogModule,
     TableModule,
     QuoteDetailsDialogComponent,
+    ContractDialogComponent,
   ],
   providers: [MessageService],
   templateUrl: './quotes-responses.component.html',

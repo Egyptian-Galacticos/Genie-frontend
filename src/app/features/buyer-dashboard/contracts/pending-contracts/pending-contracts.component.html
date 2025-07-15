@@ -125,4 +125,5 @@
   [showActions]="false"
   (paymentSubmit)="onPaymentSubmit($event)"
   (confirmDelivery)="onConfirmDelivery($event)"
+  (approve)="approveContract($event); contractDetailsVisible.set(false)"
 ></app-contract-details-dialog>

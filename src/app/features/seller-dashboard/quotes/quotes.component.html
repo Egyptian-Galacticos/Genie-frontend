@@ -52,6 +52,25 @@
       </app-data-table>
     </div>
   </div>
+  @if (quoteDetailsDialogVisible()) {
+    <app-quote-details-dialog
+      [(visible)]="quoteDetailsDialogVisible"
+      [quote]="selectedQuote"
+      [userType]="'seller'"
+      (close)="quoteDetailsDialogVisible.set(false)"
+      [allowContract]="true"
+      (contract)="createContract($event)"
+    ></app-quote-details-dialog>
+  }
+  @if (createContractVisible()) {
+    <app-contract-dialog
+      [(visible)]="createContractVisible"
+      [quote]="selectedQuote"
+      [userType]="'seller'"
+      (dialogClose)="createContractVisible.set(false)"
+      (contractCreated)="contractCreated($event)"
+    ></app-contract-dialog>
+  }
 </div>
 
 <ng-template #customBodyTemplate let-rowData let-rowIndex="rowIndex">
@@ -90,7 +109,7 @@
   </td>
   <td class="text-center w-[15%] text-nowrap">{{ rowData.created_at | date }}</td>
   <td class="flex justify-center shrink-1">
-    <div class="action-buttons">
+    <div class="flex flex-row gap-2">
       <p-button
         [icon]="'pi pi-eye'"
         [rounded]="true"
@@ -99,15 +118,20 @@
         [title]="'View Details'"
         (onClick)="viewQuoteDetails(rowData)"
       />
+      @if (rowData.status.toLowerCase() === 'accepted') {
+        <p-button
+          icon="pi pi-check"
+          [label]="'Create Contract'"
+          [rounded]="true"
+          [outlined]="true"
+          [raised]="true"
+          size="small"
+          [title]="'Create Contract'"
+          (onClick)="createContract(rowData)"
+        />
+      }
     </div>
   </td>
 </ng-template>
-@if (quoteDetailsDialogVisible()) {
-  <app-quote-details-dialog
-    [(visible)]="quoteDetailsDialogVisible"
-    [quote]="selectedQuote"
-    [userType]="'seller'"
-    (close)="quoteDetailsDialogVisible.set(false)"
-  ></app-quote-details-dialog>
-}
+
 <p-toast />

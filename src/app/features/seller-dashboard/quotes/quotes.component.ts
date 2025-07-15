@@ -1,4 +1,5 @@
-import { IQuote } from '../../shared/utils/interfaces';
+import { ContractService } from './../../shared/services/contract.service';
+import { CreateContract, IQuote } from '../../shared/utils/interfaces';
 import { PaginatedResponse, RequestOptions } from '../../../core/interfaces/api.interface';
 import { Component, inject, model, signal } from '@angular/core';
 import { DashboardInfoCardComponent } from '../../shared/dashboard-info-card/dashboard-info-card.component';
@@ -15,6 +16,8 @@ import { ToastModule } from 'primeng/toast';
 import { CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { StatusUtils } from '../../shared/utils/status-utils';
 import { QuoteDetailsDialogComponent } from '../../shared/quote-details-dialog/quote-details-dialog.component';
+import { ContractDialogComponent } from '../../shared/contract-dialog/contract-dialog.component';
+import { ChatService } from '../../chat/services/chat.service';
 
 @Component({
   selector: 'app-quotes',
@@ -32,6 +35,7 @@ import { QuoteDetailsDialogComponent } from '../../shared/quote-details-dialog/q
     DatePipe,
     TitleCasePipe,
     QuoteDetailsDialogComponent,
+    ContractDialogComponent,
   ],
   templateUrl: './quotes.component.html',
   providers: [MessageService],
@@ -39,7 +43,10 @@ import { QuoteDetailsDialogComponent } from '../../shared/quote-details-dialog/q
 export class QuotesComponent {
   private quoteService = inject(QuotesService);
   private messageService = inject(MessageService);
+  private contractService = inject(ContractService);
+  private chatService = inject(ChatService);
 
+  createContractVisible = model<boolean>(false);
   quotes: PaginatedResponse<IQuote> | null = null;
   quotesLoading = true;
   quoteDetailsDialogVisible = signal<boolean>(false);
@@ -64,7 +71,6 @@ export class QuotesComponent {
       error: error => {
         console.error(error);
         this.showError("Couldn't load quotes");
-
         this.quotesLoading = false;
       },
     });
@@ -136,5 +142,52 @@ export class QuotesComponent {
       summary: 'Error',
       detail: message,
     });
+  }
+  contractCreated(contractData: CreateContract): void {
+    this.createContractVisible.set(false);
+    this.contractService.createContract(contractData).subscribe({
+      next: response => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Contract Created',
+          detail: `Contract #${response.data.id} has been created successfully.`,
+          life: 3000,
+        });
+        this.chatService.startConversation(this.selectedQuote?.buyer?.id || 0).subscribe({
+          next: conversation => {
+            this.chatService
+              .sendMessage(
+                conversation.id,
+                `Contract #${response.data.id} has been created successfully`,
+                'contract'
+              )
+              .subscribe({
+                next: () => {
+                  this.messageService.add({
+                    severity: 'success',
+                    summary: 'Message Sent',
+                    detail: 'Notification message sent to the buyer.',
+                  });
+                },
+              });
+          },
+        });
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to create contract. Please try again.',
+          life: 5000,
+        });
+      },
+    });
+  }
+
+  createContract(quote: IQuote) {
+    console.log('Creating contract for quote:', quote);
+    this.quoteDetailsDialogVisible.set(false);
+    this.selectedQuote = quote;
+    this.createContractVisible.set(true);
   }
 }
